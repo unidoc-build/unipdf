@@ -10,25 +10,24 @@
 // terms that can be accessed at https://unidoc.io/eula/
 
 // Package license helps manage commercial licenses and check if they are valid for the version of unipdf used.
-package license ;import _d "github.com/unidoc/unipdf/v3/internal/license";
-
-// LicenseKey represents a loaded license key.
-type LicenseKey =_d .LicenseKey ;
+package license ;import _ff "github.com/unidoc/unipdf/v3/internal/license";
 
 // GetLicenseKey returns the currently loaded license key.
-func GetLicenseKey ()*LicenseKey {return _d .GetLicenseKey ()};
+func GetLicenseKey ()*LicenseKey {return _ff .GetLicenseKey ()};
 
-// SetLicenseKey sets and validates the license key.
-func SetLicenseKey (content string ,customerName string )error {return _d .SetLicenseKey (content ,customerName );};const (LicenseTierUnlicensed =_d .LicenseTierUnlicensed ;LicenseTierCommunity =_d .LicenseTierCommunity ;LicenseTierIndividual =_d .LicenseTierIndividual ;
-LicenseTierBusiness =_d .LicenseTierBusiness ;);
+// LicenseKey represents a loaded license key.
+type LicenseKey =_ff .LicenseKey ;const (LicenseTierUnlicensed =_ff .LicenseTierUnlicensed ;LicenseTierCommunity =_ff .LicenseTierCommunity ;LicenseTierIndividual =_ff .LicenseTierIndividual ;LicenseTierBusiness =_ff .LicenseTierBusiness ;);
 
 // MakeUnlicensedKey returns a default key.
-func MakeUnlicensedKey ()*LicenseKey {return _d .MakeUnlicensedKey ()};
+func MakeUnlicensedKey ()*LicenseKey {return _ff .MakeUnlicensedKey ()};
 
 // GetMeteredState checks the currently used metered document usage status,
 // documents used and credits available.
-func GetMeteredState ()(_d .MeteredStatus ,error ){return _d .GetMeteredState ()};
+func GetMeteredState ()(_ff .MeteredStatus ,error ){return _ff .GetMeteredState ()};
 
 // SetMeteredKey sets the metered API key required for SaaS operation.
 // Document usage is reported periodically for the product to function correctly.
-func SetMeteredKey (apiKey string )error {return _d .SetMeteredKey (apiKey )};
+func SetMeteredKey (apiKey string )error {return _ff .SetMeteredKey (apiKey )};
+
+// SetLicenseKey sets and validates the license key.
+func SetLicenseKey (content string ,customerName string )error {return _ff .SetLicenseKey (content ,customerName );};
