@@ -20,485 +20,171 @@
 // be converted to a string for embedding in a PDF file.
 //
 // The contentstream package uses the core and model packages.
-package contentstream ;import (_a "bufio";_g "bytes";_bd "encoding/hex";_ba "errors";_fd "fmt";_gd "github.com/unidoc/unipdf/v3/common";_e "github.com/unidoc/unipdf/v3/core";_db "github.com/unidoc/unipdf/v3/internal/imageutil";_adb "github.com/unidoc/unipdf/v3/internal/transform";
-_gc "github.com/unidoc/unipdf/v3/model";_f "image/color";_fb "image/jpeg";_cf "io";_ad "math";_d "regexp";_c "strconv";);
+package contentstream ;import (_fe "bufio";_fa "bytes";_fd "encoding/hex";_f "errors";_ea "fmt";_fbg "github.com/unidoc/unipdf/v3/common";_a "github.com/unidoc/unipdf/v3/core";_ed "github.com/unidoc/unipdf/v3/internal/imageutil";_ee "github.com/unidoc/unipdf/v3/internal/transform";
+_ab "github.com/unidoc/unipdf/v3/model";_c "image/color";_e "image/jpeg";_bea "io";_eg "math";_fb "regexp";_be "strconv";);
 
-// Bytes converts the content stream operations to a content stream byte presentation, i.e. the kind that can be
-// stored as a PDF stream or string format.
-func (_bee *ContentCreator )Bytes ()[]byte {return _bee ._bbe .Bytes ()};
+// GetColorSpace returns the colorspace of the inline image.
+func (_cbed *ContentStreamInlineImage )GetColorSpace (resources *_ab .PdfPageResources )(_ab .PdfColorspace ,error ){if _cbed .ColorSpace ==nil {_fbg .Log .Debug ("\u0049\u006e\u006c\u0069\u006e\u0065\u0020\u0069\u006d\u0061\u0067\u0065\u0020\u006e\u006f\u0074\u0020\u0068\u0061\u0076i\u006e\u0067\u0020\u0073\u0070\u0065\u0063\u0069\u0066\u0069\u0065\u0064\u0020\u0063\u006f\u006c\u006f\u0072\u0073\u0070\u0061\u0063\u0065\u002c\u0020\u0061\u0073\u0073\u0075\u006di\u006e\u0067\u0020\u0047\u0072a\u0079");
+return _ab .NewPdfColorspaceDeviceGray (),nil ;};if _fabe ,_gec :=_cbed .ColorSpace .(*_a .PdfObjectArray );_gec {return _dabfg (_fabe );};_dabf ,_bgcf :=_cbed .ColorSpace .(*_a .PdfObjectName );if !_bgcf {_fbg .Log .Debug ("E\u0072\u0072\u006f\u0072\u003a\u0020I\u006e\u0076\u0061\u006c\u0069\u0064 \u006f\u0062\u006a\u0065\u0063\u0074\u0020t\u0079\u0070\u0065\u0020\u0028\u0025\u0054\u003b\u0025\u002bv\u0029",_cbed .ColorSpace ,_cbed .ColorSpace );
+return nil ,_f .New ("\u0074\u0079p\u0065\u0020\u0063h\u0065\u0063\u006b\u0020\u0065\u0072\u0072\u006f\u0072");};if *_dabf =="\u0047"||*_dabf =="\u0044\u0065\u0076\u0069\u0063\u0065\u0047\u0072\u0061\u0079"{return _ab .NewPdfColorspaceDeviceGray (),nil ;
+}else if *_dabf =="\u0052\u0047\u0042"||*_dabf =="\u0044e\u0076\u0069\u0063\u0065\u0052\u0047B"{return _ab .NewPdfColorspaceDeviceRGB (),nil ;}else if *_dabf =="\u0043\u004d\u0059\u004b"||*_dabf =="\u0044\u0065\u0076\u0069\u0063\u0065\u0043\u004d\u0059\u004b"{return _ab .NewPdfColorspaceDeviceCMYK (),nil ;
+}else if *_dabf =="\u0049"||*_dabf =="\u0049n\u0064\u0065\u0078\u0065\u0064"{return nil ,_f .New ("\u0075\u006e\u0073\u0075p\u0070\u006f\u0072\u0074\u0065\u0064\u0020\u0049\u006e\u0064e\u0078 \u0063\u006f\u006c\u006f\u0072\u0073\u0070a\u0063\u0065");}else {if resources .ColorSpace ==nil {_fbg .Log .Debug ("\u0045\u0072r\u006f\u0072\u002c\u0020\u0075\u006e\u0073\u0075\u0070\u0070\u006f\u0072\u0074\u0065\u0064\u0020\u0069\u006e\u006c\u0069\u006e\u0065\u0020\u0069\u006d\u0061\u0067\u0065\u0020\u0063\u006f\u006c\u006f\u0072\u0073\u0070\u0061\u0063\u0065\u003a\u0020\u0025\u0073",*_dabf );
+return nil ,_f .New ("\u0075n\u006bn\u006f\u0077\u006e\u0020\u0063o\u006c\u006fr\u0073\u0070\u0061\u0063\u0065");};_cdac ,_ceaa :=resources .GetColorspaceByName (*_dabf );if !_ceaa {_fbg .Log .Debug ("\u0045\u0072r\u006f\u0072\u002c\u0020\u0075\u006e\u0073\u0075\u0070\u0070\u006f\u0072\u0074\u0065\u0064\u0020\u0069\u006e\u006c\u0069\u006e\u0065\u0020\u0069\u006d\u0061\u0067\u0065\u0020\u0063\u006f\u006c\u006f\u0072\u0073\u0070\u0061\u0063\u0065\u003a\u0020\u0025\u0073",*_dabf );
+return nil ,_f .New ("\u0075n\u006bn\u006f\u0077\u006e\u0020\u0063o\u006c\u006fr\u0073\u0070\u0061\u0063\u0065");};return _cdac ,nil ;};};const (HandlerConditionEnumOperand HandlerConditionEnum =iota ;HandlerConditionEnumAllOperands ;);func _ecee (_cfea []_a .PdfObjectName )[]_a .PdfObject {var _baef []_a .PdfObject ;
+for _ ,_bccc :=range _cfea {_baef =append (_baef ,_a .MakeName (string (_bccc )));};return _baef ;};func _dcgf (_eead []float64 )[]_a .PdfObject {var _gbcc []_a .PdfObject ;for _ ,_dccd :=range _eead {_gbcc =append (_gbcc ,_a .MakeFloat (_dccd ));};return _gbcc ;
+};func _adea (_cga *ContentStreamInlineImage )(*_a .DCTEncoder ,error ){_gbggd :=_a .NewDCTEncoder ();_ceb :=_fa .NewReader (_cga ._efe );_abfec ,_bee :=_e .DecodeConfig (_ceb );if _bee !=nil {_fbg .Log .Debug ("\u0045\u0072\u0072or\u0020\u0064\u0065\u0063\u006f\u0064\u0069\u006e\u0067\u0020\u0066\u0069\u006c\u0065\u003a\u0020\u0025\u0073",_bee );
+return nil ,_bee ;};switch _abfec .ColorModel {case _c .RGBAModel :_gbggd .BitsPerComponent =8;_gbggd .ColorComponents =3;case _c .RGBA64Model :_gbggd .BitsPerComponent =16;_gbggd .ColorComponents =3;case _c .GrayModel :_gbggd .BitsPerComponent =8;_gbggd .ColorComponents =1;
+case _c .Gray16Model :_gbggd .BitsPerComponent =16;_gbggd .ColorComponents =1;case _c .CMYKModel :_gbggd .BitsPerComponent =8;_gbggd .ColorComponents =4;case _c .YCbCrModel :_gbggd .BitsPerComponent =8;_gbggd .ColorComponents =3;default:return nil ,_f .New ("\u0075\u006e\u0073up\u0070\u006f\u0072\u0074\u0065\u0064\u0020\u0063\u006f\u006c\u006f\u0072\u0020\u006d\u006f\u0064\u0065\u006c");
+};_gbggd .Width =_abfec .Width ;_gbggd .Height =_abfec .Height ;_fbg .Log .Trace ("\u0044\u0043T\u0020\u0045\u006ec\u006f\u0064\u0065\u0072\u003a\u0020\u0025\u002b\u0076",_gbggd );return _gbggd ,nil ;};func (_cea *ContentStreamInlineImage )String ()string {_cbc :=_ea .Sprintf ("I\u006el\u0069\u006e\u0065\u0049\u006d\u0061\u0067\u0065(\u006c\u0065\u006e\u003d%d\u0029\u000a",len (_cea ._efe ));
+if _cea .BitsPerComponent !=nil {_cbc +="\u002d\u0020\u0042\u0050\u0043\u0020"+_cea .BitsPerComponent .WriteString ()+"\u000a";};if _cea .ColorSpace !=nil {_cbc +="\u002d\u0020\u0043S\u0020"+_cea .ColorSpace .WriteString ()+"\u000a";};if _cea .Decode !=nil {_cbc +="\u002d\u0020\u0044\u0020"+_cea .Decode .WriteString ()+"\u000a";
+};if _cea .DecodeParms !=nil {_cbc +="\u002d\u0020\u0044P\u0020"+_cea .DecodeParms .WriteString ()+"\u000a";};if _cea .Filter !=nil {_cbc +="\u002d\u0020\u0046\u0020"+_cea .Filter .WriteString ()+"\u000a";};if _cea .Height !=nil {_cbc +="\u002d\u0020\u0048\u0020"+_cea .Height .WriteString ()+"\u000a";
+};if _cea .ImageMask !=nil {_cbc +="\u002d\u0020\u0049M\u0020"+_cea .ImageMask .WriteString ()+"\u000a";};if _cea .Intent !=nil {_cbc +="\u002d \u0049\u006e\u0074\u0065\u006e\u0074 "+_cea .Intent .WriteString ()+"\u000a";};if _cea .Interpolate !=nil {_cbc +="\u002d\u0020\u0049\u0020"+_cea .Interpolate .WriteString ()+"\u000a";
+};if _cea .Width !=nil {_cbc +="\u002d\u0020\u0057\u0020"+_cea .Width .WriteString ()+"\u000a";};return _cbc ;};
 
-// Transform returns coordinates x, y transformed by the CTM.
-func (_dffc *GraphicsState )Transform (x ,y float64 )(float64 ,float64 ){return _dffc .CTM .Transform (x ,y );};
-
-// Add_SCN_pattern appends 'SCN' operand to the content stream for pattern `name`:
-// SCN with name attribute (for pattern). Syntax: c1 ... cn name SCN.
+// Add_g appends 'g' operand to the content stream:
+// Same as G but used for nonstroking operations.
 //
 // See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
-func (_bbb *ContentCreator )Add_SCN_pattern (name _e .PdfObjectName ,c ...float64 )*ContentCreator {_ade :=ContentStreamOperation {};_ade .Operand ="\u0053\u0043\u004e";_ade .Params =_caddf (c );_ade .Params =append (_ade .Params ,_e .MakeName (string (name )));
-_bbb ._bbe =append (_bbb ._bbe ,&_ade );return _bbb ;};
+func (_ebg *ContentCreator )Add_g (gray float64 )*ContentCreator {_cae :=ContentStreamOperation {};_cae .Operand ="\u0067";_cae .Params =_dcgf ([]float64 {gray });_ebg ._d =append (_ebg ._d ,&_cae );return _ebg ;};
 
-// Add_BMC appends 'BMC' operand to the content stream:
-// Begins a marked-content sequence terminated by a balancing EMC operator.
-// `tag` shall be a name object indicating the role or significance of
-// the sequence.
+// WrapIfNeeded wraps the entire contents within q ... Q.  If unbalanced, then adds extra Qs at the end.
+// Only does if needed. Ensures that when adding new content, one start with all states
+// in the default condition.
+func (_eag *ContentStreamOperations )WrapIfNeeded ()*ContentStreamOperations {if len (*_eag )==0{return _eag ;};if _eag .isWrapped (){return _eag ;};*_eag =append ([]*ContentStreamOperation {{Operand :"\u0071"}},*_eag ...);_ae :=0;for _ ,_bf :=range *_eag {if _bf .Operand =="\u0071"{_ae ++;
+}else if _bf .Operand =="\u0051"{_ae --;};};for _ae > 0{*_eag =append (*_eag ,&ContentStreamOperation {Operand :"\u0051"});_ae --;};return _eag ;};
+
+// Add_rg appends 'rg' operand to the content stream:
+// Same as RG but used for nonstroking operations.
 //
-// See section 14.6 "Marked Content" and Table 320 (p. 561 PDF32000_2008).
-func (_cefg *ContentCreator )Add_BMC (tag _e .PdfObjectName )*ContentCreator {_cdc :=ContentStreamOperation {};_cdc .Operand ="\u0042\u004d\u0043";_cdc .Params =_gfgf ([]_e .PdfObjectName {tag });_cefg ._bbe =append (_cefg ._bbe ,&_cdc );return _cefg ;
-};
+// See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
+func (_cdc *ContentCreator )Add_rg (r ,g ,b float64 )*ContentCreator {_cfd :=ContentStreamOperation {};_cfd .Operand ="\u0072\u0067";_cfd .Params =_dcgf ([]float64 {r ,g ,b });_cdc ._d =append (_cdc ._d ,&_cfd );return _cdc ;};
 
-// String returns `ops.Bytes()` as a string.
-func (_ca *ContentStreamOperations )String ()string {return string (_ca .Bytes ())};
+// SetNonStrokingColor sets the non-stroking `color` where color can be one of
+// PdfColorDeviceGray, PdfColorDeviceRGB, or PdfColorDeviceCMYK.
+func (_gfc *ContentCreator )SetNonStrokingColor (color _ab .PdfColor )*ContentCreator {switch _ebb :=color .(type ){case *_ab .PdfColorDeviceGray :_gfc .Add_g (_ebb .Val ());case *_ab .PdfColorDeviceRGB :_gfc .Add_rg (_ebb .R (),_ebb .G (),_ebb .B ());
+case *_ab .PdfColorDeviceCMYK :_gfc .Add_k (_ebb .C (),_ebb .M (),_ebb .Y (),_ebb .K ());case *_ab .PdfColorPatternType2 :_gfc .Add_cs (*_a .MakeName ("\u0050a\u0074\u0074\u0065\u0072\u006e"));_gfc .Add_scn_pattern (_ebb .PatternName );case *_ab .PdfColorPatternType3 :_gfc .Add_cs (*_a .MakeName ("\u0050a\u0074\u0074\u0065\u0072\u006e"));
+_gfc .Add_scn_pattern (_ebb .PatternName );default:_fbg .Log .Debug ("\u0053\u0065\u0074N\u006f\u006e\u0053\u0074\u0072\u006f\u006b\u0069\u006e\u0067\u0043\u006f\u006c\u006f\u0072\u003a\u0020\u0075\u006e\u0073\u0075\u0070\u0070\u006f\u0072\u0074\u0065\u0064\u0020c\u006f\u006c\u006f\u0072\u003a\u0020\u0025\u0054",_ebb );
+};return _gfc ;};
 
-// Push pushes `gs` on the `gsStack`.
-func (_acge *GraphicStateStack )Push (gs GraphicsState ){*_acge =append (*_acge ,gs )};func (_ged *ContentStreamProcessor )handleCommand_SCN (_fede *ContentStreamOperation ,_abag *_gc .PdfPageResources )error {_bcag :=_ged ._fgfg .ColorspaceStroking ;if !_cfec (_bcag ){if len (_fede .Params )!=_bcag .GetNumComponents (){_gd .Log .Debug ("I\u006e\u0076\u0061\u006c\u0069\u0064 \u006e\u0075\u006d\u0062\u0065\u0072 \u006f\u0066\u0020\u0070\u0061\u0072\u0061m\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020S\u0043");
-_gd .Log .Debug ("\u004e\u0075mb\u0065\u0072\u0020%\u0064\u0020\u006e\u006ft m\u0061tc\u0068\u0069\u006e\u0067\u0020\u0063\u006flo\u0072\u0073\u0070\u0061\u0063\u0065\u0020%\u0054",len (_fede .Params ),_bcag );return _ba .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");
-};};_fdab ,_eeca :=_bcag .ColorFromPdfObjects (_fede .Params );if _eeca !=nil {return _eeca ;};_ged ._fgfg .ColorStroking =_fdab ;return nil ;};
-
-// Add_TL appends 'TL' operand to the content stream:
-// Set leading.
-//
-// See section 9.3 "Text State Parameters and Operators" and
-// Table 105 (pp. 251-252 PDF32000_2008).
-func (_fcdg *ContentCreator )Add_TL (leading float64 )*ContentCreator {_eda :=ContentStreamOperation {};_eda .Operand ="\u0054\u004c";_eda .Params =_caddf ([]float64 {leading });_fcdg ._bbe =append (_fcdg ._bbe ,&_eda );return _fcdg ;};
+// Bytes converts a set of content stream operations to a content stream byte presentation,
+// i.e. the kind that can be stored as a PDF stream or string format.
+func (_eeg *ContentStreamOperations )Bytes ()[]byte {var _ba _fa .Buffer ;for _ ,_ec :=range *_eeg {if _ec ==nil {continue ;};if _ec .Operand =="\u0042\u0049"{_ba .WriteString (_ec .Operand +"\u000a");_ba .WriteString (_ec .Params [0].WriteString ());}else {for _ ,_gb :=range _ec .Params {_ba .WriteString (_gb .WriteString ());
+_ba .WriteString ("\u0020");};_ba .WriteString (_ec .Operand +"\u000a");};};return _ba .Bytes ();};func (_fgda *ContentStreamProcessor )getColorspace (_dffe string ,_bfdb *_ab .PdfPageResources )(_ab .PdfColorspace ,error ){switch _dffe {case "\u0044\u0065\u0076\u0069\u0063\u0065\u0047\u0072\u0061\u0079":return _ab .NewPdfColorspaceDeviceGray (),nil ;
+case "\u0044e\u0076\u0069\u0063\u0065\u0052\u0047B":return _ab .NewPdfColorspaceDeviceRGB (),nil ;case "\u0044\u0065\u0076\u0069\u0063\u0065\u0043\u004d\u0059\u004b":return _ab .NewPdfColorspaceDeviceCMYK (),nil ;case "\u0050a\u0074\u0074\u0065\u0072\u006e":return _ab .NewPdfColorspaceSpecialPattern (),nil ;
+};_gcda ,_cbfd :=_bfdb .GetColorspaceByName (_a .PdfObjectName (_dffe ));if _cbfd {return _gcda ,nil ;};switch _dffe {case "\u0043a\u006c\u0047\u0072\u0061\u0079":return _ab .NewPdfColorspaceCalGray (),nil ;case "\u0043\u0061\u006c\u0052\u0047\u0042":return _ab .NewPdfColorspaceCalRGB (),nil ;
+case "\u004c\u0061\u0062":return _ab .NewPdfColorspaceLab (),nil ;};_fbg .Log .Debug ("\u0055\u006e\u006b\u006e\u006f\u0077\u006e\u0020\u0063\u006f\u006c\u006f\u0072\u0073\u0070a\u0063e\u0020\u0072\u0065\u0071\u0075\u0065\u0073\u0074\u0065\u0064\u003a\u0020\u0025\u0073",_dffe );
+return nil ,_ea .Errorf ("\u0075\u006e\u0073\u0075\u0070\u0070\u006f\u0072\u0074\u0065\u0064 \u0063\u006f\u006c\u006f\u0072\u0073\u0070\u0061\u0063\u0065:\u0020\u0025\u0073",_dffe );};func (_cefb *ContentStreamParser )skipComments ()error {if _ ,_cdcbd :=_cefb .skipSpaces ();
+_cdcbd !=nil {return _cdcbd ;};_gabb :=true ;for {_bgfd ,_ede :=_cefb ._cacd .Peek (1);if _ede !=nil {_fbg .Log .Debug ("\u0045\u0072\u0072\u006f\u0072\u0020\u0025\u0073",_ede .Error ());return _ede ;};if _gabb &&_bgfd [0]!='%'{return nil ;};_gabb =false ;
+if (_bgfd [0]!='\r')&&(_bgfd [0]!='\n'){_cefb ._cacd .ReadByte ();}else {break ;};};return _cefb .skipComments ();};func _dadc (_ega *ContentStreamInlineImage )(*_a .MultiEncoder ,error ){_geg :=_a .NewMultiEncoder ();var _fdfa *_a .PdfObjectDictionary ;
+var _eca []_a .PdfObject ;if _dd :=_ega .DecodeParms ;_dd !=nil {_adg ,_gafd :=_dd .(*_a .PdfObjectDictionary );if _gafd {_fdfa =_adg ;};_aab ,_bgc :=_dd .(*_a .PdfObjectArray );if _bgc {for _ ,_eee :=range _aab .Elements (){if _gda ,_ceg :=_eee .(*_a .PdfObjectDictionary );
+_ceg {_eca =append (_eca ,_gda );}else {_eca =append (_eca ,nil );};};};};_bbc :=_ega .Filter ;if _bbc ==nil {return nil ,_ea .Errorf ("\u0066\u0069\u006c\u0074\u0065\u0072\u0020\u006d\u0069s\u0073\u0069\u006e\u0067");};_gab ,_gag :=_bbc .(*_a .PdfObjectArray );
+if !_gag {return nil ,_ea .Errorf ("m\u0075\u006c\u0074\u0069\u0020\u0066\u0069\u006c\u0074\u0065\u0072\u0020\u0063\u0061\u006e\u0020\u006f\u006el\u0079\u0020\u0062\u0065\u0020\u006d\u0061\u0064\u0065\u0020fr\u006f\u006d\u0020a\u0072r\u0061\u0079");};for _beca ,_aaa :=range _gab .Elements (){_ecac ,_ccgf :=_aaa .(*_a .PdfObjectName );
+if !_ccgf {return nil ,_ea .Errorf ("\u006d\u0075l\u0074\u0069\u0020\u0066i\u006c\u0074e\u0072\u0020\u0061\u0072\u0072\u0061\u0079\u0020e\u006c\u0065\u006d\u0065\u006e\u0074\u0020\u006e\u006f\u0074\u0020\u0061 \u006e\u0061\u006d\u0065");};var _eeed _a .PdfObject ;
+if _fdfa !=nil {_eeed =_fdfa ;}else {if len (_eca )> 0{if _beca >=len (_eca ){return nil ,_ea .Errorf ("\u006d\u0069\u0073\u0073\u0069\u006e\u0067\u0020\u0065\u006c\u0065\u006d\u0065n\u0074\u0073\u0020\u0069\u006e\u0020d\u0065\u0063\u006f\u0064\u0065\u0020\u0070\u0061\u0072\u0061\u006d\u0073\u0020a\u0072\u0072\u0061\u0079");
+};_eeed =_eca [_beca ];};};var _bcba *_a .PdfObjectDictionary ;if _bfb ,_fcdb :=_eeed .(*_a .PdfObjectDictionary );_fcdb {_bcba =_bfb ;};if *_ecac ==_a .StreamEncodingFilterNameFlate ||*_ecac =="\u0046\u006c"{_bcf ,_eec :=_geda (_ega ,_bcba );if _eec !=nil {return nil ,_eec ;
+};_geg .AddEncoder (_bcf );}else if *_ecac ==_a .StreamEncodingFilterNameLZW {_cda ,_dfgd :=_egebf (_ega ,_bcba );if _dfgd !=nil {return nil ,_dfgd ;};_geg .AddEncoder (_cda );}else if *_ecac ==_a .StreamEncodingFilterNameASCIIHex {_cbd :=_a .NewASCIIHexEncoder ();
+_geg .AddEncoder (_cbd );}else if *_ecac ==_a .StreamEncodingFilterNameASCII85 ||*_ecac =="\u0041\u0038\u0035"{_ddc :=_a .NewASCII85Encoder ();_geg .AddEncoder (_ddc );}else {_fbg .Log .Error ("U\u006e\u0073\u0075\u0070po\u0072t\u0065\u0064\u0020\u0066\u0069l\u0074\u0065\u0072\u0020\u0025\u0073",*_ecac );
+return nil ,_ea .Errorf ("\u0069\u006eva\u006c\u0069\u0064 \u0066\u0069\u006c\u0074er \u0069n \u006d\u0075\u006c\u0074\u0069\u0020\u0066il\u0074\u0065\u0072\u0020\u0061\u0072\u0072a\u0079");};};return _geg ,nil ;};
 
 // Add_BT appends 'BT' operand to the content stream:
 // Begin text.
 //
 // See section 9.4 "Text Objects" and Table 107 (p. 256 PDF32000_2008).
-func (_dcb *ContentCreator )Add_BT ()*ContentCreator {_cfba :=ContentStreamOperation {};_cfba .Operand ="\u0042\u0054";_dcb ._bbe =append (_dcb ._bbe ,&_cfba );return _dcb ;};
+func (_fbd *ContentCreator )Add_BT ()*ContentCreator {_gbb :=ContentStreamOperation {};_gbb .Operand ="\u0042\u0054";_fbd ._d =append (_fbd ._d ,&_gbb );return _fbd ;};
 
-// Add_Tj appends 'Tj' operand to the content stream:
-// Show a text string.
-//
-// See section 9.4.3 "Text Showing Operators" and
-// Table 209 (pp. 258-259 PDF32000_2008).
-func (_bbfc *ContentCreator )Add_Tj (textstr _e .PdfObjectString )*ContentCreator {_ggfa :=ContentStreamOperation {};_ggfa .Operand ="\u0054\u006a";_ggfa .Params =_dbfgf ([]_e .PdfObjectString {textstr });_bbfc ._bbe =append (_bbfc ._bbe ,&_ggfa );return _bbfc ;
-};
-
-// All returns true if `hce` is equivalent to HandlerConditionEnumAllOperands.
-func (_cecg HandlerConditionEnum )All ()bool {return _cecg ==HandlerConditionEnumAllOperands };
-
-// Translate applies a simple x-y translation to the transformation matrix.
-func (_cdd *ContentCreator )Translate (tx ,ty float64 )*ContentCreator {return _cdd .Add_cm (1,0,0,1,tx ,ty );};
-
-// GraphicsState is a basic graphics state implementation for PDF processing.
-// Initially only implementing and tracking a portion of the information specified. Easy to add more.
-type GraphicsState struct{ColorspaceStroking _gc .PdfColorspace ;ColorspaceNonStroking _gc .PdfColorspace ;ColorStroking _gc .PdfColor ;ColorNonStroking _gc .PdfColor ;CTM _adb .Matrix ;};
-
-// Add_S appends 'S' operand to the content stream: Stroke the path.
-//
-// See section 8.5.3 "Path Painting Operators" and Table 60 (p. 143 PDF32000_2008).
-func (_gb *ContentCreator )Add_S ()*ContentCreator {_gcdb :=ContentStreamOperation {};_gcdb .Operand ="\u0053";_gb ._bbe =append (_gb ._bbe ,&_gcdb );return _gb ;};
-
-// HasUnclosedQ checks if all the `q` operator is properly closed by `Q` operator.
-func (_bc *ContentStreamOperations )HasUnclosedQ ()bool {_cb :=0;for _ ,_ae :=range *_bc {if _ae .Operand =="\u0071"{_cb ++;}else if _ae .Operand =="\u0051"{_cb --;};};return _cb !=0;};
-
-// GraphicStateStack represents a stack of GraphicsState.
-type GraphicStateStack []GraphicsState ;func (_eccd *ContentStreamProcessor )getColorspace (_dec string ,_acece *_gc .PdfPageResources )(_gc .PdfColorspace ,error ){switch _dec {case "\u0044\u0065\u0076\u0069\u0063\u0065\u0047\u0072\u0061\u0079":return _gc .NewPdfColorspaceDeviceGray (),nil ;
-case "\u0044e\u0076\u0069\u0063\u0065\u0052\u0047B":return _gc .NewPdfColorspaceDeviceRGB (),nil ;case "\u0044\u0065\u0076\u0069\u0063\u0065\u0043\u004d\u0059\u004b":return _gc .NewPdfColorspaceDeviceCMYK (),nil ;case "\u0050a\u0074\u0074\u0065\u0072\u006e":return _gc .NewPdfColorspaceSpecialPattern (),nil ;
-};_aae ,_ead :=_acece .GetColorspaceByName (_e .PdfObjectName (_dec ));if _ead {return _aae ,nil ;};switch _dec {case "\u0043a\u006c\u0047\u0072\u0061\u0079":return _gc .NewPdfColorspaceCalGray (),nil ;case "\u0043\u0061\u006c\u0052\u0047\u0042":return _gc .NewPdfColorspaceCalRGB (),nil ;
-case "\u004c\u0061\u0062":return _gc .NewPdfColorspaceLab (),nil ;};_gd .Log .Debug ("\u0055\u006e\u006b\u006e\u006f\u0077\u006e\u0020\u0063\u006f\u006c\u006f\u0072\u0073\u0070a\u0063e\u0020\u0072\u0065\u0071\u0075\u0065\u0073\u0074\u0065\u0064\u003a\u0020\u0025\u0073",_dec );
-return nil ,_fd .Errorf ("\u0075\u006e\u0073\u0075\u0070\u0070\u006f\u0072\u0074\u0065\u0064 \u0063\u006f\u006c\u006f\u0072\u0073\u0070\u0061\u0063\u0065:\u0020\u0025\u0073",_dec );};
-
-// GetEncoder returns the encoder of the inline image.
-func (_cad *ContentStreamInlineImage )GetEncoder ()(_e .StreamEncoder ,error ){return _gfa (_cad )};
-
-// HandlerFunc is the function syntax that the ContentStreamProcessor handler must implement.
-type HandlerFunc func (_egge *ContentStreamOperation ,_bbge GraphicsState ,_fece *_gc .PdfPageResources )error ;
-
-// Add_b appends 'b' operand to the content stream:
-// Close, fill and then stroke the path (nonzero winding number rule).
-//
-// See section 8.5.3 "Path Painting Operators" and Table 60 (p. 143 PDF32000_2008).
-func (_ecc *ContentCreator )Add_b ()*ContentCreator {_aec :=ContentStreamOperation {};_aec .Operand ="\u0062";_ecc ._bbe =append (_ecc ._bbe ,&_aec );return _ecc ;};
-
-// Add_W_starred appends 'W*' operand to the content stream:
-// Modify the current clipping path by intersecting with the current path (even odd rule).
-//
-// See section 8.5.4 "Clipping Path Operators" and Table 61 (p. 146 PDF32000_2008).
-func (_ddb *ContentCreator )Add_W_starred ()*ContentCreator {_cac :=ContentStreamOperation {};_cac .Operand ="\u0057\u002a";_ddb ._bbe =append (_ddb ._bbe ,&_cac );return _ddb ;};func (_gaf *ContentStreamProcessor )handleCommand_cs (_dbfg *ContentStreamOperation ,_dcbd *_gc .PdfPageResources )error {if len (_dbfg .Params )< 1{_gd .Log .Debug ("\u0049\u006e\u0076\u0061\u006c\u0069d\u0020\u0043\u0053\u0020\u0063\u006f\u006d\u006d\u0061\u006e\u0064\u002c\u0020s\u006b\u0069\u0070\u0070\u0069\u006e\u0067 \u006f\u0076\u0065\u0072");
-return _ba .New ("\u0074o\u006f \u0066\u0065\u0077\u0020\u0070a\u0072\u0061m\u0065\u0074\u0065\u0072\u0073");};if len (_dbfg .Params )> 1{_gd .Log .Debug ("\u0043\u0053\u0020\u0063\u006f\u006d\u006d\u0061n\u0064\u0020\u0077it\u0068\u0020\u0074\u006f\u006f\u0020m\u0061\u006e\u0079\u0020\u0070\u0061\u0072\u0061\u006d\u0065\u0074\u0065\u0072\u0073\u0020-\u0020\u0063\u006f\u006e\u0074\u0069\u006e\u0075i\u006e\u0067");
-return _ba .New ("\u0074\u006f\u006f\u0020ma\u006e\u0079\u0020\u0070\u0061\u0072\u0061\u006d\u0065\u0074\u0065\u0072\u0073");};_fccc ,_abae :=_dbfg .Params [0].(*_e .PdfObjectName );if !_abae {_gd .Log .Debug ("\u0045\u0052\u0052\u004f\u0052\u003a\u0020C\u0053\u0020\u0063o\u006d\u006d\u0061n\u0064\u0020w\u0069\u0074\u0068\u0020\u0069\u006ev\u0061li\u0064\u0020\u0070\u0061\u0072\u0061\u006d\u0065\u0074\u0065\u0072\u002c\u0020\u0073\u006b\u0069\u0070\u0070\u0069\u006e\u0067\u0020\u006f\u0076\u0065\u0072");
-return _ba .New ("\u0074\u0079p\u0065\u0020\u0063h\u0065\u0063\u006b\u0020\u0065\u0072\u0072\u006f\u0072");};_gcdfa ,_fggb :=_gaf .getColorspace (string (*_fccc ),_dcbd );if _fggb !=nil {return _fggb ;};_gaf ._fgfg .ColorspaceNonStroking =_gcdfa ;_dfff ,_fggb :=_gaf .getInitialColor (_gcdfa );
-if _fggb !=nil {return _fggb ;};_gaf ._fgfg .ColorNonStroking =_dfff ;return nil ;};
-
-// RotateDeg applies a rotation to the transformation matrix.
-func (_dbfd *ContentCreator )RotateDeg (angle float64 )*ContentCreator {_ed :=_ad .Cos (angle *_ad .Pi /180.0);_eb :=_ad .Sin (angle *_ad .Pi /180.0);_ede :=-_ad .Sin (angle *_ad .Pi /180.0);_ebg :=_ad .Cos (angle *_ad .Pi /180.0);return _dbfd .Add_cm (_ed ,_eb ,_ede ,_ebg ,0,0);
-};
-
-// Add_ri adds 'ri' operand to the content stream, which sets the color rendering intent.
-//
-// See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
-func (_ace *ContentCreator )Add_ri (intent _e .PdfObjectName )*ContentCreator {_eg :=ContentStreamOperation {};_eg .Operand ="\u0072\u0069";_eg .Params =_gfgf ([]_e .PdfObjectName {intent });_ace ._bbe =append (_ace ._bbe ,&_eg );return _ace ;};
-
-// Add_scn appends 'scn' operand to the content stream:
-// Same as SC but for nonstroking operations.
-//
-// See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
-func (_bbc *ContentCreator )Add_scn (c ...float64 )*ContentCreator {_acb :=ContentStreamOperation {};_acb .Operand ="\u0073\u0063\u006e";_acb .Params =_caddf (c );_bbc ._bbe =append (_bbc ._bbe ,&_acb );return _bbc ;};func _caddf (_bafg []float64 )[]_e .PdfObject {var _ecdb []_e .PdfObject ;
-for _ ,_fced :=range _bafg {_ecdb =append (_ecdb ,_e .MakeFloat (_fced ));};return _ecdb ;};
-
-// Pop pops and returns the topmost GraphicsState off the `gsStack`.
-func (_bea *GraphicStateStack )Pop ()GraphicsState {_acfa :=(*_bea )[len (*_bea )-1];*_bea =(*_bea )[:len (*_bea )-1];return _acfa ;};
-
-// Add_Tstar appends 'T*' operand to the content stream:
-// Move to the start of next line.
-//
-// See section 9.4.2 "Text Positioning Operators" and
-// Table 108 (pp. 257-258 PDF32000_2008).
-func (_cacd *ContentCreator )Add_Tstar ()*ContentCreator {_fe :=ContentStreamOperation {};_fe .Operand ="\u0054\u002a";_cacd ._bbe =append (_cacd ._bbe ,&_fe );return _cacd ;};
-
-// AddOperand adds a specified operand.
-func (_dbf *ContentCreator )AddOperand (op ContentStreamOperation )*ContentCreator {_dbf ._bbe =append (_dbf ._bbe ,&op );return _dbf ;};
-
-// Add_Q adds 'Q' operand to the content stream: Pops the most recently stored state from the stack.
-//
-// See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
-func (_age *ContentCreator )Add_Q ()*ContentCreator {_eed :=ContentStreamOperation {};_eed .Operand ="\u0051";_age ._bbe =append (_age ._bbe ,&_eed );return _age ;};const (HandlerConditionEnumOperand HandlerConditionEnum =iota ;HandlerConditionEnumAllOperands ;
-);
-
-// Add_Tc appends 'Tc' operand to the content stream:
-// Set character spacing.
+// Add_Tf appends 'Tf' operand to the content stream:
+// Set font and font size specified by font resource `fontName` and `fontSize`.
 //
 // See section 9.3 "Text State Parameters and Operators" and
 // Table 105 (pp. 251-252 PDF32000_2008).
-func (_agf *ContentCreator )Add_Tc (charSpace float64 )*ContentCreator {_ggg :=ContentStreamOperation {};_ggg .Operand ="\u0054\u0063";_ggg .Params =_caddf ([]float64 {charSpace });_agf ._bbe =append (_agf ._bbe ,&_ggg );return _agf ;};
+func (_bfcb *ContentCreator )Add_Tf (fontName _a .PdfObjectName ,fontSize float64 )*ContentCreator {_gaa :=ContentStreamOperation {};_gaa .Operand ="\u0054\u0066";_gaa .Params =_ecee ([]_a .PdfObjectName {fontName });_gaa .Params =append (_gaa .Params ,_dcgf ([]float64 {fontSize })...);
+_bfcb ._d =append (_bfcb ._d ,&_gaa );return _bfcb ;};
 
-// NewContentStreamParser creates a new instance of the content stream parser from an input content
-// stream string.
-func NewContentStreamParser (contentStr string )*ContentStreamParser {_fdd :=ContentStreamParser {};contentStr =string (_bffb .ReplaceAll ([]byte (contentStr ),[]byte ("\u002f")));_ffb :=_g .NewBufferString (contentStr +"\u000a");_fdd ._dbc =_a .NewReader (_ffb );
-return &_fdd ;};
-
-// String is same as Bytes() except returns as a string for convenience.
-func (_cfa *ContentCreator )String ()string {return string (_cfa ._bbe .Bytes ())};
-
-// NewContentStreamProcessor returns a new ContentStreamProcessor for operations `ops`.
-func NewContentStreamProcessor (ops []*ContentStreamOperation )*ContentStreamProcessor {_aaag :=ContentStreamProcessor {};_aaag ._dbce =GraphicStateStack {};_dccgf :=GraphicsState {};_aaag ._fgfg =_dccgf ;_aaag ._ffgg =[]handlerEntry {};_aaag ._faff =0;
-_aaag ._adac =ops ;return &_aaag ;};func (_dbbfd *ContentStreamProcessor )handleCommand_rg (_dcca *ContentStreamOperation ,_daaf *_gc .PdfPageResources )error {_ffd :=_gc .NewPdfColorspaceDeviceRGB ();if len (_dcca .Params )!=_ffd .GetNumComponents (){_gd .Log .Debug ("I\u006e\u0076\u0061\u006c\u0069\u0064 \u006e\u0075\u006d\u0062\u0065\u0072 \u006f\u0066\u0020\u0070\u0061\u0072\u0061m\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020S\u0043");
-_gd .Log .Debug ("\u004e\u0075mb\u0065\u0072\u0020%\u0064\u0020\u006e\u006ft m\u0061tc\u0068\u0069\u006e\u0067\u0020\u0063\u006flo\u0072\u0073\u0070\u0061\u0063\u0065\u0020%\u0054",len (_dcca .Params ),_ffd );return _ba .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");
-};_adca ,_eagd :=_ffd .ColorFromPdfObjects (_dcca .Params );if _eagd !=nil {return _eagd ;};_dbbfd ._fgfg .ColorspaceNonStroking =_ffd ;_dbbfd ._fgfg .ColorNonStroking =_adca ;return nil ;};
-
-// ExtractText parses and extracts all text data in content streams and returns as a string.
-// Does not take into account Encoding table, the output is simply the character codes.
+// Add_CS appends 'CS' operand to the content stream:
+// Set the current colorspace for stroking operations.
 //
-// Deprecated: More advanced text extraction is offered in package extractor with character encoding support.
-func (_ff *ContentStreamParser )ExtractText ()(string ,error ){_fab ,_aed :=_ff .Parse ();if _aed !=nil {return "",_aed ;};_fc :=false ;_baf ,_df :=float64 (-1),float64 (-1);_cba :="";for _ ,_dfa :=range *_fab {if _dfa .Operand =="\u0042\u0054"{_fc =true ;
-}else if _dfa .Operand =="\u0045\u0054"{_fc =false ;};if _dfa .Operand =="\u0054\u0064"||_dfa .Operand =="\u0054\u0044"||_dfa .Operand =="\u0054\u002a"{_cba +="\u000a";};if _dfa .Operand =="\u0054\u006d"{if len (_dfa .Params )!=6{continue ;};_ge ,_fdc :=_dfa .Params [4].(*_e .PdfObjectFloat );
-if !_fdc {_dfb ,_ef :=_dfa .Params [4].(*_e .PdfObjectInteger );if !_ef {continue ;};_ge =_e .MakeFloat (float64 (*_dfb ));};_afa ,_fdc :=_dfa .Params [5].(*_e .PdfObjectFloat );if !_fdc {_bga ,_bdb :=_dfa .Params [5].(*_e .PdfObjectInteger );if !_bdb {continue ;
-};_afa =_e .MakeFloat (float64 (*_bga ));};if _df ==-1{_df =float64 (*_afa );}else if _df > float64 (*_afa ){_cba +="\u000a";_baf =float64 (*_ge );_df =float64 (*_afa );continue ;};if _baf ==-1{_baf =float64 (*_ge );}else if _baf < float64 (*_ge ){_cba +="\u0009";
-_baf =float64 (*_ge );};};if _fc &&_dfa .Operand =="\u0054\u004a"{if len (_dfa .Params )< 1{continue ;};_dg ,_dd :=_dfa .Params [0].(*_e .PdfObjectArray );if !_dd {return "",_fd .Errorf ("\u0069\u006ev\u0061\u006c\u0069\u0064 \u0070\u0061r\u0061\u006d\u0065\u0074\u0065\u0072\u0020\u0074y\u0070\u0065\u002c\u0020\u006e\u006f\u0020\u0061\u0072\u0072\u0061\u0079 \u0028\u0025\u0054\u0029",_dfa .Params [0]);
-};for _ ,_gcd :=range _dg .Elements (){switch _bbd :=_gcd .(type ){case *_e .PdfObjectString :_cba +=_bbd .Str ();case *_e .PdfObjectFloat :if *_bbd < -100{_cba +="\u0020";};case *_e .PdfObjectInteger :if *_bbd < -100{_cba +="\u0020";};};};}else if _fc &&_dfa .Operand =="\u0054\u006a"{if len (_dfa .Params )< 1{continue ;
-};_cd ,_bafc :=_dfa .Params [0].(*_e .PdfObjectString );if !_bafc {return "",_fd .Errorf ("\u0069\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0070\u0061\u0072\u0061\u006de\u0074\u0065\u0072\u0020\u0074\u0079p\u0065\u002c\u0020\u006e\u006f\u0074\u0020\u0073\u0074\u0072\u0069\u006e\u0067 \u0028\u0025\u0054\u0029",_dfa .Params [0]);
-};_cba +=_cd .Str ();};};return _cba ,nil ;};
-
-// ToImage exports the inline image to Image which can be transformed or exported easily.
-// Page resources are needed to look up colorspace information.
-func (_bcg *ContentStreamInlineImage )ToImage (resources *_gc .PdfPageResources )(*_gc .Image ,error ){_adc ,_efda :=_bcg .toImageBase (resources );if _efda !=nil {return nil ,_efda ;};_cfgc ,_efda :=_gfa (_bcg );if _efda !=nil {return nil ,_efda ;};_gce ,_dgb :=_e .GetDict (_bcg .DecodeParms );
-if _dgb {_cfgc .UpdateParams (_gce );};_gd .Log .Trace ("\u0065n\u0063o\u0064\u0065\u0072\u003a\u0020\u0025\u002b\u0076\u0020\u0025\u0054",_cfgc ,_cfgc );_gd .Log .Trace ("\u0069\u006e\u006c\u0069\u006e\u0065\u0020\u0069\u006d\u0061\u0067\u0065:\u0020\u0025\u002b\u0076",_bcg );
-_ccg ,_efda :=_cfgc .DecodeBytes (_bcg ._eecg );if _efda !=nil {return nil ,_efda ;};_ceda :=&_gc .Image {Width :int64 (_adc .Width ),Height :int64 (_adc .Height ),BitsPerComponent :int64 (_adc .BitsPerComponent ),ColorComponents :_adc .ColorComponents ,Data :_ccg };
-if len (_adc .Decode )> 0{for _faa :=0;_faa < len (_adc .Decode );_faa ++{_adc .Decode [_faa ]*=float64 ((int (1)<<uint (_adc .BitsPerComponent ))-1);};_ceda .SetDecode (_adc .Decode );};return _ceda ,nil ;};
-
-// ParseInlineImage parses an inline image from a content stream, both reading its properties and binary data.
-// When called, "BI" has already been read from the stream.  This function
-// finishes reading through "EI" and then returns the ContentStreamInlineImage.
-func (_eebf *ContentStreamParser )ParseInlineImage ()(*ContentStreamInlineImage ,error ){_fee :=ContentStreamInlineImage {};for {_eebf .skipSpaces ();_eag ,_cce ,_deb :=_eebf .parseObject ();if _deb !=nil {return nil ,_deb ;};if !_cce {_cafe ,_bbac :=_e .GetName (_eag );
-if !_bbac {_gd .Log .Debug ("\u0049\u006e\u0076\u0061\u006ci\u0064\u0020\u0069\u006e\u006c\u0069\u006e\u0065\u0020\u0069\u006d\u0061\u0067e\u0020\u0070\u0072\u006f\u0070\u0065\u0072\u0074\u0079\u0020\u0028\u0065\u0078\u0070\u0065\u0063\u0074\u0069\u006e\u0067\u0020\u006e\u0061\u006d\u0065\u0029\u0020\u002d\u0020\u0025T",_eag );
-return nil ,_fd .Errorf ("\u0069\u006e\u0076\u0061\u006ci\u0064\u0020\u0069\u006e\u006c\u0069\u006e\u0065\u0020\u0069\u006d\u0061\u0067e\u0020\u0070\u0072\u006f\u0070\u0065\u0072\u0074\u0079\u0020\u0028\u0065\u0078\u0070\u0065\u0063\u0074\u0069\u006e\u0067\u0020\u006e\u0061\u006d\u0065\u0029\u0020\u002d\u0020\u0025T",_eag );
-};_efcf ,_bcce ,_gegb :=_eebf .parseObject ();if _gegb !=nil {return nil ,_gegb ;};if _bcce {return nil ,_fd .Errorf ("\u006eo\u0074\u0020\u0065\u0078\u0070\u0065\u0063\u0074\u0069\u006e\u0067 \u0061\u006e\u0020\u006f\u0070\u0065\u0072\u0061\u006e\u0064");
-};switch *_cafe {case "\u0042\u0050\u0043","\u0042\u0069t\u0073\u0050\u0065r\u0043\u006f\u006d\u0070\u006f\u006e\u0065\u006e\u0074":_fee .BitsPerComponent =_efcf ;case "\u0043\u0053","\u0043\u006f\u006c\u006f\u0072\u0053\u0070\u0061\u0063\u0065":_fee .ColorSpace =_efcf ;
-case "\u0044","\u0044\u0065\u0063\u006f\u0064\u0065":_fee .Decode =_efcf ;case "\u0044\u0050","D\u0065\u0063\u006f\u0064\u0065\u0050\u0061\u0072\u006d\u0073":_fee .DecodeParms =_efcf ;case "\u0046","\u0046\u0069\u006c\u0074\u0065\u0072":_fee .Filter =_efcf ;
-case "\u0048","\u0048\u0065\u0069\u0067\u0068\u0074":_fee .Height =_efcf ;case "\u0049\u004d","\u0049m\u0061\u0067\u0065\u004d\u0061\u0073k":_fee .ImageMask =_efcf ;case "\u0049\u006e\u0074\u0065\u006e\u0074":_fee .Intent =_efcf ;case "\u0049","I\u006e\u0074\u0065\u0072\u0070\u006f\u006c\u0061\u0074\u0065":_fee .Interpolate =_efcf ;
-case "\u0057","\u0057\u0069\u0064t\u0068":_fee .Width =_efcf ;case "\u004c\u0065\u006e\u0067\u0074\u0068","\u0053u\u0062\u0074\u0079\u0070\u0065","\u0054\u0079\u0070\u0065":_gd .Log .Debug ("\u0049\u0067\u006e\u006fr\u0069\u006e\u0067\u0020\u0069\u006e\u006c\u0069\u006e\u0065 \u0070a\u0072\u0061\u006d\u0065\u0074\u0065\u0072 \u0025\u0073",*_cafe );
-default:return nil ,_fd .Errorf ("\u0075\u006e\u006b\u006e\u006f\u0077n\u0020\u0069\u006e\u006c\u0069\u006e\u0065\u0020\u0069\u006d\u0061\u0067\u0065 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0020\u0025\u0073",*_cafe );};};if _cce {_acde ,_bbca :=_eag .(*_e .PdfObjectString );
-if !_bbca {return nil ,_fd .Errorf ("\u0066a\u0069\u006ce\u0064\u0020\u0074o\u0020\u0072\u0065\u0061\u0064\u0020\u0069n\u006c\u0069\u006e\u0065\u0020\u0069m\u0061\u0067\u0065\u0020\u002d\u0020\u0069\u006e\u0076\u0061\u006ci\u0064\u0020\u006f\u0070\u0065\u0072\u0061\u006e\u0064");
-};if _acde .Str ()=="\u0045\u0049"{_gd .Log .Trace ("\u0049n\u006c\u0069\u006e\u0065\u0020\u0069\u006d\u0061\u0067\u0065\u0020f\u0069\u006e\u0069\u0073\u0068\u0065\u0064\u002e\u002e\u002e");return &_fee ,nil ;}else if _acde .Str ()=="\u0049\u0044"{_gd .Log .Trace ("\u0049\u0044\u0020\u0073\u0074\u0061\u0072\u0074");
-_dcd ,_dccg :=_eebf ._dbc .Peek (1);if _dccg !=nil {return nil ,_dccg ;};if _e .IsWhiteSpace (_dcd [0]){_eebf ._dbc .Discard (1);};_fee ._eecg =[]byte {};_bbda :=0;var _faef []byte ;for {_fdbf ,_bdac :=_eebf ._dbc .ReadByte ();if _bdac !=nil {_gd .Log .Debug ("\u0055\u006e\u0061\u0062\u006ce\u0020\u0074\u006f\u0020\u0066\u0069\u006e\u0064\u0020\u0065\u006e\u0064\u0020o\u0066\u0020\u0069\u006d\u0061\u0067\u0065\u0020\u0045\u0049\u0020\u0069\u006e\u0020\u0069\u006e\u006c\u0069\u006e\u0065\u0020\u0069\u006d\u0061\u0067\u0065\u0020\u0064\u0061\u0074a");
-return nil ,_bdac ;};if _bbda ==0{if _e .IsWhiteSpace (_fdbf ){_faef =[]byte {};_faef =append (_faef ,_fdbf );_bbda =1;}else if _fdbf =='E'{_faef =append (_faef ,_fdbf );_bbda =2;}else {_fee ._eecg =append (_fee ._eecg ,_fdbf );};}else if _bbda ==1{_faef =append (_faef ,_fdbf );
-if _fdbf =='E'{_bbda =2;}else {_fee ._eecg =append (_fee ._eecg ,_faef ...);_faef =[]byte {};if _e .IsWhiteSpace (_fdbf ){_bbda =1;}else {_bbda =0;};};}else if _bbda ==2{_faef =append (_faef ,_fdbf );if _fdbf =='I'{_bbda =3;}else {_fee ._eecg =append (_fee ._eecg ,_faef ...);
-_faef =[]byte {};_bbda =0;};}else if _bbda ==3{_faef =append (_faef ,_fdbf );if _e .IsWhiteSpace (_fdbf ){_daf ,_cadd :=_eebf ._dbc .Peek (20);if _cadd !=nil &&_cadd !=_cf .EOF {return nil ,_cadd ;};_bddf :=NewContentStreamParser (string (_daf ));_gdf :=true ;
-for _gbc :=0;_gbc < 3;_gbc ++{_ffg ,_edef ,_bgb :=_bddf .parseObject ();if _bgb !=nil {if _bgb ==_cf .EOF {break ;};_gdf =false ;continue ;};if _edef &&!_abac (_ffg .String ()){_gdf =false ;break ;};};if _gdf {if len (_fee ._eecg )> 100{_gd .Log .Trace ("\u0049\u006d\u0061\u0067\u0065\u0020\u0073\u0074\u0072\u0065\u0061m\u0020\u0028\u0025\u0064\u0029\u003a\u0020\u0025\u0020\u0078 \u002e\u002e\u002e",len (_fee ._eecg ),_fee ._eecg [:100]);
-}else {_gd .Log .Trace ("\u0049\u006d\u0061\u0067e \u0073\u0074\u0072\u0065\u0061\u006d\u0020\u0028\u0025\u0064\u0029\u003a\u0020\u0025 \u0078",len (_fee ._eecg ),_fee ._eecg );};return &_fee ,nil ;};};_fee ._eecg =append (_fee ._eecg ,_faef ...);_faef =[]byte {};
-_bbda =0;};};};};};};
+// See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
+func (_gaf *ContentCreator )Add_CS (name _a .PdfObjectName )*ContentCreator {_cd :=ContentStreamOperation {};_cd .Operand ="\u0043\u0053";_cd .Params =_ecee ([]_a .PdfObjectName {name });_gaf ._d =append (_gaf ._d ,&_cd );return _gaf ;};
 
 // Process processes the entire list of operations. Maintains the graphics state that is passed to any
 // handlers that are triggered during processing (either on specific operators or all).
-func (_acbb *ContentStreamProcessor )Process (resources *_gc .PdfPageResources )error {_acbb ._fgfg .ColorspaceStroking =_gc .NewPdfColorspaceDeviceGray ();_acbb ._fgfg .ColorspaceNonStroking =_gc .NewPdfColorspaceDeviceGray ();_acbb ._fgfg .ColorStroking =_gc .NewPdfColorDeviceGray (0);
-_acbb ._fgfg .ColorNonStroking =_gc .NewPdfColorDeviceGray (0);_acbb ._fgfg .CTM =_adb .IdentityMatrix ();for _ ,_fefd :=range _acbb ._adac {var _cge error ;switch _fefd .Operand {case "\u0071":_acbb ._dbce .Push (_acbb ._fgfg );case "\u0051":if len (_acbb ._dbce )==0{_gd .Log .Debug ("\u0057\u0041\u0052\u004e\u003a\u0020\u0069\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0060\u0051\u0060\u0020\u006f\u0070e\u0072\u0061\u0074\u006f\u0072\u002e\u0020\u0047\u0072\u0061\u0070\u0068\u0069\u0063\u0073\u0020\u0073\u0074\u0061\u0074\u0065 \u0073\u0074\u0061\u0063\u006b\u0020\u0069\u0073\u0020\u0065\u006d\u0070\u0074\u0079.\u0020\u0053\u006bi\u0070\u0070\u0069\u006e\u0067\u002e");
-continue ;};_acbb ._fgfg =_acbb ._dbce .Pop ();case "\u0043\u0053":_cge =_acbb .handleCommand_CS (_fefd ,resources );case "\u0063\u0073":_cge =_acbb .handleCommand_cs (_fefd ,resources );case "\u0053\u0043":_cge =_acbb .handleCommand_SC (_fefd ,resources );
-case "\u0053\u0043\u004e":_cge =_acbb .handleCommand_SCN (_fefd ,resources );case "\u0073\u0063":_cge =_acbb .handleCommand_sc (_fefd ,resources );case "\u0073\u0063\u006e":_cge =_acbb .handleCommand_scn (_fefd ,resources );case "\u0047":_cge =_acbb .handleCommand_G (_fefd ,resources );
-case "\u0067":_cge =_acbb .handleCommand_g (_fefd ,resources );case "\u0052\u0047":_cge =_acbb .handleCommand_RG (_fefd ,resources );case "\u0072\u0067":_cge =_acbb .handleCommand_rg (_fefd ,resources );case "\u004b":_cge =_acbb .handleCommand_K (_fefd ,resources );
-case "\u006b":_cge =_acbb .handleCommand_k (_fefd ,resources );case "\u0063\u006d":_cge =_acbb .handleCommand_cm (_fefd ,resources );};if _cge !=nil {_gd .Log .Debug ("\u0050\u0072\u006f\u0063\u0065\u0073s\u006f\u0072\u0020\u0068\u0061\u006e\u0064\u006c\u0069\u006e\u0067\u0020\u0065r\u0072\u006f\u0072\u0020\u0028\u0025\u0073)\u003a\u0020\u0025\u0076",_fefd .Operand ,_cge );
-_gd .Log .Debug ("\u004f\u0070\u0065r\u0061\u006e\u0064\u003a\u0020\u0025\u0023\u0076",_fefd .Operand );return _cge ;};for _ ,_cbc :=range _acbb ._ffgg {var _bcga error ;if _cbc .Condition .All (){_bcga =_cbc .Handler (_fefd ,_acbb ._fgfg ,resources );
-}else if _cbc .Condition .Operand ()&&_fefd .Operand ==_cbc .Operand {_bcga =_cbc .Handler (_fefd ,_acbb ._fgfg ,resources );};if _bcga !=nil {_gd .Log .Debug ("P\u0072\u006f\u0063\u0065\u0073\u0073o\u0072\u0020\u0068\u0061\u006e\u0064\u006c\u0065\u0072 \u0065\u0072\u0072o\u0072:\u0020\u0025\u0076",_bcga );
-return _bcga ;};};};return nil ;};func (_agbd *ContentStreamParser )parseBool ()(_e .PdfObjectBool ,error ){_fffc ,_dccd :=_agbd ._dbc .Peek (4);if _dccd !=nil {return _e .PdfObjectBool (false ),_dccd ;};if (len (_fffc )>=4)&&(string (_fffc [:4])=="\u0074\u0072\u0075\u0065"){_agbd ._dbc .Discard (4);
-return _e .PdfObjectBool (true ),nil ;};_fffc ,_dccd =_agbd ._dbc .Peek (5);if _dccd !=nil {return _e .PdfObjectBool (false ),_dccd ;};if (len (_fffc )>=5)&&(string (_fffc [:5])=="\u0066\u0061\u006cs\u0065"){_agbd ._dbc .Discard (5);return _e .PdfObjectBool (false ),nil ;
-};return _e .PdfObjectBool (false ),_ba .New ("\u0075n\u0065\u0078\u0070\u0065c\u0074\u0065\u0064\u0020\u0062o\u006fl\u0065a\u006e\u0020\u0073\u0074\u0072\u0069\u006eg");};func (_ebd *ContentStreamInlineImage )toImageBase (_fed *_gc .PdfPageResources )(*_db .ImageBase ,error ){if _ebd ._adff !=nil {return _ebd ._adff ,nil ;
-};_abaa :=_db .ImageBase {};if _ebd .Height ==nil {return nil ,_ba .New ("\u0068e\u0069\u0067\u0068\u0074\u0020\u0061\u0074\u0074\u0072\u0069\u0062u\u0074\u0065\u0020\u006d\u0069\u0073\u0073\u0069\u006e\u0067");};_bbcc ,_gec :=_ebd .Height .(*_e .PdfObjectInteger );
-if !_gec {return nil ,_ba .New ("\u0069\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0068e\u0069\u0067\u0068\u0074");};_abaa .Height =int (*_bbcc );if _ebd .Width ==nil {return nil ,_ba .New ("\u0077\u0069\u0064th\u0020\u0061\u0074\u0074\u0072\u0069\u0062\u0075\u0074\u0065\u0020\u006d\u0069\u0073\u0073\u0069\u006e\u0067");
-};_gggc ,_gec :=_ebd .Width .(*_e .PdfObjectInteger );if !_gec {return nil ,_ba .New ("\u0069\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0077\u0069\u0064\u0074\u0068");};_abaa .Width =int (*_gggc );_eeb ,_gecg :=_ebd .IsMask ();if _gecg !=nil {return nil ,_gecg ;
-};if _eeb {_abaa .BitsPerComponent =1;_abaa .ColorComponents =1;}else {if _ebd .BitsPerComponent ==nil {_gd .Log .Debug ("\u0049\u006el\u0069\u006e\u0065\u0020\u0042\u0069\u0074\u0073\u0020\u0070\u0065\u0072\u0020\u0063\u006f\u006d\u0070\u006f\u006e\u0065\u006e\u0074\u0020\u006d\u0069\u0073\u0073\u0069\u006e\u0067\u0020\u002d\u0020\u0061\u0073\u0073\u0075\u006d\u0069\u006e\u0067\u0020\u0038");
-_abaa .BitsPerComponent =8;}else {_dgf ,_ccbf :=_ebd .BitsPerComponent .(*_e .PdfObjectInteger );if !_ccbf {_gd .Log .Debug ("E\u0072\u0072\u006f\u0072\u0020\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u0062\u0069\u0074\u0073 p\u0065\u0072\u0020\u0063o\u006d\u0070\u006f\u006e\u0065\u006e\u0074\u0020\u0076al\u0075\u0065,\u0020\u0074\u0079\u0070\u0065\u0020\u0025\u0054",_ebd .BitsPerComponent );
-return nil ,_ba .New ("\u0042\u0050\u0043\u0020\u0054\u0079\u0070\u0065\u0020e\u0072\u0072\u006f\u0072");};_abaa .BitsPerComponent =int (*_dgf );};if _ebd .ColorSpace !=nil {_gegg ,_eaeb :=_ebd .GetColorSpace (_fed );if _eaeb !=nil {return nil ,_eaeb ;
-};_abaa .ColorComponents =_gegg .GetNumComponents ();}else {_gd .Log .Debug ("\u0049\u006el\u0069\u006e\u0065\u0020\u0049\u006d\u0061\u0067\u0065\u0020\u0063\u006f\u006c\u006f\u0072\u0073\u0070\u0061\u0063e\u0020\u006e\u006f\u0074\u0020\u0073p\u0065\u0063\u0069\u0066\u0069\u0065\u0064\u0020\u002d\u0020\u0061\u0073\u0073\u0075m\u0069\u006eg\u0020\u0031\u0020\u0063o\u006c\u006f\u0072\u0020\u0063o\u006d\u0070\u006f\u006e\u0065\u006e\u0074");
-_abaa .ColorComponents =1;};};if _fgb ,_bece :=_e .GetArray (_ebd .Decode );_bece {_abaa .Decode ,_gecg =_fgb .ToFloat64Array ();if _gecg !=nil {return nil ,_gecg ;};};_ebd ._adff =&_abaa ;return _ebd ._adff ,nil ;};func (_ggbd *ContentStreamProcessor )handleCommand_K (_abde *ContentStreamOperation ,_ffc *_gc .PdfPageResources )error {_fefb :=_gc .NewPdfColorspaceDeviceCMYK ();
-if len (_abde .Params )!=_fefb .GetNumComponents (){_gd .Log .Debug ("I\u006e\u0076\u0061\u006c\u0069\u0064 \u006e\u0075\u006d\u0062\u0065\u0072 \u006f\u0066\u0020\u0070\u0061\u0072\u0061m\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020S\u0043");
-_gd .Log .Debug ("\u004e\u0075mb\u0065\u0072\u0020%\u0064\u0020\u006e\u006ft m\u0061tc\u0068\u0069\u006e\u0067\u0020\u0063\u006flo\u0072\u0073\u0070\u0061\u0063\u0065\u0020%\u0054",len (_abde .Params ),_fefb );return _ba .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");
-};_afcd ,_dfc :=_fefb .ColorFromPdfObjects (_abde .Params );if _dfc !=nil {return _dfc ;};_ggbd ._fgfg .ColorspaceStroking =_fefb ;_ggbd ._fgfg .ColorStroking =_afcd ;return nil ;};
-
-// Add_RG appends 'RG' operand to the content stream:
-// Set the stroking colorspace to DeviceRGB and sets the r,g,b colors (0-1 each).
-//
-// See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
-func (_efg *ContentCreator )Add_RG (r ,g ,b float64 )*ContentCreator {_eede :=ContentStreamOperation {};_eede .Operand ="\u0052\u0047";_eede .Params =_caddf ([]float64 {r ,g ,b });_efg ._bbe =append (_efg ._bbe ,&_eede );return _efg ;};func (_eefg *ContentStreamParser )parseNull ()(_e .PdfObjectNull ,error ){_ ,_bbff :=_eefg ._dbc .Discard (4);
-return _e .PdfObjectNull {},_bbff ;};
-
-// SetNonStrokingColor sets the non-stroking `color` where color can be one of
-// PdfColorDeviceGray, PdfColorDeviceRGB, or PdfColorDeviceCMYK.
-func (_dbb *ContentCreator )SetNonStrokingColor (color _gc .PdfColor )*ContentCreator {switch _bec :=color .(type ){case *_gc .PdfColorDeviceGray :_dbb .Add_g (_bec .Val ());case *_gc .PdfColorDeviceRGB :_dbb .Add_rg (_bec .R (),_bec .G (),_bec .B ());
-case *_gc .PdfColorDeviceCMYK :_dbb .Add_k (_bec .C (),_bec .M (),_bec .Y (),_bec .K ());case *_gc .PdfColorPatternType2 :_dbb .Add_cs (*_e .MakeName ("\u0050a\u0074\u0074\u0065\u0072\u006e"));_dbb .Add_scn_pattern (_bec .PatternName );case *_gc .PdfColorPatternType3 :_dbb .Add_cs (*_e .MakeName ("\u0050a\u0074\u0074\u0065\u0072\u006e"));
-_dbb .Add_scn_pattern (_bec .PatternName );default:_gd .Log .Debug ("\u0053\u0065\u0074N\u006f\u006e\u0053\u0074\u0072\u006f\u006b\u0069\u006e\u0067\u0043\u006f\u006c\u006f\u0072\u003a\u0020\u0075\u006e\u0073\u0075\u0070\u0070\u006f\u0072\u0074\u0065\u0064\u0020c\u006f\u006c\u006f\u0072\u003a\u0020\u0025\u0054",_bec );
-};return _dbb ;};func _cfec (_ecef _gc .PdfColorspace )bool {_ ,_ebdg :=_ecef .(*_gc .PdfColorspaceSpecialPattern );return _ebdg ;};
-
-// Add_m adds 'm' operand to the content stream: Move the current point to (x,y).
-//
-// See section 8.5.2 "Path Construction Operators" and Table 59 (pp. 140-141 PDF32000_2008).
-func (_fcf *ContentCreator )Add_m (x ,y float64 )*ContentCreator {_ec :=ContentStreamOperation {};_ec .Operand ="\u006d";_ec .Params =_caddf ([]float64 {x ,y });_fcf ._bbe =append (_fcf ._bbe ,&_ec );return _fcf ;};
-
-// Add_c adds 'c' operand to the content stream: Append a Bezier curve to the current path from
-// the current point to (x3,y3) with (x1,x1) and (x2,y2) as control points.
-//
-// See section 8.5.2 "Path Construction Operators" and Table 59 (pp. 140-141 PDF32000_2008).
-func (_eaa *ContentCreator )Add_c (x1 ,y1 ,x2 ,y2 ,x3 ,y3 float64 )*ContentCreator {_gg :=ContentStreamOperation {};_gg .Operand ="\u0063";_gg .Params =_caddf ([]float64 {x1 ,y1 ,x2 ,y2 ,x3 ,y3 });_eaa ._bbe =append (_eaa ._bbe ,&_gg );return _eaa ;};func (_cbf *ContentStreamParser )parseArray ()(*_e .PdfObjectArray ,error ){_ece :=_e .MakeArray ();
-_cbf ._dbc .ReadByte ();for {_cbf .skipSpaces ();_geag ,_egfd :=_cbf ._dbc .Peek (1);if _egfd !=nil {return _ece ,_egfd ;};if _geag [0]==']'{_cbf ._dbc .ReadByte ();break ;};_daae ,_ ,_egfd :=_cbf .parseObject ();if _egfd !=nil {return _ece ,_egfd ;};_ece .Append (_daae );
-};return _ece ,nil ;};
-
-// Add_Do adds 'Do' operation to the content stream:
-// Displays an XObject (image or form) specified by `name`.
-//
-// See section 8.8 "External Objects" and Table 87 (pp. 209-220 PDF32000_2008).
-func (_aedf *ContentCreator )Add_Do (name _e .PdfObjectName )*ContentCreator {_ddd :=ContentStreamOperation {};_ddd .Operand ="\u0044\u006f";_ddd .Params =_gfgf ([]_e .PdfObjectName {name });_aedf ._bbe =append (_aedf ._bbe ,&_ddd );return _aedf ;};
-
-// Add_k appends 'k' operand to the content stream:
-// Same as K but used for nonstroking operations.
-//
-// See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
-func (_eaf *ContentCreator )Add_k (c ,m ,y ,k float64 )*ContentCreator {_agd :=ContentStreamOperation {};_agd .Operand ="\u006b";_agd .Params =_caddf ([]float64 {c ,m ,y ,k });_eaf ._bbe =append (_eaf ._bbe ,&_agd );return _eaf ;};func _ebc (_bgef *ContentStreamInlineImage )(*_e .DCTEncoder ,error ){_cbg :=_e .NewDCTEncoder ();
-_acd :=_g .NewReader (_bgef ._eecg );_acgc ,_ecca :=_fb .DecodeConfig (_acd );if _ecca !=nil {_gd .Log .Debug ("\u0045\u0072\u0072or\u0020\u0064\u0065\u0063\u006f\u0064\u0069\u006e\u0067\u0020\u0066\u0069\u006c\u0065\u003a\u0020\u0025\u0073",_ecca );return nil ,_ecca ;
-};switch _acgc .ColorModel {case _f .RGBAModel :_cbg .BitsPerComponent =8;_cbg .ColorComponents =3;case _f .RGBA64Model :_cbg .BitsPerComponent =16;_cbg .ColorComponents =3;case _f .GrayModel :_cbg .BitsPerComponent =8;_cbg .ColorComponents =1;case _f .Gray16Model :_cbg .BitsPerComponent =16;
-_cbg .ColorComponents =1;case _f .CMYKModel :_cbg .BitsPerComponent =8;_cbg .ColorComponents =4;case _f .YCbCrModel :_cbg .BitsPerComponent =8;_cbg .ColorComponents =3;default:return nil ,_ba .New ("\u0075\u006e\u0073up\u0070\u006f\u0072\u0074\u0065\u0064\u0020\u0063\u006f\u006c\u006f\u0072\u0020\u006d\u006f\u0064\u0065\u006c");
-};_cbg .Width =_acgc .Width ;_cbg .Height =_acgc .Height ;_gd .Log .Trace ("\u0044\u0043T\u0020\u0045\u006ec\u006f\u0064\u0065\u0072\u003a\u0020\u0025\u002b\u0076",_cbg );return _cbg ,nil ;};
-
-// Add_q adds 'q' operand to the content stream: Pushes the current graphics state on the stack.
-//
-// See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
-func (_gcdf *ContentCreator )Add_q ()*ContentCreator {_bae :=ContentStreamOperation {};_bae .Operand ="\u0071";_gcdf ._bbe =append (_gcdf ._bbe ,&_bae );return _gcdf ;};
-
-// Scale applies x-y scaling to the transformation matrix.
-func (_fcd *ContentCreator )Scale (sx ,sy float64 )*ContentCreator {return _fcd .Add_cm (sx ,0,0,sy ,0,0);};
-
-// IsMask checks if an image is a mask.
-// The image mask entry in the image dictionary specifies that the image data shall be used as a stencil
-// mask for painting in the current color. The mask data is 1bpc, grayscale.
-func (_bccd *ContentStreamInlineImage )IsMask ()(bool ,error ){if _bccd .ImageMask !=nil {_dbea ,_acf :=_bccd .ImageMask .(*_e .PdfObjectBool );if !_acf {_gd .Log .Debug ("\u0049m\u0061\u0067\u0065\u0020\u006d\u0061\u0073\u006b\u0020\u006e\u006ft\u0020\u0061\u0020\u0062\u006f\u006f\u006c\u0065\u0061\u006e");
-return false ,_ba .New ("\u0069\u006e\u0076\u0061li\u0064\u0020\u006f\u0062\u006a\u0065\u0063\u0074\u0020\u0074\u0079\u0070\u0065");};return bool (*_dbea ),nil ;};return false ,nil ;};
-
-// Add_quote appends "'" operand to the content stream:
-// Move to next line and show a string.
-//
-// See section 9.4.3 "Text Showing Operators" and
-// Table 209 (pp. 258-259 PDF32000_2008).
-func (_affa *ContentCreator )Add_quote (textstr _e .PdfObjectString )*ContentCreator {_fda :=ContentStreamOperation {};_fda .Operand ="\u0027";_fda .Params =_dbfgf ([]_e .PdfObjectString {textstr });_affa ._bbe =append (_affa ._bbe ,&_fda );return _affa ;
-};
-
-// Add_f_starred appends 'f*' operand to the content stream.
-// f*: Fill the path using the even-odd rule to determine fill region.
-//
-// See section 8.5.3 "Path Painting Operators" and Table 60 (p. 143 PDF32000_2008).
-func (_geg *ContentCreator )Add_f_starred ()*ContentCreator {_cag :=ContentStreamOperation {};_cag .Operand ="\u0066\u002a";_geg ._bbe =append (_geg ._bbe ,&_cag );return _geg ;};
-
-// Add_G appends 'G' operand to the content stream:
-// Set the stroking colorspace to DeviceGray and sets the gray level (0-1).
-//
-// See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
-func (_beg *ContentCreator )Add_G (gray float64 )*ContentCreator {_gbe :=ContentStreamOperation {};_gbe .Operand ="\u0047";_gbe .Params =_caddf ([]float64 {gray });_beg ._bbe =append (_beg ._bbe ,&_gbe );return _beg ;};func (_dge *ContentStreamProcessor )handleCommand_CS (_cea *ContentStreamOperation ,_acgb *_gc .PdfPageResources )error {if len (_cea .Params )< 1{_gd .Log .Debug ("\u0049\u006e\u0076\u0061\u006c\u0069d\u0020\u0063\u0073\u0020\u0063\u006f\u006d\u006d\u0061\u006e\u0064\u002c\u0020s\u006b\u0069\u0070\u0070\u0069\u006e\u0067 \u006f\u0076\u0065\u0072");
-return _ba .New ("\u0074o\u006f \u0066\u0065\u0077\u0020\u0070a\u0072\u0061m\u0065\u0074\u0065\u0072\u0073");};if len (_cea .Params )> 1{_gd .Log .Debug ("\u0063\u0073\u0020\u0063\u006f\u006d\u006d\u0061n\u0064\u0020\u0077it\u0068\u0020\u0074\u006f\u006f\u0020m\u0061\u006e\u0079\u0020\u0070\u0061\u0072\u0061\u006d\u0065\u0074\u0065\u0072\u0073\u0020-\u0020\u0063\u006f\u006e\u0074\u0069\u006e\u0075i\u006e\u0067");
-return _ba .New ("\u0074\u006f\u006f\u0020ma\u006e\u0079\u0020\u0070\u0061\u0072\u0061\u006d\u0065\u0074\u0065\u0072\u0073");};_aac ,_geea :=_cea .Params [0].(*_e .PdfObjectName );if !_geea {_gd .Log .Debug ("\u0045\u0052\u0052\u004f\u0052\u003a\u0020c\u0073\u0020\u0063o\u006d\u006d\u0061n\u0064\u0020w\u0069\u0074\u0068\u0020\u0069\u006ev\u0061li\u0064\u0020\u0070\u0061\u0072\u0061\u006d\u0065\u0074\u0065\u0072\u002c\u0020\u0073\u006b\u0069\u0070\u0070\u0069\u006e\u0067\u0020\u006f\u0076\u0065\u0072");
-return _ba .New ("\u0074\u0079p\u0065\u0020\u0063h\u0065\u0063\u006b\u0020\u0065\u0072\u0072\u006f\u0072");};_dccf ,_fbd :=_dge .getColorspace (string (*_aac ),_acgb );if _fbd !=nil {return _fbd ;};_dge ._fgfg .ColorspaceStroking =_dccf ;_bfa ,_fbd :=_dge .getInitialColor (_dccf );
-if _fbd !=nil {return _fbd ;};_dge ._fgfg .ColorStroking =_bfa ;return nil ;};
-
-// Add_M adds 'M' operand to the content stream: Set the miter limit (graphics state).
-//
-// See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
-func (_edf *ContentCreator )Add_M (miterlimit float64 )*ContentCreator {_aca :=ContentStreamOperation {};_aca .Operand ="\u004d";_aca .Params =_caddf ([]float64 {miterlimit });_edf ._bbe =append (_edf ._bbe ,&_aca );return _edf ;};
-
-// Add_f appends 'f' operand to the content stream:
-// Fill the path using the nonzero winding number rule to determine fill region.
-//
-// See section 8.5.3 "Path Painting Operators" and Table 60 (p. 143 PDF32000_2008).
-func (_aff *ContentCreator )Add_f ()*ContentCreator {_caa :=ContentStreamOperation {};_caa .Operand ="\u0066";_aff ._bbe =append (_aff ._bbe ,&_caa );return _aff ;};
-
-// WrapIfNeeded wraps the entire contents within q ... Q.  If unbalanced, then adds extra Qs at the end.
-// Only does if needed. Ensures that when adding new content, one start with all states
-// in the default condition.
-func (_eec *ContentStreamOperations )WrapIfNeeded ()*ContentStreamOperations {if len (*_eec )==0{return _eec ;};if _eec .isWrapped (){return _eec ;};*_eec =append ([]*ContentStreamOperation {{Operand :"\u0071"}},*_eec ...);_fa :=0;for _ ,_be :=range *_eec {if _be .Operand =="\u0071"{_fa ++;
-}else if _be .Operand =="\u0051"{_fa --;};};for _fa > 0{*_eec =append (*_eec ,&ContentStreamOperation {Operand :"\u0051"});_fa --;};return _eec ;};
-
-// ContentCreator is a builder for PDF content streams.
-type ContentCreator struct{_bbe ContentStreamOperations };
-
-// GetColorSpace returns the colorspace of the inline image.
-func (_edda *ContentStreamInlineImage )GetColorSpace (resources *_gc .PdfPageResources )(_gc .PdfColorspace ,error ){if _edda .ColorSpace ==nil {_gd .Log .Debug ("\u0049\u006e\u006c\u0069\u006e\u0065\u0020\u0069\u006d\u0061\u0067\u0065\u0020\u006e\u006f\u0074\u0020\u0068\u0061\u0076i\u006e\u0067\u0020\u0073\u0070\u0065\u0063\u0069\u0066\u0069\u0065\u0064\u0020\u0063\u006f\u006c\u006f\u0072\u0073\u0070\u0061\u0063\u0065\u002c\u0020\u0061\u0073\u0073\u0075\u006di\u006e\u0067\u0020\u0047\u0072a\u0079");
-return _gc .NewPdfColorspaceDeviceGray (),nil ;};if _cde ,_aba :=_edda .ColorSpace .(*_e .PdfObjectArray );_aba {return _aabc (_cde );};_cfe ,_dfdc :=_edda .ColorSpace .(*_e .PdfObjectName );if !_dfdc {_gd .Log .Debug ("E\u0072\u0072\u006f\u0072\u003a\u0020I\u006e\u0076\u0061\u006c\u0069\u0064 \u006f\u0062\u006a\u0065\u0063\u0074\u0020t\u0079\u0070\u0065\u0020\u0028\u0025\u0054\u003b\u0025\u002bv\u0029",_edda .ColorSpace ,_edda .ColorSpace );
-return nil ,_ba .New ("\u0074\u0079p\u0065\u0020\u0063h\u0065\u0063\u006b\u0020\u0065\u0072\u0072\u006f\u0072");};if *_cfe =="\u0047"||*_cfe =="\u0044\u0065\u0076\u0069\u0063\u0065\u0047\u0072\u0061\u0079"{return _gc .NewPdfColorspaceDeviceGray (),nil ;
-}else if *_cfe =="\u0052\u0047\u0042"||*_cfe =="\u0044e\u0076\u0069\u0063\u0065\u0052\u0047B"{return _gc .NewPdfColorspaceDeviceRGB (),nil ;}else if *_cfe =="\u0043\u004d\u0059\u004b"||*_cfe =="\u0044\u0065\u0076\u0069\u0063\u0065\u0043\u004d\u0059\u004b"{return _gc .NewPdfColorspaceDeviceCMYK (),nil ;
-}else if *_cfe =="\u0049"||*_cfe =="\u0049n\u0064\u0065\u0078\u0065\u0064"{return nil ,_ba .New ("\u0075\u006e\u0073\u0075p\u0070\u006f\u0072\u0074\u0065\u0064\u0020\u0049\u006e\u0064e\u0078 \u0063\u006f\u006c\u006f\u0072\u0073\u0070a\u0063\u0065");}else {if resources .ColorSpace ==nil {_gd .Log .Debug ("\u0045\u0072r\u006f\u0072\u002c\u0020\u0075\u006e\u0073\u0075\u0070\u0070\u006f\u0072\u0074\u0065\u0064\u0020\u0069\u006e\u006c\u0069\u006e\u0065\u0020\u0069\u006d\u0061\u0067\u0065\u0020\u0063\u006f\u006c\u006f\u0072\u0073\u0070\u0061\u0063\u0065\u003a\u0020\u0025\u0073",*_cfe );
-return nil ,_ba .New ("\u0075n\u006bn\u006f\u0077\u006e\u0020\u0063o\u006c\u006fr\u0073\u0070\u0061\u0063\u0065");};_gbd ,_eac :=resources .GetColorspaceByName (*_cfe );if !_eac {_gd .Log .Debug ("\u0045\u0072r\u006f\u0072\u002c\u0020\u0075\u006e\u0073\u0075\u0070\u0070\u006f\u0072\u0074\u0065\u0064\u0020\u0069\u006e\u006c\u0069\u006e\u0065\u0020\u0069\u006d\u0061\u0067\u0065\u0020\u0063\u006f\u006c\u006f\u0072\u0073\u0070\u0061\u0063\u0065\u003a\u0020\u0025\u0073",*_cfe );
-return nil ,_ba .New ("\u0075n\u006bn\u006f\u0077\u006e\u0020\u0063o\u006c\u006fr\u0073\u0070\u0061\u0063\u0065");};return _gbd ,nil ;};};func (_bdee *ContentStreamParser )skipSpaces ()(int ,error ){_becdc :=0;for {_cefc ,_bcd :=_bdee ._dbc .Peek (1);if _bcd !=nil {return 0,_bcd ;
-};if _e .IsWhiteSpace (_cefc [0]){_bdee ._dbc .ReadByte ();_becdc ++;}else {break ;};};return _becdc ,nil ;};func _fgf (_gegd *ContentStreamInlineImage )(*_e .MultiEncoder ,error ){_bfd :=_e .NewMultiEncoder ();var _bfg *_e .PdfObjectDictionary ;var _fge []_e .PdfObject ;
-if _cgg :=_gegd .DecodeParms ;_cgg !=nil {_ggd ,_egf :=_cgg .(*_e .PdfObjectDictionary );if _egf {_bfg =_ggd ;};_ga ,_dcc :=_cgg .(*_e .PdfObjectArray );if _dcc {for _ ,_bbg :=range _ga .Elements (){if _bff ,_cggd :=_bbg .(*_e .PdfObjectDictionary );_cggd {_fge =append (_fge ,_bff );
-}else {_fge =append (_fge ,nil );};};};};_dga :=_gegd .Filter ;if _dga ==nil {return nil ,_fd .Errorf ("\u0066\u0069\u006c\u0074\u0065\u0072\u0020\u006d\u0069s\u0073\u0069\u006e\u0067");};_fgc ,_bdea :=_dga .(*_e .PdfObjectArray );if !_bdea {return nil ,_fd .Errorf ("m\u0075\u006c\u0074\u0069\u0020\u0066\u0069\u006c\u0074\u0065\u0072\u0020\u0063\u0061\u006e\u0020\u006f\u006el\u0079\u0020\u0062\u0065\u0020\u006d\u0061\u0064\u0065\u0020fr\u006f\u006d\u0020a\u0072r\u0061\u0079");
-};for _gee ,_fgce :=range _fgc .Elements (){_fecc ,_gbb :=_fgce .(*_e .PdfObjectName );if !_gbb {return nil ,_fd .Errorf ("\u006d\u0075l\u0074\u0069\u0020\u0066i\u006c\u0074e\u0072\u0020\u0061\u0072\u0072\u0061\u0079\u0020e\u006c\u0065\u006d\u0065\u006e\u0074\u0020\u006e\u006f\u0074\u0020\u0061 \u006e\u0061\u006d\u0065");
-};var _bbdg _e .PdfObject ;if _bfg !=nil {_bbdg =_bfg ;}else {if len (_fge )> 0{if _gee >=len (_fge ){return nil ,_fd .Errorf ("\u006d\u0069\u0073\u0073\u0069\u006e\u0067\u0020\u0065\u006c\u0065\u006d\u0065n\u0074\u0073\u0020\u0069\u006e\u0020d\u0065\u0063\u006f\u0064\u0065\u0020\u0070\u0061\u0072\u0061\u006d\u0073\u0020a\u0072\u0072\u0061\u0079");
-};_bbdg =_fge [_gee ];};};var _eedgg *_e .PdfObjectDictionary ;if _bad ,_gaa :=_bbdg .(*_e .PdfObjectDictionary );_gaa {_eedgg =_bad ;};if *_fecc ==_e .StreamEncodingFilterNameFlate ||*_fecc =="\u0046\u006c"{_agg ,_efd :=_gfc (_gegd ,_eedgg );if _efd !=nil {return nil ,_efd ;
-};_bfd .AddEncoder (_agg );}else if *_fecc ==_e .StreamEncodingFilterNameLZW {_bcad ,_eccf :=_becf (_gegd ,_eedgg );if _eccf !=nil {return nil ,_eccf ;};_bfd .AddEncoder (_bcad );}else if *_fecc ==_e .StreamEncodingFilterNameASCIIHex {_bgaf :=_e .NewASCIIHexEncoder ();
-_bfd .AddEncoder (_bgaf );}else if *_fecc ==_e .StreamEncodingFilterNameASCII85 ||*_fecc =="\u0041\u0038\u0035"{_adf :=_e .NewASCII85Encoder ();_bfd .AddEncoder (_adf );}else {_gd .Log .Error ("U\u006e\u0073\u0075\u0070po\u0072t\u0065\u0064\u0020\u0066\u0069l\u0074\u0065\u0072\u0020\u0025\u0073",*_fecc );
-return nil ,_fd .Errorf ("\u0069\u006eva\u006c\u0069\u0064 \u0066\u0069\u006c\u0074er \u0069n \u006d\u0075\u006c\u0074\u0069\u0020\u0066il\u0074\u0065\u0072\u0020\u0061\u0072\u0072a\u0079");};};return _bfd ,nil ;};
-
-// Add_Td appends 'Td' operand to the content stream:
-// Move to start of next line with offset (`tx`, `ty`).
-//
-// See section 9.4.2 "Text Positioning Operators" and
-// Table 108 (pp. 257-258 PDF32000_2008).
-func (_eae *ContentCreator )Add_Td (tx ,ty float64 )*ContentCreator {_dgg :=ContentStreamOperation {};_dgg .Operand ="\u0054\u0064";_dgg .Params =_caddf ([]float64 {tx ,ty });_eae ._bbe =append (_eae ._bbe ,&_dgg );return _eae ;};
-
-// Add_s appends 's' operand to the content stream: Close and stroke the path.
-//
-// See section 8.5.3 "Path Painting Operators" and Table 60 (p. 143 PDF32000_2008).
-func (_cc *ContentCreator )Add_s ()*ContentCreator {_dff :=ContentStreamOperation {};_dff .Operand ="\u0073";_cc ._bbe =append (_cc ._bbe ,&_dff );return _cc ;};
-
-// Add_n appends 'n' operand to the content stream:
-// End the path without filling or stroking.
-//
-// See section 8.5.3 "Path Painting Operators" and Table 60 (p. 143 PDF32000_2008).
-func (_acag *ContentCreator )Add_n ()*ContentCreator {_ggf :=ContentStreamOperation {};_ggf .Operand ="\u006e";_acag ._bbe =append (_acag ._bbe ,&_ggf );return _acag ;};func _aabc (_gbaf _e .PdfObject )(_gc .PdfColorspace ,error ){_gdfc ,_gae :=_gbaf .(*_e .PdfObjectArray );
-if !_gae {_gd .Log .Debug ("\u0045r\u0072\u006fr\u003a\u0020\u0049\u006ev\u0061\u006c\u0069d\u0020\u0069\u006e\u0064\u0065\u0078\u0065\u0064\u0020cs\u0020\u006e\u006ft\u0020\u0069n\u0020\u0061\u0072\u0072\u0061\u0079 \u0028\u0025#\u0076\u0029",_gbaf );
-return nil ,_ba .New ("\u0074\u0079p\u0065\u0020\u0063h\u0065\u0063\u006b\u0020\u0065\u0072\u0072\u006f\u0072");};if _gdfc .Len ()!=4{_gd .Log .Debug ("\u0045\u0072\u0072\u006f\u0072:\u0020\u0049\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0063\u0073\u0020\u0061r\u0072\u0061\u0079\u002c\u0020\u006c\u0065\u006e\u0067\u0074\u0068\u0020\u0021\u003d\u0020\u0034\u0020\u0028\u0025\u0064\u0029",_gdfc .Len ());
-return nil ,_ba .New ("\u0072\u0061\u006e\u0067\u0065\u0020\u0063\u0068\u0065\u0063\u006b\u0020e\u0072\u0072\u006f\u0072");};_abagd ,_gae :=_gdfc .Get (0).(*_e .PdfObjectName );if !_gae {_gd .Log .Debug ("E\u0072\u0072\u006f\u0072\u003a\u0020\u0049\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0063\u0073\u0020\u0061\u0072\u0072\u0061\u0079\u0020\u0066\u0069\u0072s\u0074 \u0065\u006c\u0065\u006de\u006e\u0074 \u006e\u006f\u0074\u0020\u0061\u0020\u006e\u0061\u006d\u0065\u0020\u0028\u0061\u0072\u0072\u0061\u0079\u003a\u0020\u0025\u0023\u0076\u0029",*_gdfc );
-return nil ,_ba .New ("\u0074\u0079p\u0065\u0020\u0063h\u0065\u0063\u006b\u0020\u0065\u0072\u0072\u006f\u0072");};if *_abagd !="\u0049"&&*_abagd !="\u0049n\u0064\u0065\u0078\u0065\u0064"{_gd .Log .Debug ("\u0045\u0072r\u006f\u0072\u003a\u0020\u0049n\u0076\u0061\u006c\u0069\u0064 \u0063\u0073\u0020\u0061\u0072\u0072\u0061\u0079\u0020\u0066\u0069\u0072\u0073\u0074\u0020\u0065\u006c\u0065\u006d\u0065\u006e\u0074\u0020\u0021\u003d\u0020\u0049\u0020\u0028\u0067\u006f\u0074\u003a\u0020\u0025\u0076\u0029",*_abagd );
-return nil ,_ba .New ("\u0072\u0061\u006e\u0067\u0065\u0020\u0063\u0068\u0065\u0063\u006b\u0020e\u0072\u0072\u006f\u0072");};_abagd ,_gae =_gdfc .Get (1).(*_e .PdfObjectName );if !_gae {_gd .Log .Debug ("\u0045\u0072\u0072\u006f\u0072\u003a\u0020\u0049\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0063\u0073\u0020\u0061\u0072r\u0061\u0079\u0020\u0032\u006e\u0064\u0020\u0065\u006c\u0065\u006d\u0065\u006e\u0074\u0020\u006e\u006f\u0074\u0020\u0061\u0020\u006e\u0061\u006d\u0065\u0020\u0028\u0061\u0072\u0072a\u0079\u003a\u0020\u0025\u0023v\u0029",*_gdfc );
-return nil ,_ba .New ("\u0074\u0079p\u0065\u0020\u0063h\u0065\u0063\u006b\u0020\u0065\u0072\u0072\u006f\u0072");};if *_abagd !="\u0047"&&*_abagd !="\u0052\u0047\u0042"&&*_abagd !="\u0043\u004d\u0059\u004b"&&*_abagd !="\u0044\u0065\u0076\u0069\u0063\u0065\u0047\u0072\u0061\u0079"&&*_abagd !="\u0044e\u0076\u0069\u0063\u0065\u0052\u0047B"&&*_abagd !="\u0044\u0065\u0076\u0069\u0063\u0065\u0043\u004d\u0059\u004b"{_gd .Log .Debug ("\u0045\u0072\u0072\u006f\u0072\u003a\u0020\u0049\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0063\u0073\u0020\u0061\u0072r\u0061\u0079\u0020\u0032\u006e\u0064\u0020\u0065\u006c\u0065\u006d\u0065\u006e\u0074\u0020\u0021\u003d\u0020\u0047\u002f\u0052\u0047\u0042\u002f\u0043\u004d\u0059\u004b\u0020\u0028g\u006f\u0074\u003a\u0020\u0025v\u0029",*_abagd );
-return nil ,_ba .New ("\u0072\u0061\u006e\u0067\u0065\u0020\u0063\u0068\u0065\u0063\u006b\u0020e\u0072\u0072\u006f\u0072");};_fgfc :="";switch *_abagd {case "\u0047","\u0044\u0065\u0076\u0069\u0063\u0065\u0047\u0072\u0061\u0079":_fgfc ="\u0044\u0065\u0076\u0069\u0063\u0065\u0047\u0072\u0061\u0079";
-case "\u0052\u0047\u0042","\u0044e\u0076\u0069\u0063\u0065\u0052\u0047B":_fgfc ="\u0044e\u0076\u0069\u0063\u0065\u0052\u0047B";case "\u0043\u004d\u0059\u004b","\u0044\u0065\u0076\u0069\u0063\u0065\u0043\u004d\u0059\u004b":_fgfc ="\u0044\u0065\u0076\u0069\u0063\u0065\u0043\u004d\u0059\u004b";
-};_ebba :=_e .MakeArray (_e .MakeName ("\u0049n\u0064\u0065\u0078\u0065\u0064"),_e .MakeName (_fgfc ),_gdfc .Get (2),_gdfc .Get (3));return _gc .NewPdfColorspaceFromPdfObject (_ebba );};
-
-// ContentStreamOperations is a slice of ContentStreamOperations.
-type ContentStreamOperations []*ContentStreamOperation ;
-
-// Add_w adds 'w' operand to the content stream, which sets the line width.
-//
-// See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
-func (_agef *ContentCreator )Add_w (lineWidth float64 )*ContentCreator {_cfd :=ContentStreamOperation {};_cfd .Operand ="\u0077";_cfd .Params =_caddf ([]float64 {lineWidth });_agef ._bbe =append (_agef ._bbe ,&_cfd );return _agef ;};func (_ceae *ContentStreamProcessor )handleCommand_SC (_cfc *ContentStreamOperation ,_gcega *_gc .PdfPageResources )error {_bccef :=_ceae ._fgfg .ColorspaceStroking ;
-if len (_cfc .Params )!=_bccef .GetNumComponents (){_gd .Log .Debug ("I\u006e\u0076\u0061\u006c\u0069\u0064 \u006e\u0075\u006d\u0062\u0065\u0072 \u006f\u0066\u0020\u0070\u0061\u0072\u0061m\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020S\u0043");
-_gd .Log .Debug ("\u004e\u0075mb\u0065\u0072\u0020%\u0064\u0020\u006e\u006ft m\u0061tc\u0068\u0069\u006e\u0067\u0020\u0063\u006flo\u0072\u0073\u0070\u0061\u0063\u0065\u0020%\u0054",len (_cfc .Params ),_bccef );return _ba .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");
-};_cead ,_def :=_bccef .ColorFromPdfObjects (_cfc .Params );if _def !=nil {return _def ;};_ceae ._fgfg .ColorStroking =_cead ;return nil ;};
-
-// Add_EMC appends 'EMC' operand to the content stream:
-// Ends a marked-content sequence.
-//
-// See section 14.6 "Marked Content" and Table 320 (p. 561 PDF32000_2008).
-func (_egg *ContentCreator )Add_EMC ()*ContentCreator {_fdee :=ContentStreamOperation {};_fdee .Operand ="\u0045\u004d\u0043";_egg ._bbe =append (_egg ._bbe ,&_fdee );return _egg ;};
-
-// Add_TJ appends 'TJ' operand to the content stream:
-// Show one or more text string. Array of numbers (displacement) and strings.
-//
-// See section 9.4.3 "Text Showing Operators" and
-// Table 209 (pp. 258-259 PDF32000_2008).
-func (_ecf *ContentCreator )Add_TJ (vals ..._e .PdfObject )*ContentCreator {_fde :=ContentStreamOperation {};_fde .Operand ="\u0054\u004a";_fde .Params =[]_e .PdfObject {_e .MakeArray (vals ...)};_ecf ._bbe =append (_ecf ._bbe ,&_fde );return _ecf ;};
-
-// Add_y appends 'y' operand to the content stream: Append a Bezier curve to the current path from the
-// current point to (x3,y3) with (x1, y1) and (x3,y3) as control points.
-//
-// See section 8.5.2 "Path Construction Operators" and Table 59 (pp. 140-141 PDF32000_2008).
-func (_bcc *ContentCreator )Add_y (x1 ,y1 ,x3 ,y3 float64 )*ContentCreator {_fg :=ContentStreamOperation {};_fg .Operand ="\u0079";_fg .Params =_caddf ([]float64 {x1 ,y1 ,x3 ,y3 });_bcc ._bbe =append (_bcc ._bbe ,&_fg );return _bcc ;};
-
-// Add_b_starred appends 'b*' operand to the content stream:
-// Close, fill and then stroke the path (even-odd winding number rule).
-//
-// See section 8.5.3 "Path Painting Operators" and Table 60 (p. 143 PDF32000_2008).
-func (_bbec *ContentCreator )Add_b_starred ()*ContentCreator {_gge :=ContentStreamOperation {};_gge .Operand ="\u0062\u002a";_bbec ._bbe =append (_bbec ._bbe ,&_gge );return _bbec ;};func _gfgf (_fea []_e .PdfObjectName )[]_e .PdfObject {var _beac []_e .PdfObject ;
-for _ ,_bfdb :=range _fea {_beac =append (_beac ,_e .MakeName (string (_bfdb )));};return _beac ;};
-
-// Add_Ts appends 'Ts' operand to the content stream:
-// Set text rise.
-//
-// See section 9.3 "Text State Parameters and Operators" and
-// Table 105 (pp. 251-252 PDF32000_2008).
-func (_edaf *ContentCreator )Add_Ts (rise float64 )*ContentCreator {_bce :=ContentStreamOperation {};_bce .Operand ="\u0054\u0073";_bce .Params =_caddf ([]float64 {rise });_edaf ._bbe =append (_edaf ._bbe ,&_bce );return _edaf ;};
-
-// Bytes converts a set of content stream operations to a content stream byte presentation,
-// i.e. the kind that can be stored as a PDF stream or string format.
-func (_af *ContentStreamOperations )Bytes ()[]byte {var _eee _g .Buffer ;for _ ,_ag :=range *_af {if _ag ==nil {continue ;};if _ag .Operand =="\u0042\u0049"{_eee .WriteString (_ag .Operand +"\u000a");_eee .WriteString (_ag .Params [0].WriteString ());}else {for _ ,_bb :=range _ag .Params {_eee .WriteString (_bb .WriteString ());
-_eee .WriteString ("\u0020");};_eee .WriteString (_ag .Operand +"\u000a");};};return _eee .Bytes ();};
-
-// Add_scn_pattern appends 'scn' operand to the content stream for pattern `name`:
-// scn with name attribute (for pattern). Syntax: c1 ... cn name scn.
-//
-// See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
-func (_cgc *ContentCreator )Add_scn_pattern (name _e .PdfObjectName ,c ...float64 )*ContentCreator {_afe :=ContentStreamOperation {};_afe .Operand ="\u0073\u0063\u006e";_afe .Params =_caddf (c );_afe .Params =append (_afe .Params ,_e .MakeName (string (name )));
-_cgc ._bbe =append (_cgc ._bbe ,&_afe );return _cgc ;};
-
-// Add_cm adds 'cm' operation to the content stream: Modifies the current transformation matrix (ctm)
-// of the graphics state.
-//
-// See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
-func (_aa *ContentCreator )Add_cm (a ,b ,c ,d ,e ,f float64 )*ContentCreator {_gfde :=ContentStreamOperation {};_gfde .Operand ="\u0063\u006d";_gfde .Params =_caddf ([]float64 {a ,b ,c ,d ,e ,f });_aa ._bbe =append (_aa ._bbe ,&_gfde );return _aa ;};func (_bfe *ContentStreamParser )parseDict ()(*_e .PdfObjectDictionary ,error ){_gd .Log .Trace ("\u0052\u0065\u0061\u0064i\u006e\u0067\u0020\u0063\u006f\u006e\u0074\u0065\u006e\u0074 \u0073t\u0072\u0065\u0061\u006d\u0020\u0064\u0069c\u0074\u0021");
-_bfda :=_e .MakeDict ();_efgg ,_ :=_bfe ._dbc .ReadByte ();if _efgg !='<'{return nil ,_ba .New ("\u0069\u006e\u0076a\u006c\u0069\u0064\u0020\u0064\u0069\u0063\u0074");};_efgg ,_ =_bfe ._dbc .ReadByte ();if _efgg !='<'{return nil ,_ba .New ("\u0069\u006e\u0076a\u006c\u0069\u0064\u0020\u0064\u0069\u0063\u0074");
-};for {_bfe .skipSpaces ();_baeg ,_fgcb :=_bfe ._dbc .Peek (2);if _fgcb !=nil {return nil ,_fgcb ;};_gd .Log .Trace ("D\u0069c\u0074\u0020\u0070\u0065\u0065\u006b\u003a\u0020%\u0073\u0020\u0028\u0025 x\u0029\u0021",string (_baeg ),string (_baeg ));if (_baeg [0]=='>')&&(_baeg [1]=='>'){_gd .Log .Trace ("\u0045\u004f\u0046\u0020\u0064\u0069\u0063\u0074\u0069o\u006e\u0061\u0072\u0079");
-_bfe ._dbc .ReadByte ();_bfe ._dbc .ReadByte ();break ;};_gd .Log .Trace ("\u0050a\u0072s\u0065\u0020\u0074\u0068\u0065\u0020\u006e\u0061\u006d\u0065\u0021");_gfaf ,_fgcb :=_bfe .parseName ();_gd .Log .Trace ("\u004be\u0079\u003a\u0020\u0025\u0073",_gfaf );
-if _fgcb !=nil {_gd .Log .Debug ("E\u0052\u0052\u004f\u0052\u0020\u0052e\u0074\u0075\u0072\u006e\u0069\u006e\u0067\u0020\u006ea\u006d\u0065\u0020e\u0072r\u0020\u0025\u0073",_fgcb );return nil ,_fgcb ;};if len (_gfaf )> 4&&_gfaf [len (_gfaf )-4:]=="\u006e\u0075\u006c\u006c"{_egc :=_gfaf [0:len (_gfaf )-4];
-_gd .Log .Trace ("\u0054\u0061\u006b\u0069n\u0067\u0020\u0063\u0061\u0072\u0065\u0020\u006f\u0066\u0020n\u0075l\u006c\u0020\u0062\u0075\u0067\u0020\u0028%\u0073\u0029",_gfaf );_gd .Log .Trace ("\u004e\u0065\u0077\u0020ke\u0079\u0020\u0022\u0025\u0073\u0022\u0020\u003d\u0020\u006e\u0075\u006c\u006c",_egc );
-_bfe .skipSpaces ();_aeg ,_ :=_bfe ._dbc .Peek (1);if _aeg [0]=='/'{_bfda .Set (_egc ,_e .MakeNull ());continue ;};};_bfe .skipSpaces ();_ffad ,_ ,_fgcb :=_bfe .parseObject ();if _fgcb !=nil {return nil ,_fgcb ;};_bfda .Set (_gfaf ,_ffad );_gd .Log .Trace ("\u0064\u0069\u0063\u0074\u005b\u0025\u0073\u005d\u0020\u003d\u0020\u0025\u0073",_gfaf ,_ffad .String ());
-};return _bfda ,nil ;};func (_bdad *ContentStreamProcessor )handleCommand_cm (_dbcec *ContentStreamOperation ,_aaeb *_gc .PdfPageResources )error {if len (_dbcec .Params )!=6{_gd .Log .Debug ("\u0045\u0052R\u004f\u0052\u003a\u0020\u0049\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020\u006f\u0066\u0020\u0070\u0061\u0072\u0061\u006d\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020\u0063\u006d\u003a\u0020\u0025\u0064",len (_dbcec .Params ));
-return _ba .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");};_cgda ,_dcf :=_e .GetNumbersAsFloat (_dbcec .Params );if _dcf !=nil {return _dcf ;
-};_dbgf :=_adb .NewMatrix (_cgda [0],_cgda [1],_cgda [2],_cgda [3],_cgda [4],_cgda [5]);_bdad ._fgfg .CTM .Concat (_dbgf );return nil ;};func (_aebb *ContentStreamProcessor )handleCommand_sc (_aacb *ContentStreamOperation ,_eaab *_gc .PdfPageResources )error {_fad :=_aebb ._fgfg .ColorspaceNonStroking ;
-if !_cfec (_fad ){if len (_aacb .Params )!=_fad .GetNumComponents (){_gd .Log .Debug ("I\u006e\u0076\u0061\u006c\u0069\u0064 \u006e\u0075\u006d\u0062\u0065\u0072 \u006f\u0066\u0020\u0070\u0061\u0072\u0061m\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020S\u0043");
-_gd .Log .Debug ("\u004e\u0075mb\u0065\u0072\u0020%\u0064\u0020\u006e\u006ft m\u0061tc\u0068\u0069\u006e\u0067\u0020\u0063\u006flo\u0072\u0073\u0070\u0061\u0063\u0065\u0020%\u0054",len (_aacb .Params ),_fad );return _ba .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");
-};};_fgge ,_fdda :=_fad .ColorFromPdfObjects (_aacb .Params );if _fdda !=nil {return _fdda ;};_aebb ._fgfg .ColorNonStroking =_fgge ;return nil ;};func _dbfgf (_fdbff []_e .PdfObjectString )[]_e .PdfObject {var _ccde []_e .PdfObject ;for _ ,_fefdg :=range _fdbff {_ccde =append (_ccde ,_e .MakeString (_fefdg .Str ()));
-};return _ccde ;};
-
-// Add_v appends 'v' operand to the content stream: Append a Bezier curve to the current path from the
-// current point to (x3,y3) with the current point and (x2,y2) as control points.
-//
-// See section 8.5.2 "Path Construction Operators" and Table 59 (pp. 140-141 PDF32000_2008).
-func (_cgd *ContentCreator )Add_v (x2 ,y2 ,x3 ,y3 float64 )*ContentCreator {_aaf :=ContentStreamOperation {};_aaf .Operand ="\u0076";_aaf .Params =_caddf ([]float64 {x2 ,y2 ,x3 ,y3 });_cgd ._bbe =append (_cgd ._bbe ,&_aaf );return _cgd ;};
+func (_ccgd *ContentStreamProcessor )Process (resources *_ab .PdfPageResources )error {_ccgd ._aabb .ColorspaceStroking =_ab .NewPdfColorspaceDeviceGray ();_ccgd ._aabb .ColorspaceNonStroking =_ab .NewPdfColorspaceDeviceGray ();_ccgd ._aabb .ColorStroking =_ab .NewPdfColorDeviceGray (0);
+_ccgd ._aabb .ColorNonStroking =_ab .NewPdfColorDeviceGray (0);_ccgd ._aabb .CTM =_ee .IdentityMatrix ();for _ ,_cgef :=range _ccgd ._bdd {var _faee error ;switch _cgef .Operand {case "\u0071":_ccgd ._fbga .Push (_ccgd ._aabb );case "\u0051":if len (_ccgd ._fbga )==0{_fbg .Log .Debug ("\u0057\u0041\u0052\u004e\u003a\u0020\u0069\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0060\u0051\u0060\u0020\u006f\u0070e\u0072\u0061\u0074\u006f\u0072\u002e\u0020\u0047\u0072\u0061\u0070\u0068\u0069\u0063\u0073\u0020\u0073\u0074\u0061\u0074\u0065 \u0073\u0074\u0061\u0063\u006b\u0020\u0069\u0073\u0020\u0065\u006d\u0070\u0074\u0079.\u0020\u0053\u006bi\u0070\u0070\u0069\u006e\u0067\u002e");
+continue ;};_ccgd ._aabb =_ccgd ._fbga .Pop ();case "\u0043\u0053":_faee =_ccgd .handleCommand_CS (_cgef ,resources );case "\u0063\u0073":_faee =_ccgd .handleCommand_cs (_cgef ,resources );case "\u0053\u0043":_faee =_ccgd .handleCommand_SC (_cgef ,resources );
+case "\u0053\u0043\u004e":_faee =_ccgd .handleCommand_SCN (_cgef ,resources );case "\u0073\u0063":_faee =_ccgd .handleCommand_sc (_cgef ,resources );case "\u0073\u0063\u006e":_faee =_ccgd .handleCommand_scn (_cgef ,resources );case "\u0047":_faee =_ccgd .handleCommand_G (_cgef ,resources );
+case "\u0067":_faee =_ccgd .handleCommand_g (_cgef ,resources );case "\u0052\u0047":_faee =_ccgd .handleCommand_RG (_cgef ,resources );case "\u0072\u0067":_faee =_ccgd .handleCommand_rg (_cgef ,resources );case "\u004b":_faee =_ccgd .handleCommand_K (_cgef ,resources );
+case "\u006b":_faee =_ccgd .handleCommand_k (_cgef ,resources );case "\u0063\u006d":_faee =_ccgd .handleCommand_cm (_cgef ,resources );};if _faee !=nil {_fbg .Log .Debug ("\u0050\u0072\u006f\u0063\u0065\u0073s\u006f\u0072\u0020\u0068\u0061\u006e\u0064\u006c\u0069\u006e\u0067\u0020\u0065r\u0072\u006f\u0072\u0020\u0028\u0025\u0073)\u003a\u0020\u0025\u0076",_cgef .Operand ,_faee );
+_fbg .Log .Debug ("\u004f\u0070\u0065r\u0061\u006e\u0064\u003a\u0020\u0025\u0023\u0076",_cgef .Operand );return _faee ;};for _ ,_acge :=range _ccgd ._cggde {var _eeec error ;if _acge .Condition .All (){_eeec =_acge .Handler (_cgef ,_ccgd ._aabb ,resources );
+}else if _acge .Condition .Operand ()&&_cgef .Operand ==_acge .Operand {_eeec =_acge .Handler (_cgef ,_ccgd ._aabb ,resources );};if _eeec !=nil {_fbg .Log .Debug ("P\u0072\u006f\u0063\u0065\u0073\u0073o\u0072\u0020\u0068\u0061\u006e\u0064\u006c\u0065\u0072 \u0065\u0072\u0072o\u0072:\u0020\u0025\u0076",_eeec );
+return _eeec ;};};};return nil ;};
 
 // Add_Tz appends 'Tz' operand to the content stream:
 // Set horizontal scaling.
 //
 // See section 9.3 "Text State Parameters and Operators" and
 // Table 105 (pp. 251-252 PDF32000_2008).
-func (_eaaa *ContentCreator )Add_Tz (scale float64 )*ContentCreator {_gcda :=ContentStreamOperation {};_gcda .Operand ="\u0054\u007a";_gcda .Params =_caddf ([]float64 {scale });_eaaa ._bbe =append (_eaaa ._bbe ,&_gcda );return _eaaa ;};func (_debe *ContentStreamParser )parseObject ()(_cffa _e .PdfObject ,_dba bool ,_fcc error ){_debe .skipSpaces ();
-for {_dae ,_gggd :=_debe ._dbc .Peek (2);if _gggd !=nil {return nil ,false ,_gggd ;};_gd .Log .Trace ("\u0050e\u0065k\u0020\u0073\u0074\u0072\u0069\u006e\u0067\u003a\u0020\u0025\u0073",string (_dae ));if _dae [0]=='%'{_debe .skipComments ();continue ;}else if _dae [0]=='/'{_gbca ,_ecbf :=_debe .parseName ();
-_gd .Log .Trace ("\u002d\u003e\u004ea\u006d\u0065\u003a\u0020\u0027\u0025\u0073\u0027",_gbca );return &_gbca ,false ,_ecbf ;}else if _dae [0]=='('{_gd .Log .Trace ("\u002d>\u0053\u0074\u0072\u0069\u006e\u0067!");_bccb ,_gfdf :=_debe .parseString ();return _bccb ,false ,_gfdf ;
-}else if _dae [0]=='<'&&_dae [1]!='<'{_gd .Log .Trace ("\u002d\u003e\u0048\u0065\u0078\u0020\u0053\u0074\u0072\u0069\u006e\u0067\u0021");_ccc ,_cdg :=_debe .parseHexString ();return _ccc ,false ,_cdg ;}else if _dae [0]=='['{_gd .Log .Trace ("\u002d\u003e\u0041\u0072\u0072\u0061\u0079\u0021");
-_ccfb ,_bfgd :=_debe .parseArray ();return _ccfb ,false ,_bfgd ;}else if _e .IsFloatDigit (_dae [0])||(_dae [0]=='-'&&_e .IsFloatDigit (_dae [1]))||(_dae [0]=='+'&&_e .IsFloatDigit (_dae [1])){_gd .Log .Trace ("\u002d>\u004e\u0075\u006d\u0062\u0065\u0072!");
-_fcgbe ,_acec :=_debe .parseNumber ();return _fcgbe ,false ,_acec ;}else if _dae [0]=='<'&&_dae [1]=='<'{_cfaa ,_cfag :=_debe .parseDict ();return _cfaa ,false ,_cfag ;}else {_gd .Log .Trace ("\u002d>\u004fp\u0065\u0072\u0061\u006e\u0064 \u006f\u0072 \u0062\u006f\u006f\u006c\u003f");
-_dae ,_ =_debe ._dbc .Peek (5);_dcbe :=string (_dae );_gd .Log .Trace ("\u0063\u006f\u006e\u0074\u0020\u0050\u0065\u0065\u006b\u0020\u0073\u0074r\u003a\u0020\u0025\u0073",_dcbe );if (len (_dcbe )> 3)&&(_dcbe [:4]=="\u006e\u0075\u006c\u006c"){_cbbe ,_gfef :=_debe .parseNull ();
-return &_cbbe ,false ,_gfef ;}else if (len (_dcbe )> 4)&&(_dcbe [:5]=="\u0066\u0061\u006cs\u0065"){_geca ,_cec :=_debe .parseBool ();return &_geca ,false ,_cec ;}else if (len (_dcbe )> 3)&&(_dcbe [:4]=="\u0074\u0072\u0075\u0065"){_bddb ,_beee :=_debe .parseBool ();
-return &_bddb ,false ,_beee ;};_dgbe ,_aaa :=_debe .parseOperand ();if _aaa !=nil {return _dgbe ,false ,_aaa ;};if len (_dgbe .String ())< 1{return _dgbe ,false ,ErrInvalidOperand ;};return _dgbe ,true ,nil ;};};};
+func (_fgf *ContentCreator )Add_Tz (scale float64 )*ContentCreator {_daa :=ContentStreamOperation {};_daa .Operand ="\u0054\u007a";_daa .Params =_dcgf ([]float64 {scale });_fgf ._d =append (_fgf ._d ,&_daa );return _fgf ;};type handlerEntry struct{Condition HandlerConditionEnum ;
+Operand string ;Handler HandlerFunc ;};
 
-// Add_Tm appends 'Tm' operand to the content stream:
-// Set the text line matrix.
+// RotateDeg applies a rotation to the transformation matrix.
+func (_gd *ContentCreator )RotateDeg (angle float64 )*ContentCreator {_bdg :=_eg .Cos (angle *_eg .Pi /180.0);_eff :=_eg .Sin (angle *_eg .Pi /180.0);_ga :=-_eg .Sin (angle *_eg .Pi /180.0);_abb :=_eg .Cos (angle *_eg .Pi /180.0);return _gd .Add_cm (_bdg ,_eff ,_ga ,_abb ,0,0);
+};
+
+// AddHandler adds a new ContentStreamProcessor `handler` of type `condition` for `operand`.
+func (_ecacb *ContentStreamProcessor )AddHandler (condition HandlerConditionEnum ,operand string ,handler HandlerFunc ){_ecae :=handlerEntry {};_ecae .Condition =condition ;_ecae .Operand =operand ;_ecae .Handler =handler ;_ecacb ._cggde =append (_ecacb ._cggde ,_ecae );
+};
+
+// Add_m adds 'm' operand to the content stream: Move the current point to (x,y).
 //
-// See section 9.4.2 "Text Positioning Operators" and
-// Table 108 (pp. 257-258 PDF32000_2008).
-func (_cfg *ContentCreator )Add_Tm (a ,b ,c ,d ,e ,f float64 )*ContentCreator {_eef :=ContentStreamOperation {};_eef .Operand ="\u0054\u006d";_eef .Params =_caddf ([]float64 {a ,b ,c ,d ,e ,f });_cfg ._bbe =append (_cfg ._bbe ,&_eef );return _cfg ;};
+// See section 8.5.2 "Path Construction Operators" and Table 59 (pp. 140-141 PDF32000_2008).
+func (_dca *ContentCreator )Add_m (x ,y float64 )*ContentCreator {_cf :=ContentStreamOperation {};_cf .Operand ="\u006d";_cf .Params =_dcgf ([]float64 {x ,y });_dca ._d =append (_dca ._d ,&_cf );return _dca ;};
 
-// Operand returns true if `hce` is equivalent to HandlerConditionEnumOperand.
-func (_fgcec HandlerConditionEnum )Operand ()bool {return _fgcec ==HandlerConditionEnumOperand };
+// Add_j adds 'j' operand to the content stream: Set the line join style (graphics state).
+//
+// See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
+func (_bcab *ContentCreator )Add_j (lineJoinStyle string )*ContentCreator {_efc :=ContentStreamOperation {};_efc .Operand ="\u006a";_efc .Params =_ecee ([]_a .PdfObjectName {_a .PdfObjectName (lineJoinStyle )});_bcab ._d =append (_bcab ._d ,&_efc );return _bcab ;
+};
 
-// NewContentCreator returns a new initialized ContentCreator.
-func NewContentCreator ()*ContentCreator {_gfd :=&ContentCreator {};_gfd ._bbe =ContentStreamOperations {};return _gfd ;};
+// Add_scn_pattern appends 'scn' operand to the content stream for pattern `name`:
+// scn with name attribute (for pattern). Syntax: c1 ... cn name scn.
+//
+// See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
+func (_gbcd *ContentCreator )Add_scn_pattern (name _a .PdfObjectName ,c ...float64 )*ContentCreator {_beac :=ContentStreamOperation {};_beac .Operand ="\u0073\u0063\u006e";_beac .Params =_dcgf (c );_beac .Params =append (_beac .Params ,_a .MakeName (string (name )));
+_gbcd ._d =append (_gbcd ._d ,&_beac );return _gbcd ;};func (_fadb *ContentStreamProcessor )handleCommand_scn (_faae *ContentStreamOperation ,_eda *_ab .PdfPageResources )error {_ffe :=_fadb ._aabb .ColorspaceNonStroking ;if !_cacdd (_ffe ){if len (_faae .Params )!=_ffe .GetNumComponents (){_fbg .Log .Debug ("I\u006e\u0076\u0061\u006c\u0069\u0064 \u006e\u0075\u006d\u0062\u0065\u0072 \u006f\u0066\u0020\u0070\u0061\u0072\u0061m\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020S\u0043");
+_fbg .Log .Debug ("\u004e\u0075mb\u0065\u0072\u0020%\u0064\u0020\u006e\u006ft m\u0061tc\u0068\u0069\u006e\u0067\u0020\u0063\u006flo\u0072\u0073\u0070\u0061\u0063\u0065\u0020%\u0054",len (_faae .Params ),_ffe );return _f .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");
+};};_ffed ,_abfa :=_ffe .ColorFromPdfObjects (_faae .Params );if _abfa !=nil {_fbg .Log .Debug ("\u0045\u0052\u0052\u004f\u0052\u003a\u0020\u0046\u0061\u0069\u006c \u0074\u006f\u0020\u0067\u0065\u0074\u0020\u0063o\u006co\u0072\u0020\u0066\u0072\u006f\u006d\u0020\u0070\u0061\u0072\u0061\u006d\u0073\u003a\u0020\u0025\u002b\u0076 \u0028\u0043\u0053\u0020\u0069\u0073\u0020\u0025\u002b\u0076\u0029",_faae .Params ,_ffe );
+return _abfa ;};_fadb ._aabb .ColorNonStroking =_ffed ;return nil ;};func _egebf (_baag *ContentStreamInlineImage ,_gce *_a .PdfObjectDictionary )(*_a .LZWEncoder ,error ){_dbc :=_a .NewLZWEncoder ();if _gce ==nil {if _baag .DecodeParms !=nil {_cec ,_eae :=_a .GetDict (_baag .DecodeParms );
+if !_eae {_fbg .Log .Debug ("E\u0072\u0072\u006f\u0072\u003a\u0020\u0044\u0065\u0063\u006f\u0064\u0065\u0050\u0061\u0072\u006d\u0073\u0020n\u006f\u0074\u0020\u0061\u0020\u0064\u0069\u0063\u0074\u0069on\u0061\u0072\u0079 \u0028%\u0054\u0029",_baag .DecodeParms );
+return nil ,_ea .Errorf ("\u0069\u006e\u0076\u0061li\u0064\u0020\u0044\u0065\u0063\u006f\u0064\u0065\u0050\u0061\u0072\u006d\u0073");};_gce =_cec ;};};if _gce ==nil {return _dbc ,nil ;};_bdc :=_gce .Get ("E\u0061\u0072\u006c\u0079\u0043\u0068\u0061\u006e\u0067\u0065");
+if _bdc !=nil {_eaa ,_cdbe :=_bdc .(*_a .PdfObjectInteger );if !_cdbe {_fbg .Log .Debug ("\u0045\u0072\u0072\u006f\u0072\u003a \u0045\u0061\u0072\u006c\u0079\u0043\u0068\u0061\u006e\u0067\u0065\u0020\u0073\u0070\u0065\u0063\u0069\u0066\u0069\u0065d\u0020\u0062\u0075\u0074\u0020\u006e\u006f\u0074\u0020\u006e\u0075\u006d\u0065\u0072i\u0063 \u0028\u0025\u0054\u0029",_bdc );
+return nil ,_ea .Errorf ("\u0069\u006e\u0076\u0061li\u0064\u0020\u0045\u0061\u0072\u006c\u0079\u0043\u0068\u0061\u006e\u0067\u0065");};if *_eaa !=0&&*_eaa !=1{return nil ,_ea .Errorf ("\u0069\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0045\u0061\u0072\u006c\u0079\u0043\u0068\u0061\u006e\u0067\u0065\u0020\u0076\u0061\u006c\u0075e\u0020\u0028\u006e\u006f\u0074 \u0030\u0020o\u0072\u0020\u0031\u0029");
+};_dbc .EarlyChange =int (*_eaa );}else {_dbc .EarlyChange =1;};_bdc =_gce .Get ("\u0050r\u0065\u0064\u0069\u0063\u0074\u006fr");if _bdc !=nil {_cdf ,_fcdc :=_bdc .(*_a .PdfObjectInteger );if !_fcdc {_fbg .Log .Debug ("E\u0072\u0072\u006f\u0072\u003a\u0020\u0050\u0072\u0065d\u0069\u0063\u0074\u006f\u0072\u0020\u0073pe\u0063\u0069\u0066\u0069e\u0064\u0020\u0062\u0075\u0074\u0020\u006e\u006f\u0074 n\u0075\u006de\u0072\u0069\u0063\u0020\u0028\u0025\u0054\u0029",_bdc );
+return nil ,_ea .Errorf ("\u0069\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0050\u0072\u0065\u0064i\u0063\u0074\u006f\u0072");};_dbc .Predictor =int (*_cdf );};_bdc =_gce .Get ("\u0042\u0069t\u0073\u0050\u0065r\u0043\u006f\u006d\u0070\u006f\u006e\u0065\u006e\u0074");
+if _bdc !=nil {_afb ,_gada :=_bdc .(*_a .PdfObjectInteger );if !_gada {_fbg .Log .Debug ("\u0045\u0052\u0052O\u0052\u003a\u0020\u0049n\u0076\u0061\u006c\u0069\u0064\u0020\u0042i\u0074\u0073\u0050\u0065\u0072\u0043\u006f\u006d\u0070\u006f\u006e\u0065\u006e\u0074");
+return nil ,_ea .Errorf ("\u0069n\u0076\u0061\u006c\u0069\u0064\u0020\u0042\u0069\u0074\u0073\u0050e\u0072\u0043\u006f\u006d\u0070\u006f\u006e\u0065\u006e\u0074");};_dbc .BitsPerComponent =int (*_afb );};if _dbc .Predictor > 1{_dbc .Columns =1;_bdc =_gce .Get ("\u0043o\u006c\u0075\u006d\u006e\u0073");
+if _bdc !=nil {_fae ,_bbf :=_bdc .(*_a .PdfObjectInteger );if !_bbf {return nil ,_ea .Errorf ("\u0070r\u0065\u0064\u0069\u0063\u0074\u006f\u0072\u0020\u0063\u006f\u006cu\u006d\u006e\u0020\u0069\u006e\u0076\u0061\u006c\u0069\u0064");};_dbc .Columns =int (*_fae );
+};_dbc .Colors =1;_bdc =_gce .Get ("\u0043\u006f\u006c\u006f\u0072\u0073");if _bdc !=nil {_fcgba ,_bed :=_bdc .(*_a .PdfObjectInteger );if !_bed {return nil ,_ea .Errorf ("\u0070\u0072\u0065d\u0069\u0063\u0074\u006fr\u0020\u0063\u006f\u006c\u006f\u0072\u0073 \u006e\u006f\u0074\u0020\u0061\u006e\u0020\u0069\u006e\u0074\u0065\u0067\u0065\u0072");
+};_dbc .Colors =int (*_fcgba );};};_fbg .Log .Trace ("\u0064\u0065\u0063\u006f\u0064\u0065\u0020\u0070\u0061\u0072\u0061\u006ds\u003a\u0020\u0025\u0073",_gce .String ());return _dbc ,nil ;};
+
+// Add_K appends 'K' operand to the content stream:
+// Set the stroking colorspace to DeviceCMYK and sets the c,m,y,k color (0-1 each component).
+//
+// See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
+func (_gdc *ContentCreator )Add_K (c ,m ,y ,k float64 )*ContentCreator {_cdb :=ContentStreamOperation {};_cdb .Operand ="\u004b";_cdb .Params =_dcgf ([]float64 {c ,m ,y ,k });_gdc ._d =append (_gdc ._d ,&_cdb );return _gdc ;};
+
+// String is same as Bytes() except returns as a string for convenience.
+func (_egeb *ContentCreator )String ()string {return string (_egeb ._d .Bytes ())};
+
+// Pop pops and returns the topmost GraphicsState off the `gsStack`.
+func (_adf *GraphicStateStack )Pop ()GraphicsState {_gdcg :=(*_adf )[len (*_adf )-1];*_adf =(*_adf )[:len (*_adf )-1];return _gdcg ;};
+
+// Add_quote appends "'" operand to the content stream:
+// Move to next line and show a string.
+//
+// See section 9.4.3 "Text Showing Operators" and
+// Table 209 (pp. 258-259 PDF32000_2008).
+func (_caa *ContentCreator )Add_quote (textstr _a .PdfObjectString )*ContentCreator {_cadb :=ContentStreamOperation {};_cadb .Operand ="\u0027";_cadb .Params =_cafe ([]_a .PdfObjectString {textstr });_caa ._d =append (_caa ._d ,&_cadb );return _caa ;};
+
 
 // Add_quotes appends `"` operand to the content stream:
 // Move to next line and show a string, using `aw` and `ac` as word
@@ -506,290 +192,606 @@ func NewContentCreator ()*ContentCreator {_gfd :=&ContentCreator {};_gfd ._bbe =
 //
 // See section 9.4.3 "Text Showing Operators" and
 // Table 209 (pp. 258-259 PDF32000_2008).
-func (_egd *ContentCreator )Add_quotes (textstr _e .PdfObjectString ,aw ,ac float64 )*ContentCreator {_gga :=ContentStreamOperation {};_gga .Operand ="\u0022";_gga .Params =_caddf ([]float64 {aw ,ac });_gga .Params =append (_gga .Params ,_dbfgf ([]_e .PdfObjectString {textstr })...);
-_egd ._bbe =append (_egd ._bbe ,&_gga );return _egd ;};func _abac (_adfd string )bool {_ ,_agfd :=_agc [_adfd ];return _agfd };
-
-// Add_i adds 'i' operand to the content stream: Set the flatness tolerance in the graphics state.
-//
-// See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
-func (_fag *ContentCreator )Add_i (flatness float64 )*ContentCreator {_fcg :=ContentStreamOperation {};_fcg .Operand ="\u0069";_fcg .Params =_caddf ([]float64 {flatness });_fag ._bbe =append (_fag ._bbe ,&_fcg );return _fag ;};
+func (_bce *ContentCreator )Add_quotes (textstr _a .PdfObjectString ,aw ,ac float64 )*ContentCreator {_ebgd :=ContentStreamOperation {};_ebgd .Operand ="\u0022";_ebgd .Params =_dcgf ([]float64 {aw ,ac });_ebgd .Params =append (_ebgd .Params ,_cafe ([]_a .PdfObjectString {textstr })...);
+_bce ._d =append (_bce ._d ,&_ebgd );return _bce ;};
 
 // Add_Tr appends 'Tr' operand to the content stream:
 // Set text rendering mode.
 //
 // See section 9.3 "Text State Parameters and Operators" and
 // Table 105 (pp. 251-252 PDF32000_2008).
-func (_bdbc *ContentCreator )Add_Tr (render int64 )*ContentCreator {_afcg :=ContentStreamOperation {};_afcg .Operand ="\u0054\u0072";_afcg .Params =_dfbc ([]int64 {render });_bdbc ._bbe =append (_bdbc ._bbe ,&_afcg );return _bdbc ;};var (ErrInvalidOperand =_ba .New ("\u0069n\u0076a\u006c\u0069\u0064\u0020\u006f\u0070\u0065\u0072\u0061\u006e\u0064");
-ErrEarlyExit =_ba .New ("\u0074\u0065\u0072\u006di\u006e\u0061\u0074\u0065\u0020\u0070\u0072\u006f\u0063\u0065s\u0073 \u0065\u0061\u0072\u006c\u0079\u0020\u0065x\u0069\u0074"););
+func (_gcb *ContentCreator )Add_Tr (render int64 )*ContentCreator {_eef :=ContentStreamOperation {};_eef .Operand ="\u0054\u0072";_eef .Params =_febc ([]int64 {render });_gcb ._d =append (_gcb ._d ,&_eef );return _gcb ;};
 
-// Add_ET appends 'ET' operand to the content stream:
-// End text.
+// Translate applies a simple x-y translation to the transformation matrix.
+func (_bab *ContentCreator )Translate (tx ,ty float64 )*ContentCreator {return _bab .Add_cm (1,0,0,1,tx ,ty );};
+
+// Add_Tstar appends 'T*' operand to the content stream:
+// Move to the start of next line.
 //
-// See section 9.4 "Text Objects" and Table 107 (p. 256 PDF32000_2008).
-func (_dffb *ContentCreator )Add_ET ()*ContentCreator {_cef :=ContentStreamOperation {};_cef .Operand ="\u0045\u0054";_dffb ._bbe =append (_dffb ._bbe ,&_cef );return _dffb ;};func (_gcg *ContentStreamProcessor )handleCommand_G (_afgab *ContentStreamOperation ,_efae *_gc .PdfPageResources )error {_fbba :=_gc .NewPdfColorspaceDeviceGray ();
-if len (_afgab .Params )!=_fbba .GetNumComponents (){_gd .Log .Debug ("I\u006e\u0076\u0061\u006c\u0069\u0064 \u006e\u0075\u006d\u0062\u0065\u0072 \u006f\u0066\u0020\u0070\u0061\u0072\u0061m\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020S\u0043");
-_gd .Log .Debug ("\u004e\u0075mb\u0065\u0072\u0020%\u0064\u0020\u006e\u006ft m\u0061tc\u0068\u0069\u006e\u0067\u0020\u0063\u006flo\u0072\u0073\u0070\u0061\u0063\u0065\u0020%\u0054",len (_afgab .Params ),_fbba );return _ba .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");
-};_aebd ,_aefa :=_fbba .ColorFromPdfObjects (_afgab .Params );if _aefa !=nil {return _aefa ;};_gcg ._fgfg .ColorspaceStroking =_fbba ;_gcg ._fgfg .ColorStroking =_aebd ;return nil ;};
+// See section 9.4.2 "Text Positioning Operators" and
+// Table 108 (pp. 257-258 PDF32000_2008).
+func (_cgf *ContentCreator )Add_Tstar ()*ContentCreator {_ffb :=ContentStreamOperation {};_ffb .Operand ="\u0054\u002a";_cgf ._d =append (_cgf ._d ,&_ffb );return _cgf ;};
+
+// Add_BMC appends 'BMC' operand to the content stream:
+// Begins a marked-content sequence terminated by a balancing EMC operator.
+// `tag` shall be a name object indicating the role or significance of
+// the sequence.
+//
+// See section 14.6 "Marked Content" and Table 320 (p. 561 PDF32000_2008).
+func (_dec *ContentCreator )Add_BMC (tag _a .PdfObjectName )*ContentCreator {_bfe :=ContentStreamOperation {};_bfe .Operand ="\u0042\u004d\u0043";_bfe .Params =_ecee ([]_a .PdfObjectName {tag });_dec ._d =append (_dec ._d ,&_bfe );return _dec ;};
+
+// Add_SC appends 'SC' operand to the content stream:
+// Set color for stroking operations.  Input: c1, ..., cn.
+//
+// See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
+func (_gfgb *ContentCreator )Add_SC (c ...float64 )*ContentCreator {_daf :=ContentStreamOperation {};_daf .Operand ="\u0053\u0043";_daf .Params =_dcgf (c );_gfgb ._d =append (_gfgb ._d ,&_daf );return _gfgb ;};
+
+// Bytes converts the content stream operations to a content stream byte presentation, i.e. the kind that can be
+// stored as a PDF stream or string format.
+func (_cg *ContentCreator )Bytes ()[]byte {return _cg ._d .Bytes ()};
+
+// Add_RG appends 'RG' operand to the content stream:
+// Set the stroking colorspace to DeviceRGB and sets the r,g,b colors (0-1 each).
+//
+// See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
+func (_egg *ContentCreator )Add_RG (r ,g ,b float64 )*ContentCreator {_afa :=ContentStreamOperation {};_afa .Operand ="\u0052\u0047";_afa .Params =_dcgf ([]float64 {r ,g ,b });_egg ._d =append (_egg ._d ,&_afa );return _egg ;};
+
+// ExtractText parses and extracts all text data in content streams and returns as a string.
+// Does not take into account Encoding table, the output is simply the character codes.
+//
+// Deprecated: More advanced text extraction is offered in package extractor with character encoding support.
+func (_bge *ContentStreamParser )ExtractText ()(string ,error ){_bc ,_fba :=_bge .Parse ();if _fba !=nil {return "",_fba ;};_gf :=false ;_bd ,_abf :=float64 (-1),float64 (-1);_gc :="";for _ ,_aa :=range *_bc {if _aa .Operand =="\u0042\u0054"{_gf =true ;
+}else if _aa .Operand =="\u0045\u0054"{_gf =false ;};if _aa .Operand =="\u0054\u0064"||_aa .Operand =="\u0054\u0044"||_aa .Operand =="\u0054\u002a"{_gc +="\u000a";};if _aa .Operand =="\u0054\u006d"{if len (_aa .Params )!=6{continue ;};_gbc ,_age :=_aa .Params [4].(*_a .PdfObjectFloat );
+if !_age {_bgf ,_gbg :=_aa .Params [4].(*_a .PdfObjectInteger );if !_gbg {continue ;};_gbc =_a .MakeFloat (float64 (*_bgf ));};_bgd ,_age :=_aa .Params [5].(*_a .PdfObjectFloat );if !_age {_af ,_fad :=_aa .Params [5].(*_a .PdfObjectInteger );if !_fad {continue ;
+};_bgd =_a .MakeFloat (float64 (*_af ));};if _abf ==-1{_abf =float64 (*_bgd );}else if _abf > float64 (*_bgd ){_gc +="\u000a";_bd =float64 (*_gbc );_abf =float64 (*_bgd );continue ;};if _bd ==-1{_bd =float64 (*_gbc );}else if _bd < float64 (*_gbc ){_gc +="\u0009";
+_bd =float64 (*_gbc );};};if _gf &&_aa .Operand =="\u0054\u004a"{if len (_aa .Params )< 1{continue ;};_gfg ,_agb :=_aa .Params [0].(*_a .PdfObjectArray );if !_agb {return "",_ea .Errorf ("\u0069\u006ev\u0061\u006c\u0069\u0064 \u0070\u0061r\u0061\u006d\u0065\u0074\u0065\u0072\u0020\u0074y\u0070\u0065\u002c\u0020\u006e\u006f\u0020\u0061\u0072\u0072\u0061\u0079 \u0028\u0025\u0054\u0029",_aa .Params [0]);
+};for _ ,_ege :=range _gfg .Elements (){switch _aeg :=_ege .(type ){case *_a .PdfObjectString :_gc +=_aeg .Str ();case *_a .PdfObjectFloat :if *_aeg < -100{_gc +="\u0020";};case *_a .PdfObjectInteger :if *_aeg < -100{_gc +="\u0020";};};};}else if _gf &&_aa .Operand =="\u0054\u006a"{if len (_aa .Params )< 1{continue ;
+};_eed ,_bfc :=_aa .Params [0].(*_a .PdfObjectString );if !_bfc {return "",_ea .Errorf ("\u0069\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0070\u0061\u0072\u0061\u006de\u0074\u0065\u0072\u0020\u0074\u0079p\u0065\u002c\u0020\u006e\u006f\u0074\u0020\u0073\u0074\u0072\u0069\u006e\u0067 \u0028\u0025\u0054\u0029",_aa .Params [0]);
+};_gc +=_eed .Str ();};};return _gc ,nil ;};
+
+// SetStrokingColor sets the stroking `color` where color can be one of
+// PdfColorDeviceGray, PdfColorDeviceRGB, or PdfColorDeviceCMYK.
+func (_fef *ContentCreator )SetStrokingColor (color _ab .PdfColor )*ContentCreator {switch _acdb :=color .(type ){case *_ab .PdfColorDeviceGray :_fef .Add_G (_acdb .Val ());case *_ab .PdfColorDeviceRGB :_fef .Add_RG (_acdb .R (),_acdb .G (),_acdb .B ());
+case *_ab .PdfColorDeviceCMYK :_fef .Add_K (_acdb .C (),_acdb .M (),_acdb .Y (),_acdb .K ());case *_ab .PdfColorPatternType2 :_fef .Add_CS (*_a .MakeName ("\u0050a\u0074\u0074\u0065\u0072\u006e"));_fef .Add_SCN_pattern (_acdb .PatternName );case *_ab .PdfColorPatternType3 :_fef .Add_CS (*_a .MakeName ("\u0050a\u0074\u0074\u0065\u0072\u006e"));
+_fef .Add_SCN_pattern (_acdb .PatternName );default:_fbg .Log .Debug ("\u0053\u0065\u0074\u0053\u0074\u0072\u006f\u006b\u0069\u006e\u0067\u0043\u006fl\u006f\u0072\u003a\u0020\u0075\u006es\u0075\u0070\u0070\u006f\u0072\u0074\u0065\u0064\u0020\u0063\u006f\u006c\u006fr\u003a\u0020\u0025\u0054",_acdb );
+};return _fef ;};
+
+// Add_B appends 'B' operand to the content stream:
+// Fill and then stroke the path (nonzero winding number rule).
+//
+// See section 8.5.3 "Path Painting Operators" and Table 60 (p. 143 PDF32000_2008).
+func (_ffd *ContentCreator )Add_B ()*ContentCreator {_gfd :=ContentStreamOperation {};_gfd .Operand ="\u0042";_ffd ._d =append (_ffd ._d ,&_gfd );return _ffd ;};
+
+// Add_l adds 'l' operand to the content stream:
+// Append a straight line segment from the current point to (x,y).
+//
+// See section 8.5.2 "Path Construction Operators" and Table 59 (pp. 140-141 PDF32000_2008).
+func (_ad *ContentCreator )Add_l (x ,y float64 )*ContentCreator {_gad :=ContentStreamOperation {};_gad .Operand ="\u006c";_gad .Params =_dcgf ([]float64 {x ,y });_ad ._d =append (_ad ._d ,&_gad );return _ad ;};
 
 // NewInlineImageFromImage makes a new content stream inline image object from an image.
-func NewInlineImageFromImage (img _gc .Image ,encoder _e .StreamEncoder )(*ContentStreamInlineImage ,error ){if encoder ==nil {encoder =_e .NewRawEncoder ();};encoder .UpdateParams (img .GetParamsDict ());_ceb :=ContentStreamInlineImage {};if img .ColorComponents ==1{_ceb .ColorSpace =_e .MakeName ("\u0047");
-}else if img .ColorComponents ==3{_ceb .ColorSpace =_e .MakeName ("\u0052\u0047\u0042");}else if img .ColorComponents ==4{_ceb .ColorSpace =_e .MakeName ("\u0043\u004d\u0059\u004b");}else {_gd .Log .Debug ("\u0049\u006e\u0076\u0061\u006c\u0069\u0064 \u006e\u0075\u006db\u0065\u0072\u0020o\u0066\u0020c\u006f\u006c\u006f\u0072\u0020\u0063o\u006dpo\u006e\u0065\u006e\u0074\u0073\u0020\u0066\u006f\u0072\u0020\u0069\u006e\u006c\u0069\u006e\u0065\u0020\u0069\u006d\u0061\u0067\u0065\u003a\u0020\u0025\u0064",img .ColorComponents );
-return nil ,_ba .New ("\u0069\u006e\u0076al\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072 \u006ff\u0020c\u006fl\u006f\u0072\u0020\u0063\u006f\u006d\u0070\u006f\u006e\u0065\u006e\u0074\u0073");};_ceb .BitsPerComponent =_e .MakeInteger (img .BitsPerComponent );
-_ceb .Width =_e .MakeInteger (img .Width );_ceb .Height =_e .MakeInteger (img .Height );_ggdg ,_ffe :=encoder .EncodeBytes (img .Data );if _ffe !=nil {return nil ,_ffe ;};_ceb ._eecg =_ggdg ;_aeb :=encoder .GetFilterName ();if _aeb !=_e .StreamEncodingFilterNameRaw {_ceb .Filter =_e .MakeName (_aeb );
-};return &_ceb ,nil ;};
+func NewInlineImageFromImage (img _ab .Image ,encoder _a .StreamEncoder )(*ContentStreamInlineImage ,error ){if encoder ==nil {encoder =_a .NewRawEncoder ();};encoder .UpdateParams (img .GetParamsDict ());_gdd :=ContentStreamInlineImage {};if img .ColorComponents ==1{_gdd .ColorSpace =_a .MakeName ("\u0047");
+}else if img .ColorComponents ==3{_gdd .ColorSpace =_a .MakeName ("\u0052\u0047\u0042");}else if img .ColorComponents ==4{_gdd .ColorSpace =_a .MakeName ("\u0043\u004d\u0059\u004b");}else {_fbg .Log .Debug ("\u0049\u006e\u0076\u0061\u006c\u0069\u0064 \u006e\u0075\u006db\u0065\u0072\u0020o\u0066\u0020c\u006f\u006c\u006f\u0072\u0020\u0063o\u006dpo\u006e\u0065\u006e\u0074\u0073\u0020\u0066\u006f\u0072\u0020\u0069\u006e\u006c\u0069\u006e\u0065\u0020\u0069\u006d\u0061\u0067\u0065\u003a\u0020\u0025\u0064",img .ColorComponents );
+return nil ,_f .New ("\u0069\u006e\u0076al\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072 \u006ff\u0020c\u006fl\u006f\u0072\u0020\u0063\u006f\u006d\u0070\u006f\u006e\u0065\u006e\u0074\u0073");};_gdd .BitsPerComponent =_a .MakeInteger (img .BitsPerComponent );
+_gdd .Width =_a .MakeInteger (img .Width );_gdd .Height =_a .MakeInteger (img .Height );_fefb ,_debd :=encoder .EncodeBytes (img .Data );if _debd !=nil {return nil ,_debd ;};_gdd ._efe =_fefb ;_afbb :=encoder .GetFilterName ();if _afbb !=_a .StreamEncodingFilterNameRaw {_gdd .Filter =_a .MakeName (_afbb );
+};return &_gdd ,nil ;};
 
-// Add_sh appends 'sh' operand to the content stream:
-// Paints the shape and colour shading described by a shading dictionary specified by `name`,
-// subject to the current clipping path
+// Add_Tc appends 'Tc' operand to the content stream:
+// Set character spacing.
 //
-// See section 8.7.4 "Shading Patterns" and Table 77 (p. 190 PDF32000_2008).
-func (_bf *ContentCreator )Add_sh (name _e .PdfObjectName )*ContentCreator {_bbf :=ContentStreamOperation {};_bbf .Operand ="\u0073\u0068";_bbf .Params =_gfgf ([]_e .PdfObjectName {name });_bf ._bbe =append (_bf ._bbe ,&_bbf );return _bf ;};func _gfa (_eaff *ContentStreamInlineImage )(_e .StreamEncoder ,error ){if _eaff .Filter ==nil {return _e .NewRawEncoder (),nil ;
-};_bef ,_fcac :=_eaff .Filter .(*_e .PdfObjectName );if !_fcac {_ebgb ,_bbcd :=_eaff .Filter .(*_e .PdfObjectArray );if !_bbcd {return nil ,_fd .Errorf ("\u0066\u0069\u006c\u0074\u0065\u0072 \u006e\u006f\u0074\u0020\u0061\u0020\u004e\u0061\u006d\u0065\u0020\u006f\u0072 \u0041\u0072\u0072\u0061\u0079\u0020\u006fb\u006a\u0065\u0063\u0074");
-};if _ebgb .Len ()==0{return _e .NewRawEncoder (),nil ;};if _ebgb .Len ()!=1{_ceg ,_gca :=_fgf (_eaff );if _gca !=nil {_gd .Log .Error ("\u0046\u0061\u0069\u006c\u0065\u0064 \u0063\u0072\u0065\u0061\u0074\u0069\u006e\u0067\u0020\u006d\u0075\u006c\u0074i\u0020\u0065\u006e\u0063\u006f\u0064\u0065r\u003a\u0020\u0025\u0076",_gca );
-return nil ,_gca ;};_gd .Log .Trace ("\u004d\u0075\u006c\u0074\u0069\u0020\u0065\u006e\u0063:\u0020\u0025\u0073\u000a",_ceg );return _ceg ,nil ;};_efc :=_ebgb .Get (0);_bef ,_bbcd =_efc .(*_e .PdfObjectName );if !_bbcd {return nil ,_fd .Errorf ("\u0066\u0069l\u0074\u0065\u0072\u0020a\u0072\u0072a\u0079\u0020\u006d\u0065\u006d\u0062\u0065\u0072 \u006e\u006f\u0074\u0020\u0061\u0020\u004e\u0061\u006d\u0065\u0020\u006fb\u006a\u0065\u0063\u0074");
-};};switch *_bef {case "\u0041\u0048\u0078","\u0041\u0053\u0043\u0049\u0049\u0048\u0065\u0078\u0044e\u0063\u006f\u0064\u0065":return _e .NewASCIIHexEncoder (),nil ;case "\u0041\u0038\u0035","\u0041\u0053\u0043\u0049\u0049\u0038\u0035\u0044\u0065\u0063\u006f\u0064\u0065":return _e .NewASCII85Encoder (),nil ;
-case "\u0044\u0043\u0054","\u0044C\u0054\u0044\u0065\u0063\u006f\u0064e":return _ebc (_eaff );case "\u0046\u006c","F\u006c\u0061\u0074\u0065\u0044\u0065\u0063\u006f\u0064\u0065":return _gfc (_eaff ,nil );case "\u004c\u005a\u0057","\u004cZ\u0057\u0044\u0065\u0063\u006f\u0064e":return _becf (_eaff ,nil );
-case "\u0043\u0043\u0046","\u0043\u0043\u0049\u0054\u0054\u0046\u0061\u0078\u0044e\u0063\u006f\u0064\u0065":return _e .NewCCITTFaxEncoder (),nil ;case "\u0052\u004c","\u0052u\u006eL\u0065\u006e\u0067\u0074\u0068\u0044\u0065\u0063\u006f\u0064\u0065":return _e .NewRunLengthEncoder (),nil ;
-default:_gd .Log .Debug ("\u0055\u006e\u0073\u0075\u0070\u0070\u006f\u0072\u0074\u0065\u0064\u0020\u0069\u006e\u006c\u0069\u006e\u0065 \u0069\u006d\u0061\u0067\u0065\u0020\u0065n\u0063\u006f\u0064\u0069\u006e\u0067\u0020\u0066\u0069\u006c\u0074e\u0072\u0020\u006e\u0061\u006d\u0065\u0020\u003a\u0020\u0025\u0073",*_bef );
-return nil ,_ba .New ("\u0075\u006e\u0073up\u0070\u006f\u0072\u0074\u0065\u0064\u0020\u0069\u006el\u0069n\u0065 \u0065n\u0063\u006f\u0064\u0069\u006e\u0067\u0020\u006d\u0065\u0074\u0068\u006f\u0064");};};func (_cbb *ContentStreamParser )skipComments ()error {if _ ,_gad :=_cbb .skipSpaces ();
-_gad !=nil {return _gad ;};_cbbc :=true ;for {_gcf ,_fdg :=_cbb ._dbc .Peek (1);if _fdg !=nil {_gd .Log .Debug ("\u0045\u0072\u0072\u006f\u0072\u0020\u0025\u0073",_fdg .Error ());return _fdg ;};if _cbbc &&_gcf [0]!='%'{return nil ;};_cbbc =false ;if (_gcf [0]!='\r')&&(_gcf [0]!='\n'){_cbb ._dbc .ReadByte ();
-}else {break ;};};return _cbb .skipComments ();};
+// See section 9.3 "Text State Parameters and Operators" and
+// Table 105 (pp. 251-252 PDF32000_2008).
+func (_bec *ContentCreator )Add_Tc (charSpace float64 )*ContentCreator {_ce :=ContentStreamOperation {};_ce .Operand ="\u0054\u0063";_ce .Params =_dcgf ([]float64 {charSpace });_bec ._d =append (_bec ._d ,&_ce );return _bec ;};
 
-// Add_d adds 'd' operand to the content stream: Set the line dash pattern.
+// Operand returns true if `hce` is equivalent to HandlerConditionEnumOperand.
+func (_dgdg HandlerConditionEnum )Operand ()bool {return _dgdg ==HandlerConditionEnumOperand };func (_gcg *ContentStreamInlineImage )toImageBase (_bcec *_ab .PdfPageResources )(*_ed .ImageBase ,error ){if _gcg ._bbd !=nil {return _gcg ._bbd ,nil ;};_abc :=_ed .ImageBase {};
+if _gcg .Height ==nil {return nil ,_f .New ("\u0068e\u0069\u0067\u0068\u0074\u0020\u0061\u0074\u0074\u0072\u0069\u0062u\u0074\u0065\u0020\u006d\u0069\u0073\u0073\u0069\u006e\u0067");};_bgb ,_ebbe :=_gcg .Height .(*_a .PdfObjectInteger );if !_ebbe {return nil ,_f .New ("\u0069\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0068e\u0069\u0067\u0068\u0074");
+};_abc .Height =int (*_bgb );if _gcg .Width ==nil {return nil ,_f .New ("\u0077\u0069\u0064th\u0020\u0061\u0074\u0074\u0072\u0069\u0062\u0075\u0074\u0065\u0020\u006d\u0069\u0073\u0073\u0069\u006e\u0067");};_ddf ,_ebbe :=_gcg .Width .(*_a .PdfObjectInteger );
+if !_ebbe {return nil ,_f .New ("\u0069\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0077\u0069\u0064\u0074\u0068");};_abc .Width =int (*_ddf );_dbg ,_cggd :=_gcg .IsMask ();if _cggd !=nil {return nil ,_cggd ;};if _dbg {_abc .BitsPerComponent =1;_abc .ColorComponents =1;
+}else {if _gcg .BitsPerComponent ==nil {_fbg .Log .Debug ("\u0049\u006el\u0069\u006e\u0065\u0020\u0042\u0069\u0074\u0073\u0020\u0070\u0065\u0072\u0020\u0063\u006f\u006d\u0070\u006f\u006e\u0065\u006e\u0074\u0020\u006d\u0069\u0073\u0073\u0069\u006e\u0067\u0020\u002d\u0020\u0061\u0073\u0073\u0075\u006d\u0069\u006e\u0067\u0020\u0038");
+_abc .BitsPerComponent =8;}else {_dbcc ,_gdfg :=_gcg .BitsPerComponent .(*_a .PdfObjectInteger );if !_gdfg {_fbg .Log .Debug ("E\u0072\u0072\u006f\u0072\u0020\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u0062\u0069\u0074\u0073 p\u0065\u0072\u0020\u0063o\u006d\u0070\u006f\u006e\u0065\u006e\u0074\u0020\u0076al\u0075\u0065,\u0020\u0074\u0079\u0070\u0065\u0020\u0025\u0054",_gcg .BitsPerComponent );
+return nil ,_f .New ("\u0042\u0050\u0043\u0020\u0054\u0079\u0070\u0065\u0020e\u0072\u0072\u006f\u0072");};_abc .BitsPerComponent =int (*_dbcc );};if _gcg .ColorSpace !=nil {_bcge ,_bba :=_gcg .GetColorSpace (_bcec );if _bba !=nil {return nil ,_bba ;};_abc .ColorComponents =_bcge .GetNumComponents ();
+}else {_fbg .Log .Debug ("\u0049\u006el\u0069\u006e\u0065\u0020\u0049\u006d\u0061\u0067\u0065\u0020\u0063\u006f\u006c\u006f\u0072\u0073\u0070\u0061\u0063e\u0020\u006e\u006f\u0074\u0020\u0073p\u0065\u0063\u0069\u0066\u0069\u0065\u0064\u0020\u002d\u0020\u0061\u0073\u0073\u0075m\u0069\u006eg\u0020\u0031\u0020\u0063o\u006c\u006f\u0072\u0020\u0063o\u006d\u0070\u006f\u006e\u0065\u006e\u0074");
+_abc .ColorComponents =1;};};if _dbd ,_dabd :=_a .GetArray (_gcg .Decode );_dabd {_abc .Decode ,_cggd =_dbd .ToFloat64Array ();if _cggd !=nil {return nil ,_cggd ;};};_gcg ._bbd =&_abc ;return _gcg ._bbd ,nil ;};
+
+// HandlerConditionEnum represents the type of operand content stream processor (handler).
+// The handler may process a single specific named operand or all operands.
+type HandlerConditionEnum int ;
+
+// Add_f_starred appends 'f*' operand to the content stream.
+// f*: Fill the path using the even-odd rule to determine fill region.
+//
+// See section 8.5.3 "Path Painting Operators" and Table 60 (p. 143 PDF32000_2008).
+func (_fed *ContentCreator )Add_f_starred ()*ContentCreator {_gbf :=ContentStreamOperation {};_gbf .Operand ="\u0066\u002a";_fed ._d =append (_fed ._d ,&_gbf );return _fed ;};func (_cfff *ContentStreamParser )parseBool ()(_a .PdfObjectBool ,error ){_ced ,_dage :=_cfff ._cacd .Peek (4);
+if _dage !=nil {return _a .PdfObjectBool (false ),_dage ;};if (len (_ced )>=4)&&(string (_ced [:4])=="\u0074\u0072\u0075\u0065"){_cfff ._cacd .Discard (4);return _a .PdfObjectBool (true ),nil ;};_ced ,_dage =_cfff ._cacd .Peek (5);if _dage !=nil {return _a .PdfObjectBool (false ),_dage ;
+};if (len (_ced )>=5)&&(string (_ced [:5])=="\u0066\u0061\u006cs\u0065"){_cfff ._cacd .Discard (5);return _a .PdfObjectBool (false ),nil ;};return _a .PdfObjectBool (false ),_f .New ("\u0075n\u0065\u0078\u0070\u0065c\u0074\u0065\u0064\u0020\u0062o\u006fl\u0065a\u006e\u0020\u0073\u0074\u0072\u0069\u006eg");
+};
+
+// Add_i adds 'i' operand to the content stream: Set the flatness tolerance in the graphics state.
 //
 // See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
-func (_fca *ContentCreator )Add_d (dashArray []int64 ,dashPhase int64 )*ContentCreator {_fff :=ContentStreamOperation {};_fff .Operand ="\u0064";_fff .Params =[]_e .PdfObject {};_fff .Params =append (_fff .Params ,_e .MakeArrayFromIntegers64 (dashArray ));
-_fff .Params =append (_fff .Params ,_e .MakeInteger (dashPhase ));_fca ._bbe =append (_fca ._bbe ,&_fff );return _fca ;};
+func (_fdg *ContentCreator )Add_i (flatness float64 )*ContentCreator {_bcb :=ContentStreamOperation {};_bcb .Operand ="\u0069";_bcb .Params =_dcgf ([]float64 {flatness });_fdg ._d =append (_fdg ._d ,&_bcb );return _fdg ;};
 
-// Operations returns the list of operations.
-func (_cg *ContentCreator )Operations ()*ContentStreamOperations {return &_cg ._bbe };
+// Add_scn appends 'scn' operand to the content stream:
+// Same as SC but for nonstroking operations.
+//
+// See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
+func (_bcag *ContentCreator )Add_scn (c ...float64 )*ContentCreator {_fcc :=ContentStreamOperation {};_fcc .Operand ="\u0073\u0063\u006e";_fcc .Params =_dcgf (c );_bcag ._d =append (_bcag ._d ,&_fcc );return _bcag ;};
+
+// Add_ri adds 'ri' operand to the content stream, which sets the color rendering intent.
+//
+// See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
+func (_afc *ContentCreator )Add_ri (intent _a .PdfObjectName )*ContentCreator {_fca :=ContentStreamOperation {};_fca .Operand ="\u0072\u0069";_fca .Params =_ecee ([]_a .PdfObjectName {intent });_afc ._d =append (_afc ._d ,&_fca );return _afc ;};func (_fdge *ContentStreamParser )parseObject ()(_gcdc _a .PdfObject ,_gafa bool ,_edc error ){_fdge .skipSpaces ();
+for {_bdcf ,_efaa :=_fdge ._cacd .Peek (2);if _efaa !=nil {return nil ,false ,_efaa ;};_fbg .Log .Trace ("\u0050e\u0065k\u0020\u0073\u0074\u0072\u0069\u006e\u0067\u003a\u0020\u0025\u0073",string (_bdcf ));if _bdcf [0]=='%'{_fdge .skipComments ();continue ;
+}else if _bdcf [0]=='/'{_geed ,_bdffa :=_fdge .parseName ();_fbg .Log .Trace ("\u002d\u003e\u004ea\u006d\u0065\u003a\u0020\u0027\u0025\u0073\u0027",_geed );return &_geed ,false ,_bdffa ;}else if _bdcf [0]=='('{_fbg .Log .Trace ("\u002d>\u0053\u0074\u0072\u0069\u006e\u0067!");
+_dgg ,_cde :=_fdge .parseString ();return _dgg ,false ,_cde ;}else if _bdcf [0]=='<'&&_bdcf [1]!='<'{_fbg .Log .Trace ("\u002d\u003e\u0048\u0065\u0078\u0020\u0053\u0074\u0072\u0069\u006e\u0067\u0021");_aff ,_eaea :=_fdge .parseHexString ();return _aff ,false ,_eaea ;
+}else if _bdcf [0]=='['{_fbg .Log .Trace ("\u002d\u003e\u0041\u0072\u0072\u0061\u0079\u0021");_fbb ,_geb :=_fdge .parseArray ();return _fbb ,false ,_geb ;}else if _a .IsFloatDigit (_bdcf [0])||(_bdcf [0]=='-'&&_a .IsFloatDigit (_bdcf [1]))||(_bdcf [0]=='+'&&_a .IsFloatDigit (_bdcf [1])){_fbg .Log .Trace ("\u002d>\u004e\u0075\u006d\u0062\u0065\u0072!");
+_dgf ,_caf :=_fdge .parseNumber ();return _dgf ,false ,_caf ;}else if _bdcf [0]=='<'&&_bdcf [1]=='<'{_gead ,_dbga :=_fdge .parseDict ();return _gead ,false ,_dbga ;}else {_fbg .Log .Trace ("\u002d>\u004fp\u0065\u0072\u0061\u006e\u0064 \u006f\u0072 \u0062\u006f\u006f\u006c\u003f");
+_bdcf ,_ =_fdge ._cacd .Peek (5);_bcbd :=string (_bdcf );_fbg .Log .Trace ("\u0063\u006f\u006e\u0074\u0020\u0050\u0065\u0065\u006b\u0020\u0073\u0074r\u003a\u0020\u0025\u0073",_bcbd );if (len (_bcbd )> 3)&&(_bcbd [:4]=="\u006e\u0075\u006c\u006c"){_gdb ,_abg :=_fdge .parseNull ();
+return &_gdb ,false ,_abg ;}else if (len (_bcbd )> 4)&&(_bcbd [:5]=="\u0066\u0061\u006cs\u0065"){_dda ,_agcc :=_fdge .parseBool ();return &_dda ,false ,_agcc ;}else if (len (_bcbd )> 3)&&(_bcbd [:4]=="\u0074\u0072\u0075\u0065"){_gddc ,_eefg :=_fdge .parseBool ();
+return &_gddc ,false ,_eefg ;};_dafc ,_gcef :=_fdge .parseOperand ();if _gcef !=nil {return _dafc ,false ,_gcef ;};if len (_dafc .String ())< 1{return _dafc ,false ,ErrInvalidOperand ;};return _dafc ,true ,nil ;};};};
+
+// ContentStreamInlineImage is a representation of an inline image in a Content stream. Everything between the BI and EI operands.
+// ContentStreamInlineImage implements the core.PdfObject interface although strictly it is not a PDF object.
+type ContentStreamInlineImage struct{BitsPerComponent _a .PdfObject ;ColorSpace _a .PdfObject ;Decode _a .PdfObject ;DecodeParms _a .PdfObject ;Filter _a .PdfObject ;Height _a .PdfObject ;ImageMask _a .PdfObject ;Intent _a .PdfObject ;Interpolate _a .PdfObject ;
+Width _a .PdfObject ;_efe []byte ;_bbd *_ed .ImageBase ;};
+
+// Add_f appends 'f' operand to the content stream:
+// Fill the path using the nonzero winding number rule to determine fill region.
+//
+// See section 8.5.3 "Path Painting Operators" and Table 60 (p. 143 PDF32000_2008).
+func (_bef *ContentCreator )Add_f ()*ContentCreator {_de :=ContentStreamOperation {};_de .Operand ="\u0066";_bef ._d =append (_bef ._d ,&_de );return _bef ;};
+
+// Add_Tj appends 'Tj' operand to the content stream:
+// Show a text string.
+//
+// See section 9.4.3 "Text Showing Operators" and
+// Table 209 (pp. 258-259 PDF32000_2008).
+func (_cdcb *ContentCreator )Add_Tj (textstr _a .PdfObjectString )*ContentCreator {_dfgg :=ContentStreamOperation {};_dfgg .Operand ="\u0054\u006a";_dfgg .Params =_cafe ([]_a .PdfObjectString {textstr });_cdcb ._d =append (_cdcb ._d ,&_dfgg );return _cdcb ;
+};var _ddg =_fb .MustCompile ("\u005e\u002f\u007b\u0032\u002c\u007d");
+
+// Add_v appends 'v' operand to the content stream: Append a Bezier curve to the current path from the
+// current point to (x3,y3) with the current point and (x2,y2) as control points.
+//
+// See section 8.5.2 "Path Construction Operators" and Table 59 (pp. 140-141 PDF32000_2008).
+func (_ge *ContentCreator )Add_v (x2 ,y2 ,x3 ,y3 float64 )*ContentCreator {_ace :=ContentStreamOperation {};_ace .Operand ="\u0076";_ace .Params =_dcgf ([]float64 {x2 ,y2 ,x3 ,y3 });_ge ._d =append (_ge ._d ,&_ace );return _ge ;};
+
+// Add_W appends 'W' operand to the content stream:
+// Modify the current clipping path by intersecting with the current path (nonzero winding rule).
+//
+// See section 8.5.4 "Clipping Path Operators" and Table 61 (p. 146 PDF32000_2008).
+func (_dg *ContentCreator )Add_W ()*ContentCreator {_cbg :=ContentStreamOperation {};_cbg .Operand ="\u0057";_dg ._d =append (_dg ._d ,&_cbg );return _dg ;};
+
+// Add_M adds 'M' operand to the content stream: Set the miter limit (graphics state).
+//
+// See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
+func (_feg *ContentCreator )Add_M (miterlimit float64 )*ContentCreator {_bcae :=ContentStreamOperation {};_bcae .Operand ="\u004d";_bcae .Params =_dcgf ([]float64 {miterlimit });_feg ._d =append (_feg ._d ,&_bcae );return _feg ;};
+
+// NewContentStreamProcessor returns a new ContentStreamProcessor for operations `ops`.
+func NewContentStreamProcessor (ops []*ContentStreamOperation )*ContentStreamProcessor {_gaec :=ContentStreamProcessor {};_gaec ._fbga =GraphicStateStack {};_ceba :=GraphicsState {};_gaec ._aabb =_ceba ;_gaec ._cggde =[]handlerEntry {};_gaec ._feda =0;
+_gaec ._bdd =ops ;return &_gaec ;};
+
+// ToImage exports the inline image to Image which can be transformed or exported easily.
+// Page resources are needed to look up colorspace information.
+func (_efa *ContentStreamInlineImage )ToImage (resources *_ab .PdfPageResources )(*_ab .Image ,error ){_ccfd ,_fbad :=_efa .toImageBase (resources );if _fbad !=nil {return nil ,_fbad ;};_acef ,_fbad :=_edd (_efa );if _fbad !=nil {return nil ,_fbad ;};_adb ,_eab :=_a .GetDict (_efa .DecodeParms );
+if _eab {_acef .UpdateParams (_adb );};_fbg .Log .Trace ("\u0065n\u0063o\u0064\u0065\u0072\u003a\u0020\u0025\u002b\u0076\u0020\u0025\u0054",_acef ,_acef );_fbg .Log .Trace ("\u0069\u006e\u006c\u0069\u006e\u0065\u0020\u0069\u006d\u0061\u0067\u0065:\u0020\u0025\u002b\u0076",_efa );
+_gdce ,_fbad :=_acef .DecodeBytes (_efa ._efe );if _fbad !=nil {return nil ,_fbad ;};_abbc :=&_ab .Image {Width :int64 (_ccfd .Width ),Height :int64 (_ccfd .Height ),BitsPerComponent :int64 (_ccfd .BitsPerComponent ),ColorComponents :_ccfd .ColorComponents ,Data :_gdce };
+if len (_ccfd .Decode )> 0{for _gcc :=0;_gcc < len (_ccfd .Decode );_gcc ++{_ccfd .Decode [_gcc ]*=float64 ((int (1)<<uint (_ccfd .BitsPerComponent ))-1);};_abbc .SetDecode (_ccfd .Decode );};return _abbc ,nil ;};
+
+// Add_k appends 'k' operand to the content stream:
+// Same as K but used for nonstroking operations.
+//
+// See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
+func (_aea *ContentCreator )Add_k (c ,m ,y ,k float64 )*ContentCreator {_gbgg :=ContentStreamOperation {};_gbgg .Operand ="\u006b";_gbgg .Params =_dcgf ([]float64 {c ,m ,y ,k });_aea ._d =append (_aea ._d ,&_gbgg );return _aea ;};
 
 // Add_Tw appends 'Tw' operand to the content stream:
 // Set word spacing.
 //
 // See section 9.3 "Text State Parameters and Operators" and
 // Table 105 (pp. 251-252 PDF32000_2008).
-func (_fae *ContentCreator )Add_Tw (wordSpace float64 )*ContentCreator {_afc :=ContentStreamOperation {};_afc .Operand ="\u0054\u0077";_afc .Params =_caddf ([]float64 {wordSpace });_fae ._bbe =append (_fae ._bbe ,&_afc );return _fae ;};func (_gbea *ContentStreamParser )parseNumber ()(_e .PdfObject ,error ){return _e .ParseNumber (_gbea ._dbc );
-};
+func (_fab *ContentCreator )Add_Tw (wordSpace float64 )*ContentCreator {_fcce :=ContentStreamOperation {};_fcce .Operand ="\u0054\u0077";_fcce .Params =_dcgf ([]float64 {wordSpace });_fab ._d =append (_fab ._d ,&_fcce );return _fab ;};func _geda (_efg *ContentStreamInlineImage ,_agg *_a .PdfObjectDictionary )(*_a .FlateEncoder ,error ){_fcag :=_a .NewFlateEncoder ();
+if _efg ._bbd !=nil {_fcag .SetImage (_efg ._bbd );};if _agg ==nil {_aag :=_efg .DecodeParms ;if _aag !=nil {_fbf ,_ggc :=_a .GetDict (_aag );if !_ggc {_fbg .Log .Debug ("E\u0072\u0072\u006f\u0072\u003a\u0020\u0044\u0065\u0063\u006f\u0064\u0065\u0050\u0061\u0072\u006d\u0073\u0020n\u006f\u0074\u0020\u0061\u0020\u0064\u0069\u0063\u0074\u0069on\u0061\u0072\u0079 \u0028%\u0054\u0029",_aag );
+return nil ,_ea .Errorf ("\u0069\u006e\u0076\u0061li\u0064\u0020\u0044\u0065\u0063\u006f\u0064\u0065\u0050\u0061\u0072\u006d\u0073");};_agg =_fbf ;};};if _agg ==nil {return _fcag ,nil ;};_fbg .Log .Trace ("\u0064\u0065\u0063\u006f\u0064\u0065\u0020\u0070\u0061\u0072\u0061\u006ds\u003a\u0020\u0025\u0073",_agg .String ());
+_cef :=_agg .Get ("\u0050r\u0065\u0064\u0069\u0063\u0074\u006fr");if _cef ==nil {_fbg .Log .Debug ("E\u0072\u0072o\u0072\u003a\u0020\u0050\u0072\u0065\u0064\u0069\u0063\u0074\u006f\u0072\u0020\u006d\u0069\u0073\u0073\u0069\u006e\u0067 \u0066\u0072\u006f\u006d\u0020\u0044\u0065\u0063\u006f\u0064\u0065\u0050\u0061\u0072\u006d\u0073 \u002d\u0020\u0043\u006f\u006e\u0074\u0069\u006e\u0075\u0065\u0020\u0077\u0069t\u0068\u0020\u0064\u0065\u0066\u0061\u0075\u006c\u0074\u0020\u00281\u0029");
+}else {_egf ,_fcgb :=_cef .(*_a .PdfObjectInteger );if !_fcgb {_fbg .Log .Debug ("E\u0072\u0072\u006f\u0072\u003a\u0020\u0050\u0072\u0065d\u0069\u0063\u0074\u006f\u0072\u0020\u0073pe\u0063\u0069\u0066\u0069e\u0064\u0020\u0062\u0075\u0074\u0020\u006e\u006f\u0074 n\u0075\u006de\u0072\u0069\u0063\u0020\u0028\u0025\u0054\u0029",_cef );
+return nil ,_ea .Errorf ("\u0069\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0050\u0072\u0065\u0064i\u0063\u0074\u006f\u0072");};_fcag .Predictor =int (*_egf );};_cef =_agg .Get ("\u0042\u0069t\u0073\u0050\u0065r\u0043\u006f\u006d\u0070\u006f\u006e\u0065\u006e\u0074");
+if _cef !=nil {_bb ,_debf :=_cef .(*_a .PdfObjectInteger );if !_debf {_fbg .Log .Debug ("\u0045\u0052\u0052O\u0052\u003a\u0020\u0049n\u0076\u0061\u006c\u0069\u0064\u0020\u0042i\u0074\u0073\u0050\u0065\u0072\u0043\u006f\u006d\u0070\u006f\u006e\u0065\u006e\u0074");
+return nil ,_ea .Errorf ("\u0069n\u0076\u0061\u006c\u0069\u0064\u0020\u0042\u0069\u0074\u0073\u0050e\u0072\u0043\u006f\u006d\u0070\u006f\u006e\u0065\u006e\u0074");};_fcag .BitsPerComponent =int (*_bb );};if _fcag .Predictor > 1{_fcag .Columns =1;_cef =_agg .Get ("\u0043o\u006c\u0075\u006d\u006e\u0073");
+if _cef !=nil {_cce ,_ggf :=_cef .(*_a .PdfObjectInteger );if !_ggf {return nil ,_ea .Errorf ("\u0070r\u0065\u0064\u0069\u0063\u0074\u006f\u0072\u0020\u0063\u006f\u006cu\u006d\u006e\u0020\u0069\u006e\u0076\u0061\u006c\u0069\u0064");};_fcag .Columns =int (*_cce );
+};_fcag .Colors =1;_geag :=_agg .Get ("\u0043\u006f\u006c\u006f\u0072\u0073");if _geag !=nil {_dab ,_bfaa :=_geag .(*_a .PdfObjectInteger );if !_bfaa {return nil ,_ea .Errorf ("\u0070\u0072\u0065d\u0069\u0063\u0074\u006fr\u0020\u0063\u006f\u006c\u006f\u0072\u0073 \u006e\u006f\u0074\u0020\u0061\u006e\u0020\u0069\u006e\u0074\u0065\u0067\u0065\u0072");
+};_fcag .Colors =int (*_dab );};};return _fcag ,nil ;};
 
-// Add_B_starred appends 'B*' operand to the content stream:
-// Fill and then stroke the path (even-odd rule).
+// Add_S appends 'S' operand to the content stream: Stroke the path.
 //
 // See section 8.5.3 "Path Painting Operators" and Table 60 (p. 143 PDF32000_2008).
-func (_gea *ContentCreator )Add_B_starred ()*ContentCreator {_ffa :=ContentStreamOperation {};_ffa .Operand ="\u0042\u002a";_gea ._bbe =append (_gea ._bbe ,&_ffa );return _gea ;};
+func (_ged *ContentCreator )Add_S ()*ContentCreator {_effe :=ContentStreamOperation {};_effe .Operand ="\u0053";_ged ._d =append (_ged ._d ,&_effe );return _ged ;};func (_eea *ContentStreamProcessor )handleCommand_k (_dbgb *ContentStreamOperation ,_bfea *_ab .PdfPageResources )error {_aeec :=_ab .NewPdfColorspaceDeviceCMYK ();
+if len (_dbgb .Params )!=_aeec .GetNumComponents (){_fbg .Log .Debug ("I\u006e\u0076\u0061\u006c\u0069\u0064 \u006e\u0075\u006d\u0062\u0065\u0072 \u006f\u0066\u0020\u0070\u0061\u0072\u0061m\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020S\u0043");
+_fbg .Log .Debug ("\u004e\u0075mb\u0065\u0072\u0020%\u0064\u0020\u006e\u006ft m\u0061tc\u0068\u0069\u006e\u0067\u0020\u0063\u006flo\u0072\u0073\u0070\u0061\u0063\u0065\u0020%\u0054",len (_dbgb .Params ),_aeec );return _f .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");
+};_dcag ,_dcf :=_aeec .ColorFromPdfObjects (_dbgb .Params );if _dcf !=nil {return _dcf ;};_eea ._aabb .ColorspaceNonStroking =_aeec ;_eea ._aabb .ColorNonStroking =_dcag ;return nil ;};
 
-// ContentStreamParser represents a content stream parser for parsing content streams in PDFs.
-type ContentStreamParser struct{_dbc *_a .Reader };var _agc =map[string ]struct{}{"\u0062":struct{}{},"\u0042":struct{}{},"\u0062\u002a":struct{}{},"\u0042\u002a":struct{}{},"\u0042\u0044\u0043":struct{}{},"\u0042\u0049":struct{}{},"\u0042\u004d\u0043":struct{}{},"\u0042\u0054":struct{}{},"\u0042\u0058":struct{}{},"\u0063":struct{}{},"\u0063\u006d":struct{}{},"\u0043\u0053":struct{}{},"\u0063\u0073":struct{}{},"\u0064":struct{}{},"\u0064\u0030":struct{}{},"\u0064\u0031":struct{}{},"\u0044\u006f":struct{}{},"\u0044\u0050":struct{}{},"\u0045\u0049":struct{}{},"\u0045\u004d\u0043":struct{}{},"\u0045\u0054":struct{}{},"\u0045\u0058":struct{}{},"\u0066":struct{}{},"\u0046":struct{}{},"\u0066\u002a":struct{}{},"\u0047":struct{}{},"\u0067":struct{}{},"\u0067\u0073":struct{}{},"\u0068":struct{}{},"\u0069":struct{}{},"\u0049\u0044":struct{}{},"\u006a":struct{}{},"\u004a":struct{}{},"\u004b":struct{}{},"\u006b":struct{}{},"\u006c":struct{}{},"\u006d":struct{}{},"\u004d":struct{}{},"\u004d\u0050":struct{}{},"\u006e":struct{}{},"\u0071":struct{}{},"\u0051":struct{}{},"\u0072\u0065":struct{}{},"\u0052\u0047":struct{}{},"\u0072\u0067":struct{}{},"\u0072\u0069":struct{}{},"\u0073":struct{}{},"\u0053":struct{}{},"\u0053\u0043":struct{}{},"\u0073\u0063":struct{}{},"\u0053\u0043\u004e":struct{}{},"\u0073\u0063\u006e":struct{}{},"\u0073\u0068":struct{}{},"\u0054\u002a":struct{}{},"\u0054\u0063":struct{}{},"\u0054\u0064":struct{}{},"\u0054\u0044":struct{}{},"\u0054\u0066":struct{}{},"\u0054\u006a":struct{}{},"\u0054\u004a":struct{}{},"\u0054\u004c":struct{}{},"\u0054\u006d":struct{}{},"\u0054\u0072":struct{}{},"\u0054\u0073":struct{}{},"\u0054\u0077":struct{}{},"\u0054\u007a":struct{}{},"\u0076":struct{}{},"\u0077":struct{}{},"\u0057":struct{}{},"\u0057\u002a":struct{}{},"\u0079":struct{}{},"\u0027":struct{}{},"\u0022":struct{}{}};
-func (_afgg *ContentStreamInlineImage )String ()string {_agb :=_fd .Sprintf ("I\u006el\u0069\u006e\u0065\u0049\u006d\u0061\u0067\u0065(\u006c\u0065\u006e\u003d%d\u0029\u000a",len (_afgg ._eecg ));if _afgg .BitsPerComponent !=nil {_agb +="\u002d\u0020\u0042\u0050\u0043\u0020"+_afgg .BitsPerComponent .WriteString ()+"\u000a";
-};if _afgg .ColorSpace !=nil {_agb +="\u002d\u0020\u0043S\u0020"+_afgg .ColorSpace .WriteString ()+"\u000a";};if _afgg .Decode !=nil {_agb +="\u002d\u0020\u0044\u0020"+_afgg .Decode .WriteString ()+"\u000a";};if _afgg .DecodeParms !=nil {_agb +="\u002d\u0020\u0044P\u0020"+_afgg .DecodeParms .WriteString ()+"\u000a";
-};if _afgg .Filter !=nil {_agb +="\u002d\u0020\u0046\u0020"+_afgg .Filter .WriteString ()+"\u000a";};if _afgg .Height !=nil {_agb +="\u002d\u0020\u0048\u0020"+_afgg .Height .WriteString ()+"\u000a";};if _afgg .ImageMask !=nil {_agb +="\u002d\u0020\u0049M\u0020"+_afgg .ImageMask .WriteString ()+"\u000a";
-};if _afgg .Intent !=nil {_agb +="\u002d \u0049\u006e\u0074\u0065\u006e\u0074 "+_afgg .Intent .WriteString ()+"\u000a";};if _afgg .Interpolate !=nil {_agb +="\u002d\u0020\u0049\u0020"+_afgg .Interpolate .WriteString ()+"\u000a";};if _afgg .Width !=nil {_agb +="\u002d\u0020\u0057\u0020"+_afgg .Width .WriteString ()+"\u000a";
-};return _agb ;};func (_ecb *ContentStreamParser )parseString ()(*_e .PdfObjectString ,error ){_ecb ._dbc .ReadByte ();var _gda []byte ;_cagb :=1;for {_fgg ,_ebdf :=_ecb ._dbc .Peek (1);if _ebdf !=nil {return _e .MakeString (string (_gda )),_ebdf ;};if _fgg [0]=='\\'{_ecb ._dbc .ReadByte ();
-_dbbf ,_eaebc :=_ecb ._dbc .ReadByte ();if _eaebc !=nil {return _e .MakeString (string (_gda )),_eaebc ;};if _e .IsOctalDigit (_dbbf ){_gceb ,_edb :=_ecb ._dbc .Peek (2);if _edb !=nil {return _e .MakeString (string (_gda )),_edb ;};var _ecd []byte ;_ecd =append (_ecd ,_dbbf );
-for _ ,_beef :=range _gceb {if _e .IsOctalDigit (_beef ){_ecd =append (_ecd ,_beef );}else {break ;};};_ecb ._dbc .Discard (len (_ecd )-1);_gd .Log .Trace ("\u004e\u0075\u006d\u0065ri\u0063\u0020\u0073\u0074\u0072\u0069\u006e\u0067\u0020\u0022\u0025\u0073\u0022",_ecd );
-_dccgc ,_edb :=_c .ParseUint (string (_ecd ),8,32);if _edb !=nil {return _e .MakeString (string (_gda )),_edb ;};_gda =append (_gda ,byte (_dccgc ));continue ;};switch _dbbf {case 'n':_gda =append (_gda ,'\n');case 'r':_gda =append (_gda ,'\r');case 't':_gda =append (_gda ,'\t');
-case 'b':_gda =append (_gda ,'\b');case 'f':_gda =append (_gda ,'\f');case '(':_gda =append (_gda ,'(');case ')':_gda =append (_gda ,')');case '\\':_gda =append (_gda ,'\\');};continue ;}else if _fgg [0]=='('{_cagb ++;}else if _fgg [0]==')'{_cagb --;if _cagb ==0{_ecb ._dbc .ReadByte ();
-break ;};};_ddf ,_ :=_ecb ._dbc .ReadByte ();_gda =append (_gda ,_ddf );};return _e .MakeString (string (_gda )),nil ;};func _becf (_acab *ContentStreamInlineImage ,_bcefb *_e .PdfObjectDictionary )(*_e .LZWEncoder ,error ){_bdd :=_e .NewLZWEncoder ();
-if _bcefb ==nil {if _acab .DecodeParms !=nil {_cga ,_efa :=_e .GetDict (_acab .DecodeParms );if !_efa {_gd .Log .Debug ("E\u0072\u0072\u006f\u0072\u003a\u0020\u0044\u0065\u0063\u006f\u0064\u0065\u0050\u0061\u0072\u006d\u0073\u0020n\u006f\u0074\u0020\u0061\u0020\u0064\u0069\u0063\u0074\u0069on\u0061\u0072\u0079 \u0028%\u0054\u0029",_acab .DecodeParms );
-return nil ,_fd .Errorf ("\u0069\u006e\u0076\u0061li\u0064\u0020\u0044\u0065\u0063\u006f\u0064\u0065\u0050\u0061\u0072\u006d\u0073");};_bcefb =_cga ;};};if _bcefb ==nil {return _bdd ,nil ;};_dabf :=_bcefb .Get ("E\u0061\u0072\u006c\u0079\u0043\u0068\u0061\u006e\u0067\u0065");
-if _dabf !=nil {_fcgb ,_gfag :=_dabf .(*_e .PdfObjectInteger );if !_gfag {_gd .Log .Debug ("\u0045\u0072\u0072\u006f\u0072\u003a \u0045\u0061\u0072\u006c\u0079\u0043\u0068\u0061\u006e\u0067\u0065\u0020\u0073\u0070\u0065\u0063\u0069\u0066\u0069\u0065d\u0020\u0062\u0075\u0074\u0020\u006e\u006f\u0074\u0020\u006e\u0075\u006d\u0065\u0072i\u0063 \u0028\u0025\u0054\u0029",_dabf );
-return nil ,_fd .Errorf ("\u0069\u006e\u0076\u0061li\u0064\u0020\u0045\u0061\u0072\u006c\u0079\u0043\u0068\u0061\u006e\u0067\u0065");};if *_fcgb !=0&&*_fcgb !=1{return nil ,_fd .Errorf ("\u0069\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0045\u0061\u0072\u006c\u0079\u0043\u0068\u0061\u006e\u0067\u0065\u0020\u0076\u0061\u006c\u0075e\u0020\u0028\u006e\u006f\u0074 \u0030\u0020o\u0072\u0020\u0031\u0029");
-};_bdd .EarlyChange =int (*_fcgb );}else {_bdd .EarlyChange =1;};_dabf =_bcefb .Get ("\u0050r\u0065\u0064\u0069\u0063\u0074\u006fr");if _dabf !=nil {_effe ,_ggfb :=_dabf .(*_e .PdfObjectInteger );if !_ggfb {_gd .Log .Debug ("E\u0072\u0072\u006f\u0072\u003a\u0020\u0050\u0072\u0065d\u0069\u0063\u0074\u006f\u0072\u0020\u0073pe\u0063\u0069\u0066\u0069e\u0064\u0020\u0062\u0075\u0074\u0020\u006e\u006f\u0074 n\u0075\u006de\u0072\u0069\u0063\u0020\u0028\u0025\u0054\u0029",_dabf );
-return nil ,_fd .Errorf ("\u0069\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0050\u0072\u0065\u0064i\u0063\u0074\u006f\u0072");};_bdd .Predictor =int (*_effe );};_dabf =_bcefb .Get ("\u0042\u0069t\u0073\u0050\u0065r\u0043\u006f\u006d\u0070\u006f\u006e\u0065\u006e\u0074");
-if _dabf !=nil {_bba ,_ada :=_dabf .(*_e .PdfObjectInteger );if !_ada {_gd .Log .Debug ("\u0045\u0052\u0052O\u0052\u003a\u0020\u0049n\u0076\u0061\u006c\u0069\u0064\u0020\u0042i\u0074\u0073\u0050\u0065\u0072\u0043\u006f\u006d\u0070\u006f\u006e\u0065\u006e\u0074");
-return nil ,_fd .Errorf ("\u0069n\u0076\u0061\u006c\u0069\u0064\u0020\u0042\u0069\u0074\u0073\u0050e\u0072\u0043\u006f\u006d\u0070\u006f\u006e\u0065\u006e\u0074");};_bdd .BitsPerComponent =int (*_bba );};if _bdd .Predictor > 1{_bdd .Columns =1;_dabf =_bcefb .Get ("\u0043o\u006c\u0075\u006d\u006e\u0073");
-if _dabf !=nil {_bgde ,_efaa :=_dabf .(*_e .PdfObjectInteger );if !_efaa {return nil ,_fd .Errorf ("\u0070r\u0065\u0064\u0069\u0063\u0074\u006f\u0072\u0020\u0063\u006f\u006cu\u006d\u006e\u0020\u0069\u006e\u0076\u0061\u006c\u0069\u0064");};_bdd .Columns =int (*_bgde );
-};_bdd .Colors =1;_dabf =_bcefb .Get ("\u0043\u006f\u006c\u006f\u0072\u0073");if _dabf !=nil {_ccd ,_gege :=_dabf .(*_e .PdfObjectInteger );if !_gege {return nil ,_fd .Errorf ("\u0070\u0072\u0065d\u0069\u0063\u0074\u006fr\u0020\u0063\u006f\u006c\u006f\u0072\u0073 \u006e\u006f\u0074\u0020\u0061\u006e\u0020\u0069\u006e\u0074\u0065\u0067\u0065\u0072");
-};_bdd .Colors =int (*_ccd );};};_gd .Log .Trace ("\u0064\u0065\u0063\u006f\u0064\u0065\u0020\u0070\u0061\u0072\u0061\u006ds\u003a\u0020\u0025\u0073",_bcefb .String ());return _bdd ,nil ;};
-
-// SetStrokingColor sets the stroking `color` where color can be one of
-// PdfColorDeviceGray, PdfColorDeviceRGB, or PdfColorDeviceCMYK.
-func (_abd *ContentCreator )SetStrokingColor (color _gc .PdfColor )*ContentCreator {switch _dab :=color .(type ){case *_gc .PdfColorDeviceGray :_abd .Add_G (_dab .Val ());case *_gc .PdfColorDeviceRGB :_abd .Add_RG (_dab .R (),_dab .G (),_dab .B ());case *_gc .PdfColorDeviceCMYK :_abd .Add_K (_dab .C (),_dab .M (),_dab .Y (),_dab .K ());
-case *_gc .PdfColorPatternType2 :_abd .Add_CS (*_e .MakeName ("\u0050a\u0074\u0074\u0065\u0072\u006e"));_abd .Add_SCN_pattern (_dab .PatternName );case *_gc .PdfColorPatternType3 :_abd .Add_CS (*_e .MakeName ("\u0050a\u0074\u0074\u0065\u0072\u006e"));_abd .Add_SCN_pattern (_dab .PatternName );
-default:_gd .Log .Debug ("\u0053\u0065\u0074\u0053\u0074\u0072\u006f\u006b\u0069\u006e\u0067\u0043\u006fl\u006f\u0072\u003a\u0020\u0075\u006es\u0075\u0070\u0070\u006f\u0072\u0074\u0065\u0064\u0020\u0063\u006f\u006c\u006fr\u003a\u0020\u0025\u0054",_dab );
-};return _abd ;};
-
-// ContentStreamProcessor defines a data structure and methods for processing a content stream, keeping track of the
-// current graphics state, and allowing external handlers to define their own functions as a part of the processing,
-// for example rendering or extracting certain information.
-type ContentStreamProcessor struct{_dbce GraphicStateStack ;_adac []*ContentStreamOperation ;_fgfg GraphicsState ;_ffgg []handlerEntry ;_faff int ;};
-
-// Add_J adds 'J' operand to the content stream: Set the line cap style (graphics state).
+// Add_TL appends 'TL' operand to the content stream:
+// Set leading.
 //
-// See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
-func (_aef *ContentCreator )Add_J (lineCapStyle string )*ContentCreator {_bab :=ContentStreamOperation {};_bab .Operand ="\u004a";_bab .Params =_gfgf ([]_e .PdfObjectName {_e .PdfObjectName (lineCapStyle )});_aef ._bbe =append (_aef ._bbe ,&_bab );return _aef ;
-};func (_agea *ContentStreamProcessor )handleCommand_RG (_eaba *ContentStreamOperation ,_caag *_gc .PdfPageResources )error {_adg :=_gc .NewPdfColorspaceDeviceRGB ();if len (_eaba .Params )!=_adg .GetNumComponents (){_gd .Log .Debug ("I\u006e\u0076\u0061\u006c\u0069\u0064 \u006e\u0075\u006d\u0062\u0065\u0072 \u006f\u0066\u0020\u0070\u0061\u0072\u0061m\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020R\u0047");
-_gd .Log .Debug ("\u004e\u0075mb\u0065\u0072\u0020%\u0064\u0020\u006e\u006ft m\u0061tc\u0068\u0069\u006e\u0067\u0020\u0063\u006flo\u0072\u0073\u0070\u0061\u0063\u0065\u0020%\u0054",len (_eaba .Params ),_adg );return _ba .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");
-};_feb ,_aabe :=_adg .ColorFromPdfObjects (_eaba .Params );if _aabe !=nil {return _aabe ;};_agea ._fgfg .ColorspaceStroking =_adg ;_agea ._fgfg .ColorStroking =_feb ;return nil ;};
+// See section 9.3 "Text State Parameters and Operators" and
+// Table 105 (pp. 251-252 PDF32000_2008).
+func (_gbbb *ContentCreator )Add_TL (leading float64 )*ContentCreator {_abfe :=ContentStreamOperation {};_abfe .Operand ="\u0054\u004c";_abfe .Params =_dcgf ([]float64 {leading });_gbbb ._d =append (_gbbb ._d ,&_abfe );return _gbbb ;};
 
 // Add_TD appends 'TD' operand to the content stream:
 // Move to start of next line with offset (`tx`, `ty`).
 //
 // See section 9.4.2 "Text Positioning Operators" and
 // Table 108 (pp. 257-258 PDF32000_2008).
-func (_eaeg *ContentCreator )Add_TD (tx ,ty float64 )*ContentCreator {_bdef :=ContentStreamOperation {};_bdef .Operand ="\u0054\u0044";_bdef .Params =_caddf ([]float64 {tx ,ty });_eaeg ._bbe =append (_eaeg ._bbe ,&_bdef );return _eaeg ;};
-
-// Add_j adds 'j' operand to the content stream: Set the line join style (graphics state).
-//
-// See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
-func (_eeed *ContentCreator )Add_j (lineJoinStyle string )*ContentCreator {_dbe :=ContentStreamOperation {};_dbe .Operand ="\u006a";_dbe .Params =_gfgf ([]_e .PdfObjectName {_e .PdfObjectName (lineJoinStyle )});_eeed ._bbe =append (_eeed ._bbe ,&_dbe );
-return _eeed ;};
+func (_beg *ContentCreator )Add_TD (tx ,ty float64 )*ContentCreator {_gcd :=ContentStreamOperation {};_gcd .Operand ="\u0054\u0044";_gcd .Params =_dcgf ([]float64 {tx ,ty });_beg ._d =append (_beg ._d ,&_gcd );return _beg ;};
 
 // Wrap ensures that the contentstream is wrapped within a balanced q ... Q expression.
-func (_dea *ContentCreator )Wrap (){_dea ._bbe .WrapIfNeeded ()};func (_fce *ContentStreamParser )parseHexString ()(*_e .PdfObjectString ,error ){_fce ._dbc .ReadByte ();_gbbe :=[]byte ("\u0030\u0031\u0032\u003345\u0036\u0037\u0038\u0039\u0061\u0062\u0063\u0064\u0065\u0066\u0041\u0042\u0043\u0044E\u0046");
-var _fage []byte ;for {_fce .skipSpaces ();_faf ,_fcfc :=_fce ._dbc .Peek (1);if _fcfc !=nil {return _e .MakeString (""),_fcfc ;};if _faf [0]=='>'{_fce ._dbc .ReadByte ();break ;};_afdf ,_ :=_fce ._dbc .ReadByte ();if _g .IndexByte (_gbbe ,_afdf )>=0{_fage =append (_fage ,_afdf );
-};};if len (_fage )%2==1{_fage =append (_fage ,'0');};_dfbe ,_ :=_bd .DecodeString (string (_fage ));return _e .MakeHexString (string (_dfbe )),nil ;};
+func (_bca *ContentCreator )Wrap (){_bca ._d .WrapIfNeeded ()};
 
-// Add_re appends 're' operand to the content stream:
-// Append a rectangle to the current path as a complete subpath, with lower left corner (x,y).
+// Add_W_starred appends 'W*' operand to the content stream:
+// Modify the current clipping path by intersecting with the current path (even odd rule).
 //
-// See section 8.5.2 "Path Construction Operators" and Table 59 (pp. 140-141 PDF32000_2008).
-func (_eedg *ContentCreator )Add_re (x ,y ,width ,height float64 )*ContentCreator {_afg :=ContentStreamOperation {};_afg .Operand ="\u0072\u0065";_afg .Params =_caddf ([]float64 {x ,y ,width ,height });_eedg ._bbe =append (_eedg ._bbe ,&_afg );return _eedg ;
-};
+// See section 8.5.4 "Clipping Path Operators" and Table 61 (p. 146 PDF32000_2008).
+func (_dad *ContentCreator )Add_W_starred ()*ContentCreator {_dce :=ContentStreamOperation {};_dce .Operand ="\u0057\u002a";_dad ._d =append (_dad ._d ,&_dce );return _dad ;};func (_fbde *ContentStreamProcessor )getInitialColor (_def _ab .PdfColorspace )(_ab .PdfColor ,error ){switch _eggb :=_def .(type ){case *_ab .PdfColorspaceDeviceGray :return _ab .NewPdfColorDeviceGray (0.0),nil ;
+case *_ab .PdfColorspaceDeviceRGB :return _ab .NewPdfColorDeviceRGB (0.0,0.0,0.0),nil ;case *_ab .PdfColorspaceDeviceCMYK :return _ab .NewPdfColorDeviceCMYK (0.0,0.0,0.0,1.0),nil ;case *_ab .PdfColorspaceCalGray :return _ab .NewPdfColorCalGray (0.0),nil ;
+case *_ab .PdfColorspaceCalRGB :return _ab .NewPdfColorCalRGB (0.0,0.0,0.0),nil ;case *_ab .PdfColorspaceLab :_fbed :=0.0;_ecgc :=0.0;_gac :=0.0;if _eggb .Range [0]> 0{_fbed =_eggb .Range [0];};if _eggb .Range [2]> 0{_ecgc =_eggb .Range [2];};return _ab .NewPdfColorLab (_fbed ,_ecgc ,_gac ),nil ;
+case *_ab .PdfColorspaceICCBased :if _eggb .Alternate ==nil {_fbg .Log .Trace ("\u0049\u0043\u0043\u0020\u0042\u0061\u0073\u0065\u0064\u0020\u006eo\u0074\u0020\u0064\u0065\u0066\u0069\u006e\u0065d\u0020-\u0020\u0061\u0074\u0074\u0065\u006d\u0070\u0074\u0069\u006e\u0067\u0020\u0066\u0061\u006c\u006c\u0020\u0062a\u0063\u006b\u0020\u0028\u004e\u0020\u003d\u0020\u0025\u0064\u0029",_eggb .N );
+if _eggb .N ==1{_fbg .Log .Trace ("\u0046\u0061\u006c\u006c\u0069\u006e\u0067\u0020\u0062\u0061\u0063k\u0020\u0074\u006f\u0020\u0044\u0065\u0076\u0069\u0063\u0065G\u0072\u0061\u0079");return _fbde .getInitialColor (_ab .NewPdfColorspaceDeviceGray ());}else if _eggb .N ==3{_fbg .Log .Trace ("\u0046a\u006c\u006c\u0069\u006eg\u0020\u0062\u0061\u0063\u006b \u0074o\u0020D\u0065\u0076\u0069\u0063\u0065\u0052\u0047B");
+return _fbde .getInitialColor (_ab .NewPdfColorspaceDeviceRGB ());}else if _eggb .N ==4{_fbg .Log .Trace ("\u0046\u0061\u006c\u006c\u0069\u006e\u0067\u0020\u0062\u0061\u0063k\u0020\u0074\u006f\u0020\u0044\u0065\u0076\u0069\u0063\u0065C\u004d\u0059\u004b");
+return _fbde .getInitialColor (_ab .NewPdfColorspaceDeviceCMYK ());}else {return nil ,_f .New ("a\u006c\u0074\u0065\u0072\u006e\u0061t\u0065\u0020\u0073\u0070\u0061\u0063e\u0020\u006e\u006f\u0074\u0020\u0064\u0065f\u0069\u006e\u0065\u0064\u0020\u0066\u006f\u0072\u0020\u0049C\u0043");
+};};return _fbde .getInitialColor (_eggb .Alternate );case *_ab .PdfColorspaceSpecialIndexed :if _eggb .Base ==nil {return nil ,_f .New ("\u0069\u006e\u0064\u0065\u0078\u0065\u0064\u0020\u0062\u0061\u0073e\u0020\u006e\u006f\u0074\u0020\u0073\u0070\u0065\u0063\u0069f\u0069\u0065\u0064");
+};return _fbde .getInitialColor (_eggb .Base );case *_ab .PdfColorspaceSpecialSeparation :if _eggb .AlternateSpace ==nil {return nil ,_f .New ("\u0061\u006ct\u0065\u0072\u006e\u0061\u0074\u0065\u0020\u0073\u0070\u0061\u0063\u0065\u0020\u006e\u006f\u0074\u0020\u0073\u0070\u0065\u0063\u0069fi\u0065\u0064");
+};return _fbde .getInitialColor (_eggb .AlternateSpace );case *_ab .PdfColorspaceDeviceN :if _eggb .AlternateSpace ==nil {return nil ,_f .New ("\u0061\u006ct\u0065\u0072\u006e\u0061\u0074\u0065\u0020\u0073\u0070\u0061\u0063\u0065\u0020\u006e\u006f\u0074\u0020\u0073\u0070\u0065\u0063\u0069fi\u0065\u0064");
+};return _fbde .getInitialColor (_eggb .AlternateSpace );case *_ab .PdfColorspaceSpecialPattern :return _ab .NewPdfColorPattern (),nil ;};_fbg .Log .Debug ("Un\u0061\u0062l\u0065\u0020\u0074\u006f\u0020\u0064\u0065\u0074\u0065r\u006d\u0069\u006e\u0065\u0020\u0069\u006e\u0069\u0074\u0069\u0061\u006c\u0020\u0063\u006f\u006c\u006f\u0072\u0020\u0066\u006f\u0072\u0020\u0075\u006e\u006b\u006e\u006fw\u006e \u0063\u006f\u006c\u006f\u0072\u0073\u0070\u0061c\u0065:\u0020\u0025T",_def );
+return nil ,_f .New ("\u0075\u006e\u0073\u0075pp\u006f\u0072\u0074\u0065\u0064\u0020\u0063\u006f\u006c\u006f\u0072\u0073\u0070\u0061c\u0065");};func _cggb (_cfda string )bool {_ ,_gbfb :=_edb [_cfda ];return _gbfb };
 
-// Add_Tf appends 'Tf' operand to the content stream:
-// Set font and font size specified by font resource `fontName` and `fontSize`.
-//
-// See section 9.3 "Text State Parameters and Operators" and
-// Table 105 (pp. 251-252 PDF32000_2008).
-func (_bda *ContentCreator )Add_Tf (fontName _e .PdfObjectName ,fontSize float64 )*ContentCreator {_deae :=ContentStreamOperation {};_deae .Operand ="\u0054\u0066";_deae .Params =_gfgf ([]_e .PdfObjectName {fontName });_deae .Params =append (_deae .Params ,_caddf ([]float64 {fontSize })...);
-_bda ._bbe =append (_bda ._bbe ,&_deae );return _bda ;};func (_ecdg *ContentStreamProcessor )handleCommand_g (_gdc *ContentStreamOperation ,_aab *_gc .PdfPageResources )error {_dbcee :=_gc .NewPdfColorspaceDeviceGray ();if len (_gdc .Params )!=_dbcee .GetNumComponents (){_gd .Log .Debug ("\u0049\u006e\u0076al\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072 \u006ff\u0020p\u0061r\u0061\u006d\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020\u0067");
-_gd .Log .Debug ("\u004e\u0075mb\u0065\u0072\u0020%\u0064\u0020\u006e\u006ft m\u0061tc\u0068\u0069\u006e\u0067\u0020\u0063\u006flo\u0072\u0073\u0070\u0061\u0063\u0065\u0020%\u0054",len (_gdc .Params ),_dbcee );return _ba .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");
-};_geaf ,_fbg :=_dbcee .ColorFromPdfObjects (_gdc .Params );if _fbg !=nil {_gd .Log .Debug ("\u0045\u0052\u0052\u004fR\u003a\u0020\u0068\u0061\u006e\u0064\u006c\u0065\u0043o\u006d\u006d\u0061\u006e\u0064\u005f\u0067\u0020\u0049\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0070\u0061r\u0061\u006d\u0073\u002e\u0020c\u0073\u003d\u0025\u0054\u0020\u006f\u0070\u003d\u0025\u0073\u0020\u0065\u0072\u0072\u003d\u0025\u0076",_dbcee ,_gdc ,_fbg );
-return _fbg ;};_ecdg ._fgfg .ColorspaceNonStroking =_dbcee ;_ecdg ._fgfg .ColorNonStroking =_geaf ;return nil ;};
+// ParseInlineImage parses an inline image from a content stream, both reading its properties and binary data.
+// When called, "BI" has already been read from the stream.  This function
+// finishes reading through "EI" and then returns the ContentStreamInlineImage.
+func (_gcf *ContentStreamParser )ParseInlineImage ()(*ContentStreamInlineImage ,error ){_bdgd :=ContentStreamInlineImage {};for {_gcf .skipSpaces ();_fga ,_acac ,_fdc :=_gcf .parseObject ();if _fdc !=nil {return nil ,_fdc ;};if !_acac {_bbac ,_cac :=_a .GetName (_fga );
+if !_cac {_fbg .Log .Debug ("\u0049\u006e\u0076\u0061\u006ci\u0064\u0020\u0069\u006e\u006c\u0069\u006e\u0065\u0020\u0069\u006d\u0061\u0067e\u0020\u0070\u0072\u006f\u0070\u0065\u0072\u0074\u0079\u0020\u0028\u0065\u0078\u0070\u0065\u0063\u0074\u0069\u006e\u0067\u0020\u006e\u0061\u006d\u0065\u0029\u0020\u002d\u0020\u0025T",_fga );
+return nil ,_ea .Errorf ("\u0069\u006e\u0076\u0061\u006ci\u0064\u0020\u0069\u006e\u006c\u0069\u006e\u0065\u0020\u0069\u006d\u0061\u0067e\u0020\u0070\u0072\u006f\u0070\u0065\u0072\u0074\u0079\u0020\u0028\u0065\u0078\u0070\u0065\u0063\u0074\u0069\u006e\u0067\u0020\u006e\u0061\u006d\u0065\u0029\u0020\u002d\u0020\u0025T",_fga );
+};_dgd ,_cbf ,_fdgf :=_gcf .parseObject ();if _fdgf !=nil {return nil ,_fdgf ;};if _cbf {return nil ,_ea .Errorf ("\u006eo\u0074\u0020\u0065\u0078\u0070\u0065\u0063\u0074\u0069\u006e\u0067 \u0061\u006e\u0020\u006f\u0070\u0065\u0072\u0061\u006e\u0064");
+};switch *_bbac {case "\u0042\u0050\u0043","\u0042\u0069t\u0073\u0050\u0065r\u0043\u006f\u006d\u0070\u006f\u006e\u0065\u006e\u0074":_bdgd .BitsPerComponent =_dgd ;case "\u0043\u0053","\u0043\u006f\u006c\u006f\u0072\u0053\u0070\u0061\u0063\u0065":_bdgd .ColorSpace =_dgd ;
+case "\u0044","\u0044\u0065\u0063\u006f\u0064\u0065":_bdgd .Decode =_dgd ;case "\u0044\u0050","D\u0065\u0063\u006f\u0064\u0065\u0050\u0061\u0072\u006d\u0073":_bdgd .DecodeParms =_dgd ;case "\u0046","\u0046\u0069\u006c\u0074\u0065\u0072":_bdgd .Filter =_dgd ;
+case "\u0048","\u0048\u0065\u0069\u0067\u0068\u0074":_bdgd .Height =_dgd ;case "\u0049\u004d","\u0049m\u0061\u0067\u0065\u004d\u0061\u0073k":_bdgd .ImageMask =_dgd ;case "\u0049\u006e\u0074\u0065\u006e\u0074":_bdgd .Intent =_dgd ;case "\u0049","I\u006e\u0074\u0065\u0072\u0070\u006f\u006c\u0061\u0074\u0065":_bdgd .Interpolate =_dgd ;
+case "\u0057","\u0057\u0069\u0064t\u0068":_bdgd .Width =_dgd ;case "\u004c\u0065\u006e\u0067\u0074\u0068","\u0053u\u0062\u0074\u0079\u0070\u0065","\u0054\u0079\u0070\u0065":_fbg .Log .Debug ("\u0049\u0067\u006e\u006fr\u0069\u006e\u0067\u0020\u0069\u006e\u006c\u0069\u006e\u0065 \u0070a\u0072\u0061\u006d\u0065\u0074\u0065\u0072 \u0025\u0073",*_bbac );
+default:return nil ,_ea .Errorf ("\u0075\u006e\u006b\u006e\u006f\u0077n\u0020\u0069\u006e\u006c\u0069\u006e\u0065\u0020\u0069\u006d\u0061\u0067\u0065 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0020\u0025\u0073",*_bbac );};};if _acac {_eeff ,_fdd :=_fga .(*_a .PdfObjectString );
+if !_fdd {return nil ,_ea .Errorf ("\u0066a\u0069\u006ce\u0064\u0020\u0074o\u0020\u0072\u0065\u0061\u0064\u0020\u0069n\u006c\u0069\u006e\u0065\u0020\u0069m\u0061\u0067\u0065\u0020\u002d\u0020\u0069\u006e\u0076\u0061\u006ci\u0064\u0020\u006f\u0070\u0065\u0072\u0061\u006e\u0064");
+};if _eeff .Str ()=="\u0045\u0049"{_fbg .Log .Trace ("\u0049n\u006c\u0069\u006e\u0065\u0020\u0069\u006d\u0061\u0067\u0065\u0020f\u0069\u006e\u0069\u0073\u0068\u0065\u0064\u002e\u002e\u002e");return &_bdgd ,nil ;}else if _eeff .Str ()=="\u0049\u0044"{_fbg .Log .Trace ("\u0049\u0044\u0020\u0073\u0074\u0061\u0072\u0074");
+_aadg ,_dege :=_gcf ._cacd .Peek (1);if _dege !=nil {return nil ,_dege ;};if _a .IsWhiteSpace (_aadg [0]){_gcf ._cacd .Discard (1);};_bdgd ._efe =[]byte {};_gga :=0;var _cdd []byte ;for {_fdfb ,_fda :=_gcf ._cacd .ReadByte ();if _fda !=nil {_fbg .Log .Debug ("\u0055\u006e\u0061\u0062\u006ce\u0020\u0074\u006f\u0020\u0066\u0069\u006e\u0064\u0020\u0065\u006e\u0064\u0020o\u0066\u0020\u0069\u006d\u0061\u0067\u0065\u0020\u0045\u0049\u0020\u0069\u006e\u0020\u0069\u006e\u006c\u0069\u006e\u0065\u0020\u0069\u006d\u0061\u0067\u0065\u0020\u0064\u0061\u0074a");
+return nil ,_fda ;};if _gga ==0{if _a .IsWhiteSpace (_fdfb ){_cdd =[]byte {};_cdd =append (_cdd ,_fdfb );_gga =1;}else if _fdfb =='E'{_cdd =append (_cdd ,_fdfb );_gga =2;}else {_bdgd ._efe =append (_bdgd ._efe ,_fdfb );};}else if _gga ==1{_cdd =append (_cdd ,_fdfb );
+if _fdfb =='E'{_gga =2;}else {_bdgd ._efe =append (_bdgd ._efe ,_cdd ...);_cdd =[]byte {};if _a .IsWhiteSpace (_fdfb ){_gga =1;}else {_gga =0;};};}else if _gga ==2{_cdd =append (_cdd ,_fdfb );if _fdfb =='I'{_gga =3;}else {_bdgd ._efe =append (_bdgd ._efe ,_cdd ...);
+_cdd =[]byte {};_gga =0;};}else if _gga ==3{_cdd =append (_cdd ,_fdfb );if _a .IsWhiteSpace (_fdfb ){_gecg ,_bga :=_gcf ._cacd .Peek (20);if _bga !=nil &&_bga !=_bea .EOF {return nil ,_bga ;};_caab :=NewContentStreamParser (string (_gecg ));_gfcb :=true ;
+for _faa :=0;_faa < 3;_faa ++{_aeag ,_cdg ,_aaf :=_caab .parseObject ();if _aaf !=nil {if _aaf ==_bea .EOF {break ;};_gfcb =false ;continue ;};if _cdg &&!_cggb (_aeag .String ()){_gfcb =false ;break ;};};if _gfcb {if len (_bdgd ._efe )> 100{_fbg .Log .Trace ("\u0049\u006d\u0061\u0067\u0065\u0020\u0073\u0074\u0072\u0065\u0061m\u0020\u0028\u0025\u0064\u0029\u003a\u0020\u0025\u0020\u0078 \u002e\u002e\u002e",len (_bdgd ._efe ),_bdgd ._efe [:100]);
+}else {_fbg .Log .Trace ("\u0049\u006d\u0061\u0067e \u0073\u0074\u0072\u0065\u0061\u006d\u0020\u0028\u0025\u0064\u0029\u003a\u0020\u0025 \u0078",len (_bdgd ._efe ),_bdgd ._efe );};return &_bdgd ,nil ;};};_bdgd ._efe =append (_bdgd ._efe ,_cdd ...);_cdd =[]byte {};
+_gga =0;};};};};};};
 
-// Add_gs adds 'gs' operand to the content stream: Set the graphics state.
-//
-// See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
-func (_dbd *ContentCreator )Add_gs (dictName _e .PdfObjectName )*ContentCreator {_ce :=ContentStreamOperation {};_ce .Operand ="\u0067\u0073";_ce .Params =_gfgf ([]_e .PdfObjectName {dictName });_dbd ._bbe =append (_dbd ._bbe ,&_ce );return _dbd ;};func (_bg *ContentStreamOperations )isWrapped ()bool {if len (*_bg )< 2{return false ;
-};_ac :=0;for _ ,_ee :=range *_bg {if _ee .Operand =="\u0071"{_ac ++;}else if _ee .Operand =="\u0051"{_ac --;}else {if _ac < 1{return false ;};};};return _ac ==0;};
-
-// AddHandler adds a new ContentStreamProcessor `handler` of type `condition` for `operand`.
-func (_bbgeb *ContentStreamProcessor )AddHandler (condition HandlerConditionEnum ,operand string ,handler HandlerFunc ){_bdg :=handlerEntry {};_bdg .Condition =condition ;_bdg .Operand =operand ;_bdg .Handler =handler ;_bbgeb ._ffgg =append (_bbgeb ._ffgg ,_bdg );
-};var _bffb =_d .MustCompile ("\u005e\u002f\u007b\u0032\u002c\u007d");
-
-// Add_B appends 'B' operand to the content stream:
-// Fill and then stroke the path (nonzero winding number rule).
+// Add_n appends 'n' operand to the content stream:
+// End the path without filling or stroking.
 //
 // See section 8.5.3 "Path Painting Operators" and Table 60 (p. 143 PDF32000_2008).
-func (_aedb *ContentCreator )Add_B ()*ContentCreator {_add :=ContentStreamOperation {};_add .Operand ="\u0042";_aedb ._bbe =append (_aedb ._bbe ,&_add );return _aedb ;};
+func (_fbe *ContentCreator )Add_n ()*ContentCreator {_fea :=ContentStreamOperation {};_fea .Operand ="\u006e";_fbe ._d =append (_fbe ._d ,&_fea );return _fbe ;};func (_aga *ContentStreamProcessor )handleCommand_cs (_dgaf *ContentStreamOperation ,_ebdd *_ab .PdfPageResources )error {if len (_dgaf .Params )< 1{_fbg .Log .Debug ("\u0049\u006e\u0076\u0061\u006c\u0069d\u0020\u0043\u0053\u0020\u0063\u006f\u006d\u006d\u0061\u006e\u0064\u002c\u0020s\u006b\u0069\u0070\u0070\u0069\u006e\u0067 \u006f\u0076\u0065\u0072");
+return _f .New ("\u0074o\u006f \u0066\u0065\u0077\u0020\u0070a\u0072\u0061m\u0065\u0074\u0065\u0072\u0073");};if len (_dgaf .Params )> 1{_fbg .Log .Debug ("\u0043\u0053\u0020\u0063\u006f\u006d\u006d\u0061n\u0064\u0020\u0077it\u0068\u0020\u0074\u006f\u006f\u0020m\u0061\u006e\u0079\u0020\u0070\u0061\u0072\u0061\u006d\u0065\u0074\u0065\u0072\u0073\u0020-\u0020\u0063\u006f\u006e\u0074\u0069\u006e\u0075i\u006e\u0067");
+return _f .New ("\u0074\u006f\u006f\u0020ma\u006e\u0079\u0020\u0070\u0061\u0072\u0061\u006d\u0065\u0074\u0065\u0072\u0073");};_cee ,_fee :=_dgaf .Params [0].(*_a .PdfObjectName );if !_fee {_fbg .Log .Debug ("\u0045\u0052\u0052\u004f\u0052\u003a\u0020C\u0053\u0020\u0063o\u006d\u006d\u0061n\u0064\u0020w\u0069\u0074\u0068\u0020\u0069\u006ev\u0061li\u0064\u0020\u0070\u0061\u0072\u0061\u006d\u0065\u0074\u0065\u0072\u002c\u0020\u0073\u006b\u0069\u0070\u0070\u0069\u006e\u0067\u0020\u006f\u0076\u0065\u0072");
+return _f .New ("\u0074\u0079p\u0065\u0020\u0063h\u0065\u0063\u006b\u0020\u0065\u0072\u0072\u006f\u0072");};_ded ,_aae :=_aga .getColorspace (string (*_cee ),_ebdd );if _aae !=nil {return _aae ;};_aga ._aabb .ColorspaceNonStroking =_ded ;_dcg ,_aae :=_aga .getInitialColor (_ded );
+if _aae !=nil {return _aae ;};_aga ._aabb .ColorNonStroking =_dcg ;return nil ;};
 
-// Add_K appends 'K' operand to the content stream:
-// Set the stroking colorspace to DeviceCMYK and sets the c,m,y,k color (0-1 each component).
-//
-// See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
-func (_gbee *ContentCreator )Add_K (c ,m ,y ,k float64 )*ContentCreator {_beec :=ContentStreamOperation {};_beec .Operand ="\u004b";_beec .Params =_caddf ([]float64 {c ,m ,y ,k });_gbee ._bbe =append (_gbee ._bbe ,&_beec );return _gbee ;};func _dfbc (_gba []int64 )[]_e .PdfObject {var _gdfe []_e .PdfObject ;
-for _ ,_dafb :=range _gba {_gdfe =append (_gdfe ,_e .MakeInteger (_dafb ));};return _gdfe ;};
+// ContentStreamProcessor defines a data structure and methods for processing a content stream, keeping track of the
+// current graphics state, and allowing external handlers to define their own functions as a part of the processing,
+// for example rendering or extracting certain information.
+type ContentStreamProcessor struct{_fbga GraphicStateStack ;_bdd []*ContentStreamOperation ;_aabb GraphicsState ;_cggde []handlerEntry ;_feda int ;};
 
-// Add_SC appends 'SC' operand to the content stream:
-// Set color for stroking operations.  Input: c1, ..., cn.
+// Add_EMC appends 'EMC' operand to the content stream:
+// Ends a marked-content sequence.
 //
-// See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
-func (_afab *ContentCreator )Add_SC (c ...float64 )*ContentCreator {_ggeb :=ContentStreamOperation {};_ggeb .Operand ="\u0053\u0043";_ggeb .Params =_caddf (c );_afab ._bbe =append (_afab ._bbe ,&_ggeb );return _afab ;};
+// See section 14.6 "Marked Content" and Table 320 (p. 561 PDF32000_2008).
+func (_aad *ContentCreator )Add_EMC ()*ContentCreator {_cbe :=ContentStreamOperation {};_cbe .Operand ="\u0045\u004d\u0043";_aad ._d =append (_aad ._d ,&_cbe );return _aad ;};
+
+// ContentCreator is a builder for PDF content streams.
+type ContentCreator struct{_d ContentStreamOperations };
+
+// Add_Q adds 'Q' operand to the content stream: Pops the most recently stored state from the stack.
+//
+// See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
+func (_fce *ContentCreator )Add_Q ()*ContentCreator {_df :=ContentStreamOperation {};_df .Operand ="\u0051";_fce ._d =append (_fce ._d ,&_df );return _fce ;};
 
 // Add_cs appends 'cs' operand to the content stream:
 // Same as CS but for non-stroking operations.
 //
 // See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
-func (_bbed *ContentCreator )Add_cs (name _e .PdfObjectName )*ContentCreator {_cbd :=ContentStreamOperation {};_cbd .Operand ="\u0063\u0073";_cbd .Params =_gfgf ([]_e .PdfObjectName {name });_bbed ._bbe =append (_bbed ._bbe ,&_cbd );return _bbed ;};func (_bbdc *ContentStreamParser )parseOperand ()(*_e .PdfObjectString ,error ){var _bcgcf []byte ;
-for {_eab ,_dbgc :=_bbdc ._dbc .Peek (1);if _dbgc !=nil {return _e .MakeString (string (_bcgcf )),_dbgc ;};if _e .IsDelimiter (_eab [0]){break ;};if _e .IsWhiteSpace (_eab [0]){break ;};_agcc ,_ :=_bbdc ._dbc .ReadByte ();_bcgcf =append (_bcgcf ,_agcc );
-};return _e .MakeString (string (_bcgcf )),nil ;};
+func (_deb *ContentCreator )Add_cs (name _a .PdfObjectName )*ContentCreator {_ade :=ContentStreamOperation {};_ade .Operand ="\u0063\u0073";_ade .Params =_ecee ([]_a .PdfObjectName {name });_deb ._d =append (_deb ._d ,&_ade );return _deb ;};
 
-// ContentStreamOperation represents an operation in PDF contentstream which consists of
-// an operand and parameters.
-type ContentStreamOperation struct{Params []_e .PdfObject ;Operand string ;};func (_gadf *ContentStreamParser )parseName ()(_e .PdfObjectName ,error ){_bbcg :="";_daa :=false ;for {_aefc ,_cfga :=_gadf ._dbc .Peek (1);if _cfga ==_cf .EOF {break ;};if _cfga !=nil {return _e .PdfObjectName (_bbcg ),_cfga ;
-};if !_daa {if _aefc [0]=='/'{_daa =true ;_gadf ._dbc .ReadByte ();}else {_gd .Log .Error ("N\u0061\u006d\u0065\u0020\u0073\u0074a\u0072\u0074\u0069\u006e\u0067\u0020\u0077\u0069\u0074h\u0020\u0025\u0073 \u0028%\u0020\u0078\u0029",_aefc ,_aefc );return _e .PdfObjectName (_bbcg ),_fd .Errorf ("\u0069n\u0076a\u006c\u0069\u0064\u0020\u006ea\u006d\u0065:\u0020\u0028\u0025\u0063\u0029",_aefc [0]);
-};}else {if _e .IsWhiteSpace (_aefc [0]){break ;}else if (_aefc [0]=='/')||(_aefc [0]=='[')||(_aefc [0]=='(')||(_aefc [0]==']')||(_aefc [0]=='<')||(_aefc [0]=='>'){break ;}else if _aefc [0]=='#'{_adad ,_ggaa :=_gadf ._dbc .Peek (3);if _ggaa !=nil {return _e .PdfObjectName (_bbcg ),_ggaa ;
-};_gadf ._dbc .Discard (3);_ccf ,_ggaa :=_bd .DecodeString (string (_adad [1:3]));if _ggaa !=nil {return _e .PdfObjectName (_bbcg ),_ggaa ;};_bbcg +=string (_ccf );}else {_eacd ,_ :=_gadf ._dbc .ReadByte ();_bbcg +=string (_eacd );};};};return _e .PdfObjectName (_bbcg ),nil ;
+// Add_ET appends 'ET' operand to the content stream:
+// End text.
+//
+// See section 9.4 "Text Objects" and Table 107 (p. 256 PDF32000_2008).
+func (_eagde *ContentCreator )Add_ET ()*ContentCreator {_fdf :=ContentStreamOperation {};_fdf .Operand ="\u0045\u0054";_eagde ._d =append (_eagde ._d ,&_fdf );return _eagde ;};func (_dbf *ContentStreamProcessor )handleCommand_cm (_bgda *ContentStreamOperation ,_cdgf *_ab .PdfPageResources )error {if len (_bgda .Params )!=6{_fbg .Log .Debug ("\u0045\u0052R\u004f\u0052\u003a\u0020\u0049\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020\u006f\u0066\u0020\u0070\u0061\u0072\u0061\u006d\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020\u0063\u006d\u003a\u0020\u0025\u0064",len (_bgda .Params ));
+return _f .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");};_dfdb ,_dgbe :=_a .GetNumbersAsFloat (_bgda .Params );if _dgbe !=nil {return _dgbe ;
+};_bgae :=_ee .NewMatrix (_dfdb [0],_dfdb [1],_dfdb [2],_dfdb [3],_dfdb [4],_dfdb [5]);_dbf ._aabb .CTM .Concat (_bgae );return nil ;};
+
+// HandlerFunc is the function syntax that the ContentStreamProcessor handler must implement.
+type HandlerFunc func (_daac *ContentStreamOperation ,_beea GraphicsState ,_fabg *_ab .PdfPageResources )error ;func (_fcbc *ContentStreamProcessor )handleCommand_SC (_efed *ContentStreamOperation ,_bega *_ab .PdfPageResources )error {_cfdb :=_fcbc ._aabb .ColorspaceStroking ;
+if len (_efed .Params )!=_cfdb .GetNumComponents (){_fbg .Log .Debug ("I\u006e\u0076\u0061\u006c\u0069\u0064 \u006e\u0075\u006d\u0062\u0065\u0072 \u006f\u0066\u0020\u0070\u0061\u0072\u0061m\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020S\u0043");
+_fbg .Log .Debug ("\u004e\u0075mb\u0065\u0072\u0020%\u0064\u0020\u006e\u006ft m\u0061tc\u0068\u0069\u006e\u0067\u0020\u0063\u006flo\u0072\u0073\u0070\u0061\u0063\u0065\u0020%\u0054",len (_efed .Params ),_cfdb );return _f .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");
+};_cfb ,_cddb :=_cfdb .ColorFromPdfObjects (_efed .Params );if _cddb !=nil {return _cddb ;};_fcbc ._aabb .ColorStroking =_cfb ;return nil ;};func (_gge *ContentStreamProcessor )handleCommand_rg (_cdabb *ContentStreamOperation ,_eefa *_ab .PdfPageResources )error {_gaee :=_ab .NewPdfColorspaceDeviceRGB ();
+if len (_cdabb .Params )!=_gaee .GetNumComponents (){_fbg .Log .Debug ("I\u006e\u0076\u0061\u006c\u0069\u0064 \u006e\u0075\u006d\u0062\u0065\u0072 \u006f\u0066\u0020\u0070\u0061\u0072\u0061m\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020S\u0043");
+_fbg .Log .Debug ("\u004e\u0075mb\u0065\u0072\u0020%\u0064\u0020\u006e\u006ft m\u0061tc\u0068\u0069\u006e\u0067\u0020\u0063\u006flo\u0072\u0073\u0070\u0061\u0063\u0065\u0020%\u0054",len (_cdabb .Params ),_gaee );return _f .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");
+};_acde ,_cffd :=_gaee .ColorFromPdfObjects (_cdabb .Params );if _cffd !=nil {return _cffd ;};_gge ._aabb .ColorspaceNonStroking =_gaee ;_gge ._aabb .ColorNonStroking =_acde ;return nil ;};func (_ecc *ContentStreamProcessor )handleCommand_g (_gdad *ContentStreamOperation ,_cdcf *_ab .PdfPageResources )error {_edee :=_ab .NewPdfColorspaceDeviceGray ();
+if len (_gdad .Params )!=_edee .GetNumComponents (){_fbg .Log .Debug ("\u0049\u006e\u0076al\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072 \u006ff\u0020p\u0061r\u0061\u006d\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020\u0067");_fbg .Log .Debug ("\u004e\u0075mb\u0065\u0072\u0020%\u0064\u0020\u006e\u006ft m\u0061tc\u0068\u0069\u006e\u0067\u0020\u0063\u006flo\u0072\u0073\u0070\u0061\u0063\u0065\u0020%\u0054",len (_gdad .Params ),_edee );
+return _f .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");};_feaf ,_gabf :=_edee .ColorFromPdfObjects (_gdad .Params );if _gabf !=nil {_fbg .Log .Debug ("\u0045\u0052\u0052\u004fR\u003a\u0020\u0068\u0061\u006e\u0064\u006c\u0065\u0043o\u006d\u006d\u0061\u006e\u0064\u005f\u0067\u0020\u0049\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0070\u0061r\u0061\u006d\u0073\u002e\u0020c\u0073\u003d\u0025\u0054\u0020\u006f\u0070\u003d\u0025\u0073\u0020\u0065\u0072\u0072\u003d\u0025\u0076",_edee ,_gdad ,_gabf );
+return _gabf ;};_ecc ._aabb .ColorspaceNonStroking =_edee ;_ecc ._aabb .ColorNonStroking =_feaf ;return nil ;};
+
+// NewContentCreator returns a new initialized ContentCreator.
+func NewContentCreator ()*ContentCreator {_ccf :=&ContentCreator {};_ccf ._d =ContentStreamOperations {};return _ccf ;};var (ErrInvalidOperand =_f .New ("\u0069n\u0076a\u006c\u0069\u0064\u0020\u006f\u0070\u0065\u0072\u0061\u006e\u0064");ErrEarlyExit =_f .New ("\u0074\u0065\u0072\u006di\u006e\u0061\u0074\u0065\u0020\u0070\u0072\u006f\u0063\u0065s\u0073 \u0065\u0061\u0072\u006c\u0079\u0020\u0065x\u0069\u0074");
+);
+
+// GetEncoder returns the encoder of the inline image.
+func (_aeaa *ContentStreamInlineImage )GetEncoder ()(_a .StreamEncoder ,error ){return _edd (_aeaa )};func _febc (_fdab []int64 )[]_a .PdfObject {var _gdca []_a .PdfObject ;for _ ,_fbfe :=range _fdab {_gdca =append (_gdca ,_a .MakeInteger (_fbfe ));};return _gdca ;
+};func (_debff *ContentStreamProcessor )handleCommand_CS (_dfc *ContentStreamOperation ,_fdb *_ab .PdfPageResources )error {if len (_dfc .Params )< 1{_fbg .Log .Debug ("\u0049\u006e\u0076\u0061\u006c\u0069d\u0020\u0063\u0073\u0020\u0063\u006f\u006d\u006d\u0061\u006e\u0064\u002c\u0020s\u006b\u0069\u0070\u0070\u0069\u006e\u0067 \u006f\u0076\u0065\u0072");
+return _f .New ("\u0074o\u006f \u0066\u0065\u0077\u0020\u0070a\u0072\u0061m\u0065\u0074\u0065\u0072\u0073");};if len (_dfc .Params )> 1{_fbg .Log .Debug ("\u0063\u0073\u0020\u0063\u006f\u006d\u006d\u0061n\u0064\u0020\u0077it\u0068\u0020\u0074\u006f\u006f\u0020m\u0061\u006e\u0079\u0020\u0070\u0061\u0072\u0061\u006d\u0065\u0074\u0065\u0072\u0073\u0020-\u0020\u0063\u006f\u006e\u0074\u0069\u006e\u0075i\u006e\u0067");
+return _f .New ("\u0074\u006f\u006f\u0020ma\u006e\u0079\u0020\u0070\u0061\u0072\u0061\u006d\u0065\u0074\u0065\u0072\u0073");};_gabd ,_add :=_dfc .Params [0].(*_a .PdfObjectName );if !_add {_fbg .Log .Debug ("\u0045\u0052\u0052\u004f\u0052\u003a\u0020c\u0073\u0020\u0063o\u006d\u006d\u0061n\u0064\u0020w\u0069\u0074\u0068\u0020\u0069\u006ev\u0061li\u0064\u0020\u0070\u0061\u0072\u0061\u006d\u0065\u0074\u0065\u0072\u002c\u0020\u0073\u006b\u0069\u0070\u0070\u0069\u006e\u0067\u0020\u006f\u0076\u0065\u0072");
+return _f .New ("\u0074\u0079p\u0065\u0020\u0063h\u0065\u0063\u006b\u0020\u0065\u0072\u0072\u006f\u0072");};_adc ,_bbag :=_debff .getColorspace (string (*_gabd ),_fdb );if _bbag !=nil {return _bbag ;};_debff ._aabb .ColorspaceStroking =_adc ;_gecd ,_bbag :=_debff .getInitialColor (_adc );
+if _bbag !=nil {return _bbag ;};_debff ._aabb .ColorStroking =_gecd ;return nil ;};
+
+// Add_Tm appends 'Tm' operand to the content stream:
+// Set the text line matrix.
+//
+// See section 9.4.2 "Text Positioning Operators" and
+// Table 108 (pp. 257-258 PDF32000_2008).
+func (_fcd *ContentCreator )Add_Tm (a ,b ,c ,d ,e ,f float64 )*ContentCreator {_bfa :=ContentStreamOperation {};_bfa .Operand ="\u0054\u006d";_bfa .Params =_dcgf ([]float64 {a ,b ,c ,d ,e ,f });_fcd ._d =append (_fcd ._d ,&_bfa );return _fcd ;};
+
+// Scale applies x-y scaling to the transformation matrix.
+func (_dff *ContentCreator )Scale (sx ,sy float64 )*ContentCreator {return _dff .Add_cm (sx ,0,0,sy ,0,0);};
+
+// Add_b_starred appends 'b*' operand to the content stream:
+// Close, fill and then stroke the path (even-odd winding number rule).
+//
+// See section 8.5.3 "Path Painting Operators" and Table 60 (p. 143 PDF32000_2008).
+func (_ccc *ContentCreator )Add_b_starred ()*ContentCreator {_eagd :=ContentStreamOperation {};_eagd .Operand ="\u0062\u002a";_ccc ._d =append (_ccc ._d ,&_eagd );return _ccc ;};
+
+// ContentStreamOperations is a slice of ContentStreamOperations.
+type ContentStreamOperations []*ContentStreamOperation ;func _cafe (_edce []_a .PdfObjectString )[]_a .PdfObject {var _fcefa []_a .PdfObject ;for _ ,_gbbf :=range _edce {_fcefa =append (_fcefa ,_a .MakeString (_gbbf .Str ()));};return _fcefa ;};
+
+// ContentStreamParser represents a content stream parser for parsing content streams in PDFs.
+type ContentStreamParser struct{_cacd *_fe .Reader };
+
+// Add_cm adds 'cm' operation to the content stream: Modifies the current transformation matrix (ctm)
+// of the graphics state.
+//
+// See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
+func (_bcg *ContentCreator )Add_cm (a ,b ,c ,d ,e ,f float64 )*ContentCreator {_ccd :=ContentStreamOperation {};_ccd .Operand ="\u0063\u006d";_ccd .Params =_dcgf ([]float64 {a ,b ,c ,d ,e ,f });_bcg ._d =append (_bcg ._d ,&_ccd );return _bcg ;};
+
+// AddOperand adds a specified operand.
+func (_acg *ContentCreator )AddOperand (op ContentStreamOperation )*ContentCreator {_acg ._d =append (_acg ._d ,&op );return _acg ;};func _cacdd (_gbe _ab .PdfColorspace )bool {_ ,_gdfb :=_gbe .(*_ab .PdfColorspaceSpecialPattern );return _gdfb ;};
+
+// Transform returns coordinates x, y transformed by the CTM.
+func (_ddga *GraphicsState )Transform (x ,y float64 )(float64 ,float64 ){return _ddga .CTM .Transform (x ,y );};func (_ggdb *ContentStreamParser )parseDict ()(*_a .PdfObjectDictionary ,error ){_fbg .Log .Trace ("\u0052\u0065\u0061\u0064i\u006e\u0067\u0020\u0063\u006f\u006e\u0074\u0065\u006e\u0074 \u0073t\u0072\u0065\u0061\u006d\u0020\u0064\u0069c\u0074\u0021");
+_dcca :=_a .MakeDict ();_ggce ,_ :=_ggdb ._cacd .ReadByte ();if _ggce !='<'{return nil ,_f .New ("\u0069\u006e\u0076a\u006c\u0069\u0064\u0020\u0064\u0069\u0063\u0074");};_ggce ,_ =_ggdb ._cacd .ReadByte ();if _ggce !='<'{return nil ,_f .New ("\u0069\u006e\u0076a\u006c\u0069\u0064\u0020\u0064\u0069\u0063\u0074");
+};for {_ggdb .skipSpaces ();_fcab ,_aegd :=_ggdb ._cacd .Peek (2);if _aegd !=nil {return nil ,_aegd ;};_fbg .Log .Trace ("D\u0069c\u0074\u0020\u0070\u0065\u0065\u006b\u003a\u0020%\u0073\u0020\u0028\u0025 x\u0029\u0021",string (_fcab ),string (_fcab ));
+if (_fcab [0]=='>')&&(_fcab [1]=='>'){_fbg .Log .Trace ("\u0045\u004f\u0046\u0020\u0064\u0069\u0063\u0074\u0069o\u006e\u0061\u0072\u0079");_ggdb ._cacd .ReadByte ();_ggdb ._cacd .ReadByte ();break ;};_fbg .Log .Trace ("\u0050a\u0072s\u0065\u0020\u0074\u0068\u0065\u0020\u006e\u0061\u006d\u0065\u0021");
+_aagb ,_aegd :=_ggdb .parseName ();_fbg .Log .Trace ("\u004be\u0079\u003a\u0020\u0025\u0073",_aagb );if _aegd !=nil {_fbg .Log .Debug ("E\u0052\u0052\u004f\u0052\u0020\u0052e\u0074\u0075\u0072\u006e\u0069\u006e\u0067\u0020\u006ea\u006d\u0065\u0020e\u0072r\u0020\u0025\u0073",_aegd );
+return nil ,_aegd ;};if len (_aagb )> 4&&_aagb [len (_aagb )-4:]=="\u006e\u0075\u006c\u006c"{_aagg :=_aagb [0:len (_aagb )-4];_fbg .Log .Trace ("\u0054\u0061\u006b\u0069n\u0067\u0020\u0063\u0061\u0072\u0065\u0020\u006f\u0066\u0020n\u0075l\u006c\u0020\u0062\u0075\u0067\u0020\u0028%\u0073\u0029",_aagb );
+_fbg .Log .Trace ("\u004e\u0065\u0077\u0020ke\u0079\u0020\u0022\u0025\u0073\u0022\u0020\u003d\u0020\u006e\u0075\u006c\u006c",_aagg );_ggdb .skipSpaces ();_cgd ,_ :=_ggdb ._cacd .Peek (1);if _cgd [0]=='/'{_dcca .Set (_aagg ,_a .MakeNull ());continue ;};
+};_ggdb .skipSpaces ();_dgb ,_ ,_aegd :=_ggdb .parseObject ();if _aegd !=nil {return nil ,_aegd ;};_dcca .Set (_aagb ,_dgb );_fbg .Log .Trace ("\u0064\u0069\u0063\u0074\u005b\u0025\u0073\u005d\u0020\u003d\u0020\u0025\u0073",_aagb ,_dgb .String ());};return _dcca ,nil ;
 };
 
-// Add_CS appends 'CS' operand to the content stream:
-// Set the current colorspace for stroking operations.
-//
-// See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
-func (_afga *ContentCreator )Add_CS (name _e .PdfObjectName )*ContentCreator {_bca :=ContentStreamOperation {};_bca .Operand ="\u0043\u0053";_bca .Params =_gfgf ([]_e .PdfObjectName {name });_afga ._bbe =append (_afga ._bbe ,&_bca );return _afga ;};type handlerEntry struct{Condition HandlerConditionEnum ;
-Operand string ;Handler HandlerFunc ;};
+// HasUnclosedQ checks if all the `q` operator is properly closed by `Q` operator.
+func (_bg *ContentStreamOperations )HasUnclosedQ ()bool {_ac :=0;for _ ,_cc :=range *_bg {if _cc .Operand =="\u0071"{_ac ++;}else if _cc .Operand =="\u0051"{_ac --;};};return _ac !=0;};func (_fceb *ContentStreamParser )parseArray ()(*_a .PdfObjectArray ,error ){_gcfa :=_a .MakeArray ();
+_fceb ._cacd .ReadByte ();for {_fceb .skipSpaces ();_agc ,_acbf :=_fceb ._cacd .Peek (1);if _acbf !=nil {return _gcfa ,_acbf ;};if _agc [0]==']'{_fceb ._cacd .ReadByte ();break ;};_cfe ,_ ,_acbf :=_fceb .parseObject ();if _acbf !=nil {return _gcfa ,_acbf ;
+};_gcfa .Append (_cfe );};return _gcfa ,nil ;};
 
-// Add_SCN appends 'SCN' operand to the content stream:
-// Same as SC but supports more colorspaces.
+// Add_sh appends 'sh' operand to the content stream:
+// Paints the shape and colour shading described by a shading dictionary specified by `name`,
+// subject to the current clipping path
 //
-// See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
-func (_ded *ContentCreator )Add_SCN (c ...float64 )*ContentCreator {_gfda :=ContentStreamOperation {};_gfda .Operand ="\u0053\u0043\u004e";_gfda .Params =_caddf (c );_ded ._bbe =append (_ded ._bbe ,&_gfda );return _ded ;};
+// See section 8.7.4 "Shading Patterns" and Table 77 (p. 190 PDF32000_2008).
+func (_gbgd *ContentCreator )Add_sh (name _a .PdfObjectName )*ContentCreator {_db :=ContentStreamOperation {};_db .Operand ="\u0073\u0068";_db .Params =_ecee ([]_a .PdfObjectName {name });_gbgd ._d =append (_gbgd ._d ,&_db );return _gbgd ;};
 
-// Add_g appends 'g' operand to the content stream:
-// Same as G but used for nonstroking operations.
+// Add_J adds 'J' operand to the content stream: Set the line cap style (graphics state).
 //
-// See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
-func (_dc *ContentCreator )Add_g (gray float64 )*ContentCreator {_geb :=ContentStreamOperation {};_geb .Operand ="\u0067";_geb .Params =_caddf ([]float64 {gray });_dc ._bbe =append (_dc ._bbe ,&_geb );return _dc ;};
+// See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
+func (_cge *ContentCreator )Add_J (lineCapStyle string )*ContentCreator {_cad :=ContentStreamOperation {};_cad .Operand ="\u004a";_cad .Params =_ecee ([]_a .PdfObjectName {_a .PdfObjectName (lineCapStyle )});_cge ._d =append (_cge ._d ,&_cad );return _cge ;
+};func _edd (_dfd *ContentStreamInlineImage )(_a .StreamEncoder ,error ){if _dfd .Filter ==nil {return _a .NewRawEncoder (),nil ;};_ece ,_cff :=_dfd .Filter .(*_a .PdfObjectName );if !_cff {_eefd ,_edda :=_dfd .Filter .(*_a .PdfObjectArray );if !_edda {return nil ,_ea .Errorf ("\u0066\u0069\u006c\u0074\u0065\u0072 \u006e\u006f\u0074\u0020\u0061\u0020\u004e\u0061\u006d\u0065\u0020\u006f\u0072 \u0041\u0072\u0072\u0061\u0079\u0020\u006fb\u006a\u0065\u0063\u0074");
+};if _eefd .Len ()==0{return _a .NewRawEncoder (),nil ;};if _eefd .Len ()!=1{_cfg ,_fcg :=_dadc (_dfd );if _fcg !=nil {_fbg .Log .Error ("\u0046\u0061\u0069\u006c\u0065\u0064 \u0063\u0072\u0065\u0061\u0074\u0069\u006e\u0067\u0020\u006d\u0075\u006c\u0074i\u0020\u0065\u006e\u0063\u006f\u0064\u0065r\u003a\u0020\u0025\u0076",_fcg );
+return nil ,_fcg ;};_fbg .Log .Trace ("\u004d\u0075\u006c\u0074\u0069\u0020\u0065\u006e\u0063:\u0020\u0025\u0073\u000a",_cfg );return _cfg ,nil ;};_feb :=_eefd .Get (0);_ece ,_edda =_feb .(*_a .PdfObjectName );if !_edda {return nil ,_ea .Errorf ("\u0066\u0069l\u0074\u0065\u0072\u0020a\u0072\u0072a\u0079\u0020\u006d\u0065\u006d\u0062\u0065\u0072 \u006e\u006f\u0074\u0020\u0061\u0020\u004e\u0061\u006d\u0065\u0020\u006fb\u006a\u0065\u0063\u0074");
+};};switch *_ece {case "\u0041\u0048\u0078","\u0041\u0053\u0043\u0049\u0049\u0048\u0065\u0078\u0044e\u0063\u006f\u0064\u0065":return _a .NewASCIIHexEncoder (),nil ;case "\u0041\u0038\u0035","\u0041\u0053\u0043\u0049\u0049\u0038\u0035\u0044\u0065\u0063\u006f\u0064\u0065":return _a .NewASCII85Encoder (),nil ;
+case "\u0044\u0043\u0054","\u0044C\u0054\u0044\u0065\u0063\u006f\u0064e":return _adea (_dfd );case "\u0046\u006c","F\u006c\u0061\u0074\u0065\u0044\u0065\u0063\u006f\u0064\u0065":return _geda (_dfd ,nil );case "\u004c\u005a\u0057","\u004cZ\u0057\u0044\u0065\u0063\u006f\u0064e":return _egebf (_dfd ,nil );
+case "\u0043\u0043\u0046","\u0043\u0043\u0049\u0054\u0054\u0046\u0061\u0078\u0044e\u0063\u006f\u0064\u0065":return _a .NewCCITTFaxEncoder (),nil ;case "\u0052\u004c","\u0052u\u006eL\u0065\u006e\u0067\u0074\u0068\u0044\u0065\u0063\u006f\u0064\u0065":return _a .NewRunLengthEncoder (),nil ;
+default:_fbg .Log .Debug ("\u0055\u006e\u0073\u0075\u0070\u0070\u006f\u0072\u0074\u0065\u0064\u0020\u0069\u006e\u006c\u0069\u006e\u0065 \u0069\u006d\u0061\u0067\u0065\u0020\u0065n\u0063\u006f\u0064\u0069\u006e\u0067\u0020\u0066\u0069\u006c\u0074e\u0072\u0020\u006e\u0061\u006d\u0065\u0020\u003a\u0020\u0025\u0073",*_ece );
+return nil ,_f .New ("\u0075\u006e\u0073up\u0070\u006f\u0072\u0074\u0065\u0064\u0020\u0069\u006el\u0069n\u0065 \u0065n\u0063\u006f\u0064\u0069\u006e\u0067\u0020\u006d\u0065\u0074\u0068\u006f\u0064");};};func _dabfg (_efgc _a .PdfObject )(_ab .PdfColorspace ,error ){_ffeg ,_bbcg :=_efgc .(*_a .PdfObjectArray );
+if !_bbcg {_fbg .Log .Debug ("\u0045r\u0072\u006fr\u003a\u0020\u0049\u006ev\u0061\u006c\u0069d\u0020\u0069\u006e\u0064\u0065\u0078\u0065\u0064\u0020cs\u0020\u006e\u006ft\u0020\u0069n\u0020\u0061\u0072\u0072\u0061\u0079 \u0028\u0025#\u0076\u0029",_efgc );
+return nil ,_f .New ("\u0074\u0079p\u0065\u0020\u0063h\u0065\u0063\u006b\u0020\u0065\u0072\u0072\u006f\u0072");};if _ffeg .Len ()!=4{_fbg .Log .Debug ("\u0045\u0072\u0072\u006f\u0072:\u0020\u0049\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0063\u0073\u0020\u0061r\u0072\u0061\u0079\u002c\u0020\u006c\u0065\u006e\u0067\u0074\u0068\u0020\u0021\u003d\u0020\u0034\u0020\u0028\u0025\u0064\u0029",_ffeg .Len ());
+return nil ,_f .New ("\u0072\u0061\u006e\u0067\u0065\u0020\u0063\u0068\u0065\u0063\u006b\u0020e\u0072\u0072\u006f\u0072");};_fega ,_bbcg :=_ffeg .Get (0).(*_a .PdfObjectName );if !_bbcg {_fbg .Log .Debug ("E\u0072\u0072\u006f\u0072\u003a\u0020\u0049\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0063\u0073\u0020\u0061\u0072\u0072\u0061\u0079\u0020\u0066\u0069\u0072s\u0074 \u0065\u006c\u0065\u006de\u006e\u0074 \u006e\u006f\u0074\u0020\u0061\u0020\u006e\u0061\u006d\u0065\u0020\u0028\u0061\u0072\u0072\u0061\u0079\u003a\u0020\u0025\u0023\u0076\u0029",*_ffeg );
+return nil ,_f .New ("\u0074\u0079p\u0065\u0020\u0063h\u0065\u0063\u006b\u0020\u0065\u0072\u0072\u006f\u0072");};if *_fega !="\u0049"&&*_fega !="\u0049n\u0064\u0065\u0078\u0065\u0064"{_fbg .Log .Debug ("\u0045\u0072r\u006f\u0072\u003a\u0020\u0049n\u0076\u0061\u006c\u0069\u0064 \u0063\u0073\u0020\u0061\u0072\u0072\u0061\u0079\u0020\u0066\u0069\u0072\u0073\u0074\u0020\u0065\u006c\u0065\u006d\u0065\u006e\u0074\u0020\u0021\u003d\u0020\u0049\u0020\u0028\u0067\u006f\u0074\u003a\u0020\u0025\u0076\u0029",*_fega );
+return nil ,_f .New ("\u0072\u0061\u006e\u0067\u0065\u0020\u0063\u0068\u0065\u0063\u006b\u0020e\u0072\u0072\u006f\u0072");};_fega ,_bbcg =_ffeg .Get (1).(*_a .PdfObjectName );if !_bbcg {_fbg .Log .Debug ("\u0045\u0072\u0072\u006f\u0072\u003a\u0020\u0049\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0063\u0073\u0020\u0061\u0072r\u0061\u0079\u0020\u0032\u006e\u0064\u0020\u0065\u006c\u0065\u006d\u0065\u006e\u0074\u0020\u006e\u006f\u0074\u0020\u0061\u0020\u006e\u0061\u006d\u0065\u0020\u0028\u0061\u0072\u0072a\u0079\u003a\u0020\u0025\u0023v\u0029",*_ffeg );
+return nil ,_f .New ("\u0074\u0079p\u0065\u0020\u0063h\u0065\u0063\u006b\u0020\u0065\u0072\u0072\u006f\u0072");};if *_fega !="\u0047"&&*_fega !="\u0052\u0047\u0042"&&*_fega !="\u0043\u004d\u0059\u004b"&&*_fega !="\u0044\u0065\u0076\u0069\u0063\u0065\u0047\u0072\u0061\u0079"&&*_fega !="\u0044e\u0076\u0069\u0063\u0065\u0052\u0047B"&&*_fega !="\u0044\u0065\u0076\u0069\u0063\u0065\u0043\u004d\u0059\u004b"{_fbg .Log .Debug ("\u0045\u0072\u0072\u006f\u0072\u003a\u0020\u0049\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0063\u0073\u0020\u0061\u0072r\u0061\u0079\u0020\u0032\u006e\u0064\u0020\u0065\u006c\u0065\u006d\u0065\u006e\u0074\u0020\u0021\u003d\u0020\u0047\u002f\u0052\u0047\u0042\u002f\u0043\u004d\u0059\u004b\u0020\u0028g\u006f\u0074\u003a\u0020\u0025v\u0029",*_fega );
+return nil ,_f .New ("\u0072\u0061\u006e\u0067\u0065\u0020\u0063\u0068\u0065\u0063\u006b\u0020e\u0072\u0072\u006f\u0072");};_ffgf :="";switch *_fega {case "\u0047","\u0044\u0065\u0076\u0069\u0063\u0065\u0047\u0072\u0061\u0079":_ffgf ="\u0044\u0065\u0076\u0069\u0063\u0065\u0047\u0072\u0061\u0079";
+case "\u0052\u0047\u0042","\u0044e\u0076\u0069\u0063\u0065\u0052\u0047B":_ffgf ="\u0044e\u0076\u0069\u0063\u0065\u0052\u0047B";case "\u0043\u004d\u0059\u004b","\u0044\u0065\u0076\u0069\u0063\u0065\u0043\u004d\u0059\u004b":_ffgf ="\u0044\u0065\u0076\u0069\u0063\u0065\u0043\u004d\u0059\u004b";
+};_gddf :=_a .MakeArray (_a .MakeName ("\u0049n\u0064\u0065\u0078\u0065\u0064"),_a .MakeName (_ffgf ),_ffeg .Get (2),_ffeg .Get (3));return _ab .NewPdfColorspaceFromPdfObject (_gddf );};
 
-// Add_l adds 'l' operand to the content stream:
-// Append a straight line segment from the current point to (x,y).
+// Add_q adds 'q' operand to the content stream: Pushes the current graphics state on the stack.
+//
+// See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
+func (_cb *ContentCreator )Add_q ()*ContentCreator {_ccg :=ContentStreamOperation {};_ccg .Operand ="\u0071";_cb ._d =append (_cb ._d ,&_ccg );return _cb ;};
+
+// Add_c adds 'c' operand to the content stream: Append a Bezier curve to the current path from
+// the current point to (x3,y3) with (x1,x1) and (x2,y2) as control points.
 //
 // See section 8.5.2 "Path Construction Operators" and Table 59 (pp. 140-141 PDF32000_2008).
-func (_dac *ContentCreator )Add_l (x ,y float64 )*ContentCreator {_bdf :=ContentStreamOperation {};_bdf .Operand ="\u006c";_bdf .Params =_caddf ([]float64 {x ,y });_dac ._bbe =append (_dac ._bbe ,&_bdf );return _dac ;};func (_aebg *ContentStreamProcessor )handleCommand_scn (_bbedb *ContentStreamOperation ,_dbef *_gc .PdfPageResources )error {_fbbf :=_aebg ._fgfg .ColorspaceNonStroking ;
-if !_cfec (_fbbf ){if len (_bbedb .Params )!=_fbbf .GetNumComponents (){_gd .Log .Debug ("I\u006e\u0076\u0061\u006c\u0069\u0064 \u006e\u0075\u006d\u0062\u0065\u0072 \u006f\u0066\u0020\u0070\u0061\u0072\u0061m\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020S\u0043");
-_gd .Log .Debug ("\u004e\u0075mb\u0065\u0072\u0020%\u0064\u0020\u006e\u006ft m\u0061tc\u0068\u0069\u006e\u0067\u0020\u0063\u006flo\u0072\u0073\u0070\u0061\u0063\u0065\u0020%\u0054",len (_bbedb .Params ),_fbbf );return _ba .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");
-};};_dggf ,_aag :=_fbbf .ColorFromPdfObjects (_bbedb .Params );if _aag !=nil {_gd .Log .Debug ("\u0045\u0052\u0052\u004f\u0052\u003a\u0020\u0046\u0061\u0069\u006c \u0074\u006f\u0020\u0067\u0065\u0074\u0020\u0063o\u006co\u0072\u0020\u0066\u0072\u006f\u006d\u0020\u0070\u0061\u0072\u0061\u006d\u0073\u003a\u0020\u0025\u002b\u0076 \u0028\u0043\u0053\u0020\u0069\u0073\u0020\u0025\u002b\u0076\u0029",_bbedb .Params ,_fbbf );
-return _aag ;};_aebg ._fgfg .ColorNonStroking =_dggf ;return nil ;};
+func (_agbc *ContentCreator )Add_c (x1 ,y1 ,x2 ,y2 ,x3 ,y3 float64 )*ContentCreator {_bff :=ContentStreamOperation {};_bff .Operand ="\u0063";_bff .Params =_dcgf ([]float64 {x1 ,y1 ,x2 ,y2 ,x3 ,y3 });_agbc ._d =append (_agbc ._d ,&_bff );return _agbc ;
+};
 
-// Parse parses all commands in content stream, returning a list of operation data.
-func (_eggf *ContentStreamParser )Parse ()(*ContentStreamOperations ,error ){_bbdf :=ContentStreamOperations {};for {_acea :=ContentStreamOperation {};for {_feg ,_bcgc ,_ffgf :=_eggf .parseObject ();if _ffgf !=nil {if _ffgf ==_cf .EOF {return &_bbdf ,nil ;
-};return &_bbdf ,_ffgf ;};if _bcgc {_acea .Operand ,_ =_e .GetStringVal (_feg );_bbdf =append (_bbdf ,&_acea );break ;}else {_acea .Params =append (_acea .Params ,_feg );};};if _acea .Operand =="\u0042\u0049"{_ddda ,_becd :=_eggf .ParseInlineImage ();if _becd !=nil {return &_bbdf ,_becd ;
-};_acea .Params =append (_acea .Params ,_ddda );};};};
+// Add_B_starred appends 'B*' operand to the content stream:
+// Fill and then stroke the path (even-odd rule).
+//
+// See section 8.5.3 "Path Painting Operators" and Table 60 (p. 143 PDF32000_2008).
+func (_bdf *ContentCreator )Add_B_starred ()*ContentCreator {_da :=ContentStreamOperation {};_da .Operand ="\u0042\u002a";_bdf ._d =append (_bdf ._d ,&_da );return _bdf ;};
+
+// Add_gs adds 'gs' operand to the content stream: Set the graphics state.
+//
+// See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
+func (_dc *ContentCreator )Add_gs (dictName _a .PdfObjectName )*ContentCreator {_eb :=ContentStreamOperation {};_eb .Operand ="\u0067\u0073";_eb .Params =_ecee ([]_a .PdfObjectName {dictName });_dc ._d =append (_dc ._d ,&_eb );return _dc ;};
+
+// All returns true if `hce` is equivalent to HandlerConditionEnumAllOperands.
+func (_eggg HandlerConditionEnum )All ()bool {return _eggg ==HandlerConditionEnumAllOperands };
+
+// GraphicStateStack represents a stack of GraphicsState.
+type GraphicStateStack []GraphicsState ;
+
+// Add_y appends 'y' operand to the content stream: Append a Bezier curve to the current path from the
+// current point to (x3,y3) with (x1, y1) and (x3,y3) as control points.
+//
+// See section 8.5.2 "Path Construction Operators" and Table 59 (pp. 140-141 PDF32000_2008).
+func (_ff *ContentCreator )Add_y (x1 ,y1 ,x3 ,y3 float64 )*ContentCreator {_aged :=ContentStreamOperation {};_aged .Operand ="\u0079";_aged .Params =_dcgf ([]float64 {x1 ,y1 ,x3 ,y3 });_ff ._d =append (_ff ._d ,&_aged );return _ff ;};
+
+// Push pushes `gs` on the `gsStack`.
+func (_edcd *GraphicStateStack )Push (gs GraphicsState ){*_edcd =append (*_edcd ,gs )};
+
+// Add_re appends 're' operand to the content stream:
+// Append a rectangle to the current path as a complete subpath, with lower left corner (x,y).
+//
+// See section 8.5.2 "Path Construction Operators" and Table 59 (pp. 140-141 PDF32000_2008).
+func (_gea *ContentCreator )Add_re (x ,y ,width ,height float64 )*ContentCreator {_gdf :=ContentStreamOperation {};_gdf .Operand ="\u0072\u0065";_gdf .Params =_dcgf ([]float64 {x ,y ,width ,height });_gea ._d =append (_gea ._d ,&_gdf );return _gea ;};func (_ffa *ContentStreamParser )parseOperand ()(*_a .PdfObjectString ,error ){var _cgc []byte ;
+for {_dcae ,_eagg :=_ffa ._cacd .Peek (1);if _eagg !=nil {return _a .MakeString (string (_cgc )),_eagg ;};if _a .IsDelimiter (_dcae [0]){break ;};if _a .IsWhiteSpace (_dcae [0]){break ;};_dfda ,_ :=_ffa ._cacd .ReadByte ();_cgc =append (_cgc ,_dfda );};
+return _a .MakeString (string (_cgc )),nil ;};
+
+// GraphicsState is a basic graphics state implementation for PDF processing.
+// Initially only implementing and tracking a portion of the information specified. Easy to add more.
+type GraphicsState struct{ColorspaceStroking _ab .PdfColorspace ;ColorspaceNonStroking _ab .PdfColorspace ;ColorStroking _ab .PdfColor ;ColorNonStroking _ab .PdfColor ;CTM _ee .Matrix ;};
 
 // Add_h appends 'h' operand to the content stream:
 // Close the current subpath by adding a line between the current position and the starting position.
 //
 // See section 8.5.2 "Path Construction Operators" and Table 59 (pp. 140-141 PDF32000_2008).
-func (_bge *ContentCreator )Add_h ()*ContentCreator {_gdg :=ContentStreamOperation {};_gdg .Operand ="\u0068";_bge ._bbe =append (_bge ._bbe ,&_gdg );return _bge ;};func _gfc (_bcef *ContentStreamInlineImage ,_fec *_e .PdfObjectDictionary )(*_e .FlateEncoder ,error ){_ebb :=_e .NewFlateEncoder ();
-if _bcef ._adff !=nil {_ebb .SetImage (_bcef ._adff );};if _fec ==nil {_fdb :=_bcef .DecodeParms ;if _fdb !=nil {_ebgbc ,_eedf :=_e .GetDict (_fdb );if !_eedf {_gd .Log .Debug ("E\u0072\u0072\u006f\u0072\u003a\u0020\u0044\u0065\u0063\u006f\u0064\u0065\u0050\u0061\u0072\u006d\u0073\u0020n\u006f\u0074\u0020\u0061\u0020\u0064\u0069\u0063\u0074\u0069on\u0061\u0072\u0079 \u0028%\u0054\u0029",_fdb );
-return nil ,_fd .Errorf ("\u0069\u006e\u0076\u0061li\u0064\u0020\u0044\u0065\u0063\u006f\u0064\u0065\u0050\u0061\u0072\u006d\u0073");};_fec =_ebgbc ;};};if _fec ==nil {return _ebb ,nil ;};_gd .Log .Trace ("\u0064\u0065\u0063\u006f\u0064\u0065\u0020\u0070\u0061\u0072\u0061\u006ds\u003a\u0020\u0025\u0073",_fec .String ());
-_gfg :=_fec .Get ("\u0050r\u0065\u0064\u0069\u0063\u0074\u006fr");if _gfg ==nil {_gd .Log .Debug ("E\u0072\u0072o\u0072\u003a\u0020\u0050\u0072\u0065\u0064\u0069\u0063\u0074\u006f\u0072\u0020\u006d\u0069\u0073\u0073\u0069\u006e\u0067 \u0066\u0072\u006f\u006d\u0020\u0044\u0065\u0063\u006f\u0064\u0065\u0050\u0061\u0072\u006d\u0073 \u002d\u0020\u0043\u006f\u006e\u0074\u0069\u006e\u0075\u0065\u0020\u0077\u0069t\u0068\u0020\u0064\u0065\u0066\u0061\u0075\u006c\u0074\u0020\u00281\u0029");
-}else {_aecc ,_acg :=_gfg .(*_e .PdfObjectInteger );if !_acg {_gd .Log .Debug ("E\u0072\u0072\u006f\u0072\u003a\u0020\u0050\u0072\u0065d\u0069\u0063\u0074\u006f\u0072\u0020\u0073pe\u0063\u0069\u0066\u0069e\u0064\u0020\u0062\u0075\u0074\u0020\u006e\u006f\u0074 n\u0075\u006de\u0072\u0069\u0063\u0020\u0028\u0025\u0054\u0029",_gfg );
-return nil ,_fd .Errorf ("\u0069\u006e\u0076\u0061\u006c\u0069\u0064\u0020\u0050\u0072\u0065\u0064i\u0063\u0074\u006f\u0072");};_ebb .Predictor =int (*_aecc );};_gfg =_fec .Get ("\u0042\u0069t\u0073\u0050\u0065r\u0043\u006f\u006d\u0070\u006f\u006e\u0065\u006e\u0074");
-if _gfg !=nil {_ebf ,_deg :=_gfg .(*_e .PdfObjectInteger );if !_deg {_gd .Log .Debug ("\u0045\u0052\u0052O\u0052\u003a\u0020\u0049n\u0076\u0061\u006c\u0069\u0064\u0020\u0042i\u0074\u0073\u0050\u0065\u0072\u0043\u006f\u006d\u0070\u006f\u006e\u0065\u006e\u0074");
-return nil ,_fd .Errorf ("\u0069n\u0076\u0061\u006c\u0069\u0064\u0020\u0042\u0069\u0074\u0073\u0050e\u0072\u0043\u006f\u006d\u0070\u006f\u006e\u0065\u006e\u0074");};_ebb .BitsPerComponent =int (*_ebf );};if _ebb .Predictor > 1{_ebb .Columns =1;_gfg =_fec .Get ("\u0043o\u006c\u0075\u006d\u006e\u0073");
-if _gfg !=nil {_ced ,_caf :=_gfg .(*_e .PdfObjectInteger );if !_caf {return nil ,_fd .Errorf ("\u0070r\u0065\u0064\u0069\u0063\u0074\u006f\u0072\u0020\u0063\u006f\u006cu\u006d\u006e\u0020\u0069\u006e\u0076\u0061\u006c\u0069\u0064");};_ebb .Columns =int (*_ced );
-};_ebb .Colors =1;_fded :=_fec .Get ("\u0043\u006f\u006c\u006f\u0072\u0073");if _fded !=nil {_afd ,_fbc :=_fded .(*_e .PdfObjectInteger );if !_fbc {return nil ,_fd .Errorf ("\u0070\u0072\u0065d\u0069\u0063\u0074\u006fr\u0020\u0063\u006f\u006c\u006f\u0072\u0073 \u006e\u006f\u0074\u0020\u0061\u006e\u0020\u0069\u006e\u0074\u0065\u0067\u0065\u0072");
-};_ebb .Colors =int (*_afd );};};return _ebb ,nil ;};
+func (_cgg *ContentCreator )Add_h ()*ContentCreator {_gg :=ContentStreamOperation {};_gg .Operand ="\u0068";_cgg ._d =append (_cgg ._d ,&_gg );return _cgg ;};func (_gee *ContentStreamParser )parseNumber ()(_a .PdfObject ,error ){return _a .ParseNumber (_gee ._cacd );
+};func (_dba *ContentStreamParser )parseHexString ()(*_a .PdfObjectString ,error ){_dba ._cacd .ReadByte ();_dfb :=[]byte ("\u0030\u0031\u0032\u003345\u0036\u0037\u0038\u0039\u0061\u0062\u0063\u0064\u0065\u0066\u0041\u0042\u0043\u0044E\u0046");var _aeef []byte ;
+for {_dba .skipSpaces ();_acad ,_bcabg :=_dba ._cacd .Peek (1);if _bcabg !=nil {return _a .MakeString (""),_bcabg ;};if _acad [0]=='>'{_dba ._cacd .ReadByte ();break ;};_gfcf ,_ :=_dba ._cacd .ReadByte ();if _fa .IndexByte (_dfb ,_gfcf )>=0{_aeef =append (_aeef ,_gfcf );
+};};if len (_aeef )%2==1{_aeef =append (_aeef ,'0');};_eabf ,_ :=_fd .DecodeString (string (_aeef ));return _a .MakeHexString (string (_eabf )),nil ;};
+
+// Add_b appends 'b' operand to the content stream:
+// Close, fill and then stroke the path (nonzero winding number rule).
+//
+// See section 8.5.3 "Path Painting Operators" and Table 60 (p. 143 PDF32000_2008).
+func (_dcc *ContentCreator )Add_b ()*ContentCreator {_abeb :=ContentStreamOperation {};_abeb .Operand ="\u0062";_dcc ._d =append (_dcc ._d ,&_abeb );return _dcc ;};func (_aaeg *ContentStreamProcessor )handleCommand_SCN (_beag *ContentStreamOperation ,_fcfd *_ab .PdfPageResources )error {_ebgdd :=_aaeg ._aabb .ColorspaceStroking ;
+if !_cacdd (_ebgdd ){if len (_beag .Params )!=_ebgdd .GetNumComponents (){_fbg .Log .Debug ("I\u006e\u0076\u0061\u006c\u0069\u0064 \u006e\u0075\u006d\u0062\u0065\u0072 \u006f\u0066\u0020\u0070\u0061\u0072\u0061m\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020S\u0043");
+_fbg .Log .Debug ("\u004e\u0075mb\u0065\u0072\u0020%\u0064\u0020\u006e\u006ft m\u0061tc\u0068\u0069\u006e\u0067\u0020\u0063\u006flo\u0072\u0073\u0070\u0061\u0063\u0065\u0020%\u0054",len (_beag .Params ),_ebgdd );return _f .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");
+};};_cade ,_gaga :=_ebgdd .ColorFromPdfObjects (_beag .Params );if _gaga !=nil {return _gaga ;};_aaeg ._aabb .ColorStroking =_cade ;return nil ;};func (_fbgf *ContentStreamOperations )isWrapped ()bool {if len (*_fbgf )< 2{return false ;};_fg :=0;for _ ,_cab :=range *_fbgf {if _cab .Operand =="\u0071"{_fg ++;
+}else if _cab .Operand =="\u0051"{_fg --;}else {if _fg < 1{return false ;};};};return _fg ==0;};func (_fced *ContentStreamProcessor )handleCommand_K (_ebbg *ContentStreamOperation ,_cba *_ab .PdfPageResources )error {_cfee :=_ab .NewPdfColorspaceDeviceCMYK ();
+if len (_ebbg .Params )!=_cfee .GetNumComponents (){_fbg .Log .Debug ("I\u006e\u0076\u0061\u006c\u0069\u0064 \u006e\u0075\u006d\u0062\u0065\u0072 \u006f\u0066\u0020\u0070\u0061\u0072\u0061m\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020S\u0043");
+_fbg .Log .Debug ("\u004e\u0075mb\u0065\u0072\u0020%\u0064\u0020\u006e\u006ft m\u0061tc\u0068\u0069\u006e\u0067\u0020\u0063\u006flo\u0072\u0073\u0070\u0061\u0063\u0065\u0020%\u0054",len (_ebbg .Params ),_cfee );return _f .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");
+};_baf ,_aed :=_cfee .ColorFromPdfObjects (_ebbg .Params );if _aed !=nil {return _aed ;};_fced ._aabb .ColorspaceStroking =_cfee ;_fced ._aabb .ColorStroking =_baf ;return nil ;};
 
 // WriteString outputs the object as it is to be written to file.
-func (_bbdgd *ContentStreamInlineImage )WriteString ()string {var _cgcd _g .Buffer ;_dfd :="";if _bbdgd .BitsPerComponent !=nil {_dfd +="\u002f\u0042\u0050C\u0020"+_bbdgd .BitsPerComponent .WriteString ()+"\u000a";};if _bbdgd .ColorSpace !=nil {_dfd +="\u002f\u0043\u0053\u0020"+_bbdgd .ColorSpace .WriteString ()+"\u000a";
-};if _bbdgd .Decode !=nil {_dfd +="\u002f\u0044\u0020"+_bbdgd .Decode .WriteString ()+"\u000a";};if _bbdgd .DecodeParms !=nil {_dfd +="\u002f\u0044\u0050\u0020"+_bbdgd .DecodeParms .WriteString ()+"\u000a";};if _bbdgd .Filter !=nil {_dfd +="\u002f\u0046\u0020"+_bbdgd .Filter .WriteString ()+"\u000a";
-};if _bbdgd .Height !=nil {_dfd +="\u002f\u0048\u0020"+_bbdgd .Height .WriteString ()+"\u000a";};if _bbdgd .ImageMask !=nil {_dfd +="\u002f\u0049\u004d\u0020"+_bbdgd .ImageMask .WriteString ()+"\u000a";};if _bbdgd .Intent !=nil {_dfd +="\u002f\u0049\u006e\u0074\u0065\u006e\u0074\u0020"+_bbdgd .Intent .WriteString ()+"\u000a";
-};if _bbdgd .Interpolate !=nil {_dfd +="\u002f\u0049\u0020"+_bbdgd .Interpolate .WriteString ()+"\u000a";};if _bbdgd .Width !=nil {_dfd +="\u002f\u0057\u0020"+_bbdgd .Width .WriteString ()+"\u000a";};_cgcd .WriteString (_dfd );_cgcd .WriteString ("\u0049\u0044\u0020");
-_cgcd .Write (_bbdgd ._eecg );_cgcd .WriteString ("\u000a\u0045\u0049\u000a");return _cgcd .String ();};
+func (_bgce *ContentStreamInlineImage )WriteString ()string {var _ffbg _fa .Buffer ;_ddb :="";if _bgce .BitsPerComponent !=nil {_ddb +="\u002f\u0042\u0050C\u0020"+_bgce .BitsPerComponent .WriteString ()+"\u000a";};if _bgce .ColorSpace !=nil {_ddb +="\u002f\u0043\u0053\u0020"+_bgce .ColorSpace .WriteString ()+"\u000a";
+};if _bgce .Decode !=nil {_ddb +="\u002f\u0044\u0020"+_bgce .Decode .WriteString ()+"\u000a";};if _bgce .DecodeParms !=nil {_ddb +="\u002f\u0044\u0050\u0020"+_bgce .DecodeParms .WriteString ()+"\u000a";};if _bgce .Filter !=nil {_ddb +="\u002f\u0046\u0020"+_bgce .Filter .WriteString ()+"\u000a";
+};if _bgce .Height !=nil {_ddb +="\u002f\u0048\u0020"+_bgce .Height .WriteString ()+"\u000a";};if _bgce .ImageMask !=nil {_ddb +="\u002f\u0049\u004d\u0020"+_bgce .ImageMask .WriteString ()+"\u000a";};if _bgce .Intent !=nil {_ddb +="\u002f\u0049\u006e\u0074\u0065\u006e\u0074\u0020"+_bgce .Intent .WriteString ()+"\u000a";
+};if _bgce .Interpolate !=nil {_ddb +="\u002f\u0049\u0020"+_bgce .Interpolate .WriteString ()+"\u000a";};if _bgce .Width !=nil {_ddb +="\u002f\u0057\u0020"+_bgce .Width .WriteString ()+"\u000a";};_ffbg .WriteString (_ddb );_ffbg .WriteString ("\u0049\u0044\u0020");
+_ffbg .Write (_bgce ._efe );_ffbg .WriteString ("\u000a\u0045\u0049\u000a");return _ffbg .String ();};
 
-// Add_rg appends 'rg' operand to the content stream:
-// Same as RG but used for nonstroking operations.
+// Add_Ts appends 'Ts' operand to the content stream:
+// Set text rise.
+//
+// See section 9.3 "Text State Parameters and Operators" and
+// Table 105 (pp. 251-252 PDF32000_2008).
+func (_gfa *ContentCreator )Add_Ts (rise float64 )*ContentCreator {_dac :=ContentStreamOperation {};_dac .Operand ="\u0054\u0073";_dac .Params =_dcgf ([]float64 {rise });_gfa ._d =append (_gfa ._d ,&_dac );return _gfa ;};func (_eagb *ContentStreamProcessor )handleCommand_sc (_daae *ContentStreamOperation ,_eegag *_ab .PdfPageResources )error {_ecaa :=_eagb ._aabb .ColorspaceNonStroking ;
+if !_cacdd (_ecaa ){if len (_daae .Params )!=_ecaa .GetNumComponents (){_fbg .Log .Debug ("I\u006e\u0076\u0061\u006c\u0069\u0064 \u006e\u0075\u006d\u0062\u0065\u0072 \u006f\u0066\u0020\u0070\u0061\u0072\u0061m\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020S\u0043");
+_fbg .Log .Debug ("\u004e\u0075mb\u0065\u0072\u0020%\u0064\u0020\u006e\u006ft m\u0061tc\u0068\u0069\u006e\u0067\u0020\u0063\u006flo\u0072\u0073\u0070\u0061\u0063\u0065\u0020%\u0054",len (_daae .Params ),_ecaa );return _f .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");
+};};_bfec ,_cgcc :=_ecaa .ColorFromPdfObjects (_daae .Params );if _cgcc !=nil {return _cgcc ;};_eagb ._aabb .ColorNonStroking =_bfec ;return nil ;};var _edb =map[string ]struct{}{"\u0062":struct{}{},"\u0042":struct{}{},"\u0062\u002a":struct{}{},"\u0042\u002a":struct{}{},"\u0042\u0044\u0043":struct{}{},"\u0042\u0049":struct{}{},"\u0042\u004d\u0043":struct{}{},"\u0042\u0054":struct{}{},"\u0042\u0058":struct{}{},"\u0063":struct{}{},"\u0063\u006d":struct{}{},"\u0043\u0053":struct{}{},"\u0063\u0073":struct{}{},"\u0064":struct{}{},"\u0064\u0030":struct{}{},"\u0064\u0031":struct{}{},"\u0044\u006f":struct{}{},"\u0044\u0050":struct{}{},"\u0045\u0049":struct{}{},"\u0045\u004d\u0043":struct{}{},"\u0045\u0054":struct{}{},"\u0045\u0058":struct{}{},"\u0066":struct{}{},"\u0046":struct{}{},"\u0066\u002a":struct{}{},"\u0047":struct{}{},"\u0067":struct{}{},"\u0067\u0073":struct{}{},"\u0068":struct{}{},"\u0069":struct{}{},"\u0049\u0044":struct{}{},"\u006a":struct{}{},"\u004a":struct{}{},"\u004b":struct{}{},"\u006b":struct{}{},"\u006c":struct{}{},"\u006d":struct{}{},"\u004d":struct{}{},"\u004d\u0050":struct{}{},"\u006e":struct{}{},"\u0071":struct{}{},"\u0051":struct{}{},"\u0072\u0065":struct{}{},"\u0052\u0047":struct{}{},"\u0072\u0067":struct{}{},"\u0072\u0069":struct{}{},"\u0073":struct{}{},"\u0053":struct{}{},"\u0053\u0043":struct{}{},"\u0073\u0063":struct{}{},"\u0053\u0043\u004e":struct{}{},"\u0073\u0063\u006e":struct{}{},"\u0073\u0068":struct{}{},"\u0054\u002a":struct{}{},"\u0054\u0063":struct{}{},"\u0054\u0064":struct{}{},"\u0054\u0044":struct{}{},"\u0054\u0066":struct{}{},"\u0054\u006a":struct{}{},"\u0054\u004a":struct{}{},"\u0054\u004c":struct{}{},"\u0054\u006d":struct{}{},"\u0054\u0072":struct{}{},"\u0054\u0073":struct{}{},"\u0054\u0077":struct{}{},"\u0054\u007a":struct{}{},"\u0076":struct{}{},"\u0077":struct{}{},"\u0057":struct{}{},"\u0057\u002a":struct{}{},"\u0079":struct{}{},"\u0027":struct{}{},"\u0022":struct{}{}};
+
+
+// Add_G appends 'G' operand to the content stream:
+// Set the stroking colorspace to DeviceGray and sets the gray level (0-1).
 //
 // See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
-func (_edd *ContentCreator )Add_rg (r ,g ,b float64 )*ContentCreator {_ccb :=ContentStreamOperation {};_ccb .Operand ="\u0072\u0067";_ccb .Params =_caddf ([]float64 {r ,g ,b });_edd ._bbe =append (_edd ._bbe ,&_ccb );return _edd ;};func (_edc *ContentStreamProcessor )handleCommand_k (_bfgdd *ContentStreamOperation ,_ddgd *_gc .PdfPageResources )error {_gef :=_gc .NewPdfColorspaceDeviceCMYK ();
-if len (_bfgdd .Params )!=_gef .GetNumComponents (){_gd .Log .Debug ("I\u006e\u0076\u0061\u006c\u0069\u0064 \u006e\u0075\u006d\u0062\u0065\u0072 \u006f\u0066\u0020\u0070\u0061\u0072\u0061m\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020S\u0043");
-_gd .Log .Debug ("\u004e\u0075mb\u0065\u0072\u0020%\u0064\u0020\u006e\u006ft m\u0061tc\u0068\u0069\u006e\u0067\u0020\u0063\u006flo\u0072\u0073\u0070\u0061\u0063\u0065\u0020%\u0054",len (_bfgdd .Params ),_gef );return _ba .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");
-};_bcb ,_eeeb :=_gef .ColorFromPdfObjects (_bfgdd .Params );if _eeeb !=nil {return _eeeb ;};_edc ._fgfg .ColorspaceNonStroking =_gef ;_edc ._fgfg .ColorNonStroking =_bcb ;return nil ;};
+func (_efd *ContentCreator )Add_G (gray float64 )*ContentCreator {_eeb :=ContentStreamOperation {};_eeb .Operand ="\u0047";_eeb .Params =_dcgf ([]float64 {gray });_efd ._d =append (_efd ._d ,&_eeb );return _efd ;};
 
-// HandlerConditionEnum represents the type of operand content stream processor (handler).
-// The handler may process a single specific named operand or all operands.
-type HandlerConditionEnum int ;func (_bdff *ContentStreamProcessor )getInitialColor (_dgbb _gc .PdfColorspace )(_gc .PdfColor ,error ){switch _fef :=_dgbb .(type ){case *_gc .PdfColorspaceDeviceGray :return _gc .NewPdfColorDeviceGray (0.0),nil ;case *_gc .PdfColorspaceDeviceRGB :return _gc .NewPdfColorDeviceRGB (0.0,0.0,0.0),nil ;
-case *_gc .PdfColorspaceDeviceCMYK :return _gc .NewPdfColorDeviceCMYK (0.0,0.0,0.0,1.0),nil ;case *_gc .PdfColorspaceCalGray :return _gc .NewPdfColorCalGray (0.0),nil ;case *_gc .PdfColorspaceCalRGB :return _gc .NewPdfColorCalRGB (0.0,0.0,0.0),nil ;case *_gc .PdfColorspaceLab :_eafc :=0.0;
-_gac :=0.0;_bcab :=0.0;if _fef .Range [0]> 0{_eafc =_fef .Range [0];};if _fef .Range [2]> 0{_gac =_fef .Range [2];};return _gc .NewPdfColorLab (_eafc ,_gac ,_bcab ),nil ;case *_gc .PdfColorspaceICCBased :if _fef .Alternate ==nil {_gd .Log .Trace ("\u0049\u0043\u0043\u0020\u0042\u0061\u0073\u0065\u0064\u0020\u006eo\u0074\u0020\u0064\u0065\u0066\u0069\u006e\u0065d\u0020-\u0020\u0061\u0074\u0074\u0065\u006d\u0070\u0074\u0069\u006e\u0067\u0020\u0066\u0061\u006c\u006c\u0020\u0062a\u0063\u006b\u0020\u0028\u004e\u0020\u003d\u0020\u0025\u0064\u0029",_fef .N );
-if _fef .N ==1{_gd .Log .Trace ("\u0046\u0061\u006c\u006c\u0069\u006e\u0067\u0020\u0062\u0061\u0063k\u0020\u0074\u006f\u0020\u0044\u0065\u0076\u0069\u0063\u0065G\u0072\u0061\u0079");return _bdff .getInitialColor (_gc .NewPdfColorspaceDeviceGray ());}else if _fef .N ==3{_gd .Log .Trace ("\u0046a\u006c\u006c\u0069\u006eg\u0020\u0062\u0061\u0063\u006b \u0074o\u0020D\u0065\u0076\u0069\u0063\u0065\u0052\u0047B");
-return _bdff .getInitialColor (_gc .NewPdfColorspaceDeviceRGB ());}else if _fef .N ==4{_gd .Log .Trace ("\u0046\u0061\u006c\u006c\u0069\u006e\u0067\u0020\u0062\u0061\u0063k\u0020\u0074\u006f\u0020\u0044\u0065\u0076\u0069\u0063\u0065C\u004d\u0059\u004b");
-return _bdff .getInitialColor (_gc .NewPdfColorspaceDeviceCMYK ());}else {return nil ,_ba .New ("a\u006c\u0074\u0065\u0072\u006e\u0061t\u0065\u0020\u0073\u0070\u0061\u0063e\u0020\u006e\u006f\u0074\u0020\u0064\u0065f\u0069\u006e\u0065\u0064\u0020\u0066\u006f\u0072\u0020\u0049C\u0043");
-};};return _bdff .getInitialColor (_fef .Alternate );case *_gc .PdfColorspaceSpecialIndexed :if _fef .Base ==nil {return nil ,_ba .New ("\u0069\u006e\u0064\u0065\u0078\u0065\u0064\u0020\u0062\u0061\u0073e\u0020\u006e\u006f\u0074\u0020\u0073\u0070\u0065\u0063\u0069f\u0069\u0065\u0064");
-};return _bdff .getInitialColor (_fef .Base );case *_gc .PdfColorspaceSpecialSeparation :if _fef .AlternateSpace ==nil {return nil ,_ba .New ("\u0061\u006ct\u0065\u0072\u006e\u0061\u0074\u0065\u0020\u0073\u0070\u0061\u0063\u0065\u0020\u006e\u006f\u0074\u0020\u0073\u0070\u0065\u0063\u0069fi\u0065\u0064");
-};return _bdff .getInitialColor (_fef .AlternateSpace );case *_gc .PdfColorspaceDeviceN :if _fef .AlternateSpace ==nil {return nil ,_ba .New ("\u0061\u006ct\u0065\u0072\u006e\u0061\u0074\u0065\u0020\u0073\u0070\u0061\u0063\u0065\u0020\u006e\u006f\u0074\u0020\u0073\u0070\u0065\u0063\u0069fi\u0065\u0064");
-};return _bdff .getInitialColor (_fef .AlternateSpace );case *_gc .PdfColorspaceSpecialPattern :return _gc .NewPdfColorPattern (),nil ;};_gd .Log .Debug ("Un\u0061\u0062l\u0065\u0020\u0074\u006f\u0020\u0064\u0065\u0074\u0065r\u006d\u0069\u006e\u0065\u0020\u0069\u006e\u0069\u0074\u0069\u0061\u006c\u0020\u0063\u006f\u006c\u006f\u0072\u0020\u0066\u006f\u0072\u0020\u0075\u006e\u006b\u006e\u006fw\u006e \u0063\u006f\u006c\u006f\u0072\u0073\u0070\u0061c\u0065:\u0020\u0025T",_dgbb );
-return nil ,_ba .New ("\u0075\u006e\u0073\u0075pp\u006f\u0072\u0074\u0065\u0064\u0020\u0063\u006f\u006c\u006f\u0072\u0073\u0070\u0061c\u0065");};
+// Operations returns the list of operations.
+func (_ef *ContentCreator )Operations ()*ContentStreamOperations {return &_ef ._d };func (_dbgc *ContentStreamParser )parseString ()(*_a .PdfObjectString ,error ){_dbgc ._cacd .ReadByte ();var _dea []byte ;_decc :=1;for {_cag ,_ddfe :=_dbgc ._cacd .Peek (1);
+if _ddfe !=nil {return _a .MakeString (string (_dea )),_ddfe ;};if _cag [0]=='\\'{_dbgc ._cacd .ReadByte ();_bae ,_ccec :=_dbgc ._cacd .ReadByte ();if _ccec !=nil {return _a .MakeString (string (_dea )),_ccec ;};if _a .IsOctalDigit (_bae ){_bfd ,_beab :=_dbgc ._cacd .Peek (2);
+if _beab !=nil {return _a .MakeString (string (_dea )),_beab ;};var _aced []byte ;_aced =append (_aced ,_bae );for _ ,_geca :=range _bfd {if _a .IsOctalDigit (_geca ){_aced =append (_aced ,_geca );}else {break ;};};_dbgc ._cacd .Discard (len (_aced )-1);
+_fbg .Log .Trace ("\u004e\u0075\u006d\u0065ri\u0063\u0020\u0073\u0074\u0072\u0069\u006e\u0067\u0020\u0022\u0025\u0073\u0022",_aced );_ecg ,_beab :=_be .ParseUint (string (_aced ),8,32);if _beab !=nil {return _a .MakeString (string (_dea )),_beab ;};_dea =append (_dea ,byte (_ecg ));
+continue ;};switch _bae {case 'n':_dea =append (_dea ,'\n');case 'r':_dea =append (_dea ,'\r');case 't':_dea =append (_dea ,'\t');case 'b':_dea =append (_dea ,'\b');case 'f':_dea =append (_dea ,'\f');case '(':_dea =append (_dea ,'(');case ')':_dea =append (_dea ,')');
+case '\\':_dea =append (_dea ,'\\');};continue ;}else if _cag [0]=='('{_decc ++;}else if _cag [0]==')'{_decc --;if _decc ==0{_dbgc ._cacd .ReadByte ();break ;};};_aef ,_ :=_dbgc ._cacd .ReadByte ();_dea =append (_dea ,_aef );};return _a .MakeString (string (_dea )),nil ;
+};
 
-// ContentStreamInlineImage is a representation of an inline image in a Content stream. Everything between the BI and EI operands.
-// ContentStreamInlineImage implements the core.PdfObject interface although strictly it is not a PDF object.
-type ContentStreamInlineImage struct{BitsPerComponent _e .PdfObject ;ColorSpace _e .PdfObject ;Decode _e .PdfObject ;DecodeParms _e .PdfObject ;Filter _e .PdfObject ;Height _e .PdfObject ;ImageMask _e .PdfObject ;Intent _e .PdfObject ;Interpolate _e .PdfObject ;
-Width _e .PdfObject ;_eecg []byte ;_adff *_db .ImageBase ;};
+// ContentStreamOperation represents an operation in PDF contentstream which consists of
+// an operand and parameters.
+type ContentStreamOperation struct{Params []_a .PdfObject ;Operand string ;};
 
-// Add_W appends 'W' operand to the content stream:
-// Modify the current clipping path by intersecting with the current path (nonzero winding rule).
+// Add_w adds 'w' operand to the content stream, which sets the line width.
 //
-// See section 8.5.4 "Clipping Path Operators" and Table 61 (p. 146 PDF32000_2008).
-func (_bde *ContentCreator )Add_W ()*ContentCreator {_bgd :=ContentStreamOperation {};_bgd .Operand ="\u0057";_bde ._bbe =append (_bde ._bbe ,&_bgd );return _bde ;};
+// See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
+func (_eegb *ContentCreator )Add_w (lineWidth float64 )*ContentCreator {_acb :=ContentStreamOperation {};_acb .Operand ="\u0077";_acb .Params =_dcgf ([]float64 {lineWidth });_eegb ._d =append (_eegb ._d ,&_acb );return _eegb ;};
+
+// Add_Do adds 'Do' operation to the content stream:
+// Displays an XObject (image or form) specified by `name`.
+//
+// See section 8.8 "External Objects" and Table 87 (pp. 209-220 PDF32000_2008).
+func (_acd *ContentCreator )Add_Do (name _a .PdfObjectName )*ContentCreator {_dfg :=ContentStreamOperation {};_dfg .Operand ="\u0044\u006f";_dfg .Params =_ecee ([]_a .PdfObjectName {name });_acd ._d =append (_acd ._d ,&_dfg );return _acd ;};func (_efac *ContentStreamProcessor )handleCommand_G (_dfbf *ContentStreamOperation ,_gca *_ab .PdfPageResources )error {_cdfg :=_ab .NewPdfColorspaceDeviceGray ();
+if len (_dfbf .Params )!=_cdfg .GetNumComponents (){_fbg .Log .Debug ("I\u006e\u0076\u0061\u006c\u0069\u0064 \u006e\u0075\u006d\u0062\u0065\u0072 \u006f\u0066\u0020\u0070\u0061\u0072\u0061m\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020S\u0043");
+_fbg .Log .Debug ("\u004e\u0075mb\u0065\u0072\u0020%\u0064\u0020\u006e\u006ft m\u0061tc\u0068\u0069\u006e\u0067\u0020\u0063\u006flo\u0072\u0073\u0070\u0061\u0063\u0065\u0020%\u0054",len (_dfbf .Params ),_cdfg );return _f .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");
+};_bbfd ,_afcg :=_cdfg .ColorFromPdfObjects (_dfbf .Params );if _afcg !=nil {return _afcg ;};_efac ._aabb .ColorspaceStroking =_cdfg ;_efac ._aabb .ColorStroking =_bbfd ;return nil ;};func (_bfbf *ContentStreamParser )parseNull ()(_a .PdfObjectNull ,error ){_ ,_fgd :=_bfbf ._cacd .Discard (4);
+return _a .PdfObjectNull {},_fgd ;};
+
+// Add_s appends 's' operand to the content stream: Close and stroke the path.
+//
+// See section 8.5.3 "Path Painting Operators" and Table 60 (p. 143 PDF32000_2008).
+func (_ebd *ContentCreator )Add_s ()*ContentCreator {_gbgc :=ContentStreamOperation {};_gbgc .Operand ="\u0073";_ebd ._d =append (_ebd ._d ,&_gbgc );return _ebd ;};
+
+// String returns `ops.Bytes()` as a string.
+func (_aba *ContentStreamOperations )String ()string {return string (_aba .Bytes ())};
+
+// Add_d adds 'd' operand to the content stream: Set the line dash pattern.
+//
+// See section 8.4.4 "Graphic State Operators" and Table 57 (pp. 135-136 PDF32000_2008).
+func (_aegg *ContentCreator )Add_d (dashArray []int64 ,dashPhase int64 )*ContentCreator {_abd :=ContentStreamOperation {};_abd .Operand ="\u0064";_abd .Params =[]_a .PdfObject {};_abd .Params =append (_abd .Params ,_a .MakeArrayFromIntegers64 (dashArray ));
+_abd .Params =append (_abd .Params ,_a .MakeInteger (dashPhase ));_aegg ._d =append (_aegg ._d ,&_abd );return _aegg ;};func (_cged *ContentStreamProcessor )handleCommand_RG (_cbdd *ContentStreamOperation ,_eefe *_ab .PdfPageResources )error {_deda :=_ab .NewPdfColorspaceDeviceRGB ();
+if len (_cbdd .Params )!=_deda .GetNumComponents (){_fbg .Log .Debug ("I\u006e\u0076\u0061\u006c\u0069\u0064 \u006e\u0075\u006d\u0062\u0065\u0072 \u006f\u0066\u0020\u0070\u0061\u0072\u0061m\u0065\u0074\u0065\u0072\u0073\u0020\u0066\u006f\u0072\u0020R\u0047");
+_fbg .Log .Debug ("\u004e\u0075mb\u0065\u0072\u0020%\u0064\u0020\u006e\u006ft m\u0061tc\u0068\u0069\u006e\u0067\u0020\u0063\u006flo\u0072\u0073\u0070\u0061\u0063\u0065\u0020%\u0054",len (_cbdd .Params ),_deda );return _f .New ("\u0069\u006e\u0076\u0061l\u0069\u0064\u0020\u006e\u0075\u006d\u0062\u0065\u0072\u0020o\u0066 \u0070\u0061\u0072\u0061\u006d\u0065\u0074e\u0072\u0073");
+};_deccf ,_afg :=_deda .ColorFromPdfObjects (_cbdd .Params );if _afg !=nil {return _afg ;};_cged ._aabb .ColorspaceStroking =_deda ;_cged ._aabb .ColorStroking =_deccf ;return nil ;};
+
+// Add_SCN_pattern appends 'SCN' operand to the content stream for pattern `name`:
+// SCN with name attribute (for pattern). Syntax: c1 ... cn name SCN.
+//
+// See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
+func (_ggd *ContentCreator )Add_SCN_pattern (name _a .PdfObjectName ,c ...float64 )*ContentCreator {_eedg :=ContentStreamOperation {};_eedg .Operand ="\u0053\u0043\u004e";_eedg .Params =_dcgf (c );_eedg .Params =append (_eedg .Params ,_a .MakeName (string (name )));
+_ggd ._d =append (_ggd ._d ,&_eedg );return _ggd ;};
+
+// Add_Td appends 'Td' operand to the content stream:
+// Move to start of next line with offset (`tx`, `ty`).
+//
+// See section 9.4.2 "Text Positioning Operators" and
+// Table 108 (pp. 257-258 PDF32000_2008).
+func (_baa *ContentCreator )Add_Td (tx ,ty float64 )*ContentCreator {_aca :=ContentStreamOperation {};_aca .Operand ="\u0054\u0064";_aca .Params =_dcgf ([]float64 {tx ,ty });_baa ._d =append (_baa ._d ,&_aca );return _baa ;};
+
+// IsMask checks if an image is a mask.
+// The image mask entry in the image dictionary specifies that the image data shall be used as a stencil
+// mask for painting in the current color. The mask data is 1bpc, grayscale.
+func (_deg *ContentStreamInlineImage )IsMask ()(bool ,error ){if _deg .ImageMask !=nil {_dga ,_fcf :=_deg .ImageMask .(*_a .PdfObjectBool );if !_fcf {_fbg .Log .Debug ("\u0049m\u0061\u0067\u0065\u0020\u006d\u0061\u0073\u006b\u0020\u006e\u006ft\u0020\u0061\u0020\u0062\u006f\u006f\u006c\u0065\u0061\u006e");
+return false ,_f .New ("\u0069\u006e\u0076\u0061li\u0064\u0020\u006f\u0062\u006a\u0065\u0063\u0074\u0020\u0074\u0079\u0070\u0065");};return bool (*_dga ),nil ;};return false ,nil ;};func (_eefde *ContentStreamParser )parseName ()(_a .PdfObjectName ,error ){_fgag :="";
+_dge :=false ;for {_ccb ,_gae :=_eefde ._cacd .Peek (1);if _gae ==_bea .EOF {break ;};if _gae !=nil {return _a .PdfObjectName (_fgag ),_gae ;};if !_dge {if _ccb [0]=='/'{_dge =true ;_eefde ._cacd .ReadByte ();}else {_fbg .Log .Error ("N\u0061\u006d\u0065\u0020\u0073\u0074a\u0072\u0074\u0069\u006e\u0067\u0020\u0077\u0069\u0074h\u0020\u0025\u0073 \u0028%\u0020\u0078\u0029",_ccb ,_ccb );
+return _a .PdfObjectName (_fgag ),_ea .Errorf ("\u0069n\u0076a\u006c\u0069\u0064\u0020\u006ea\u006d\u0065:\u0020\u0028\u0025\u0063\u0029",_ccb [0]);};}else {if _a .IsWhiteSpace (_ccb [0]){break ;}else if (_ccb [0]=='/')||(_ccb [0]=='[')||(_ccb [0]=='(')||(_ccb [0]==']')||(_ccb [0]=='<')||(_ccb [0]=='>'){break ;
+}else if _ccb [0]=='#'{_cca ,_egef :=_eefde ._cacd .Peek (3);if _egef !=nil {return _a .PdfObjectName (_fgag ),_egef ;};_eefde ._cacd .Discard (3);_gdac ,_egef :=_fd .DecodeString (string (_cca [1:3]));if _egef !=nil {return _a .PdfObjectName (_fgag ),_egef ;
+};_fgag +=string (_gdac );}else {_dgc ,_ :=_eefde ._cacd .ReadByte ();_fgag +=string (_dgc );};};};return _a .PdfObjectName (_fgag ),nil ;};
+
+// Add_TJ appends 'TJ' operand to the content stream:
+// Show one or more text string. Array of numbers (displacement) and strings.
+//
+// See section 9.4.3 "Text Showing Operators" and
+// Table 209 (pp. 258-259 PDF32000_2008).
+func (_bcc *ContentCreator )Add_TJ (vals ..._a .PdfObject )*ContentCreator {_ebbd :=ContentStreamOperation {};_ebbd .Operand ="\u0054\u004a";_ebbd .Params =[]_a .PdfObject {_a .MakeArray (vals ...)};_bcc ._d =append (_bcc ._d ,&_ebbd );return _bcc ;};
+
+// Add_SCN appends 'SCN' operand to the content stream:
+// Same as SC but supports more colorspaces.
+//
+// See section 8.6.8 "Colour Operators" and Table 74 (p. 179-180 PDF32000_2008).
+func (_afcc *ContentCreator )Add_SCN (c ...float64 )*ContentCreator {_beff :=ContentStreamOperation {};_beff .Operand ="\u0053\u0043\u004e";_beff .Params =_dcgf (c );_afcc ._d =append (_afcc ._d ,&_beff );return _afcc ;};
+
+// NewContentStreamParser creates a new instance of the content stream parser from an input content
+// stream string.
+func NewContentStreamParser (contentStr string )*ContentStreamParser {_dbb :=ContentStreamParser {};contentStr =string (_ddg .ReplaceAll ([]byte (contentStr ),[]byte ("\u002f")));_ccda :=_fa .NewBufferString (contentStr +"\u000a");_dbb ._cacd =_fe .NewReader (_ccda );
+return &_dbb ;};func (_aee *ContentStreamParser )skipSpaces ()(int ,error ){_dag :=0;for {_ffc ,_dcec :=_aee ._cacd .Peek (1);if _dcec !=nil {return 0,_dcec ;};if _a .IsWhiteSpace (_ffc [0]){_aee ._cacd .ReadByte ();_dag ++;}else {break ;};};return _dag ,nil ;
+};
+
+// Parse parses all commands in content stream, returning a list of operation data.
+func (_agbb *ContentStreamParser )Parse ()(*ContentStreamOperations ,error ){_fgfb :=ContentStreamOperations {};for {_bdff :=ContentStreamOperation {};for {_aec ,_ddcd ,_fcb :=_agbb .parseObject ();if _fcb !=nil {if _fcb ==_bea .EOF {return &_fgfb ,nil ;
+};return &_fgfb ,_fcb ;};if _ddcd {_bdff .Operand ,_ =_a .GetStringVal (_aec );_fgfb =append (_fgfb ,&_bdff );break ;}else {_bdff .Params =append (_bdff .Params ,_aec );};};if _bdff .Operand =="\u0042\u0049"{_adgb ,_cdab :=_agbb .ParseInlineImage ();if _cdab !=nil {return &_fgfb ,_cdab ;
+};_bdff .Params =append (_bdff .Params ,_adgb );};};};
