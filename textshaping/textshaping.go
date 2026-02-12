@@ -9,8 +9,8 @@
 // Use of this source code is governed by the UniDoc End User License Agreement
 // terms that can be accessed at https://unidoc.io/eula/
 
-package textshaping ;import (_c "github.com/unidoc/garabic";_a "golang.org/x/text/unicode/bidi";_gb "strings";);
+package textshaping ;import (_af "github.com/unidoc/garabic";_d "golang.org/x/text/unicode/bidi";_aa "strings";);
 
 // ArabicShape returns shaped arabic glyphs string.
-func ArabicShape (text string )(string ,error ){_cg :=_a .Paragraph {};_cg .SetString (text );_e ,_cf :=_cg .Order ();if _cf !=nil {return "",_cf ;};for _f :=0;_f < _e .NumRuns ();_f ++{_fc :=_e .Run (_f );_ed :=_fc .String ();if _fc .Direction ()==_a .RightToLeft {var (_ga =_c .Shape (_ed );
-_fe =[]rune (_ga );_ae =make ([]rune ,len (_fe )););_b :=0;for _feg :=len (_fe )-1;_feg >=0;_feg --{_ae [_b ]=_fe [_feg ];_b ++;};_ed =string (_ae );text =_gb .Replace (text ,_gb .TrimSpace (_fc .String ()),_ed ,1);};};return text ,nil ;};
+func ArabicShape (text string )(string ,error ){_b :=_d .Paragraph {};_b .SetString (text );_ae ,_ac :=_b .Order ();if _ac !=nil {return "",_ac ;};for _e :=0;_e < _ae .NumRuns ();_e ++{_ab :=_ae .Run (_e );_c :=_ab .String ();if _ab .Direction ()==_d .RightToLeft {var (_f =_af .Shape (_c );
+_ec =[]rune (_f );_g =make ([]rune ,len (_ec )););_gg :=0;for _acg :=len (_ec )-1;_acg >=0;_acg --{_g [_gg ]=_ec [_acg ];_gg ++;};_c =string (_g );text =_aa .Replace (text ,_aa .TrimSpace (_ab .String ()),_c ,1);};};return text ,nil ;};
