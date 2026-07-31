@@ -1,4 +1,4 @@
-module github.com/unidoc/unipdf/v4
+module github.com/unidoc/unipdf/v5
 
 go 1.24.0
 
@@ -7,9 +7,9 @@ require (
 	github.com/boombuler/barcode v1.1.0
 	github.com/h2non/filetype v1.1.3
 	github.com/stretchr/testify v1.11.1
-	github.com/trimmer-io/go-xmp v1.0.0
 	github.com/unidoc/freetype v0.2.5
 	github.com/unidoc/garabic v0.0.0-20220702200334-8c7cb25baa11
+	github.com/unidoc/go-xmp v1.1.0
 	github.com/unidoc/pkcs7 v0.3.0
 	github.com/unidoc/timestamp v0.0.0-20200412005513-91597fd3793a
 	github.com/unidoc/typesetting v0.1.1
@@ -18,9 +18,9 @@ require (
 	golang.org/x/crypto v0.48.0
 	golang.org/x/image v0.36.0
 	golang.org/x/net v0.50.0
+	golang.org/x/sync v0.19.0
 	golang.org/x/text v0.34.0
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da
-	software.sslmate.com/src/go-pkcs12 v0.7.0
 )
 
 require (
